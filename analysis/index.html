@@ -10,6 +10,9 @@
 <title>微分公式・解析</title>
 <script>
     window.MathJax = {
+      startup: {
+        typeset: false
+      },
       tex: {
         inlineMath: [['\\(', '\\)']],
         displayMath: [['\\[', '\\]']]
@@ -2085,6 +2088,74 @@
   }
 }
 
+
+/* =====================================================
+   章選択式・MathJax遅延変換
+===================================================== */
+
+[hidden] {
+  display: none !important;
+}
+
+.lazy-chapter-guide {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid #bfdbfe;
+  border-radius: 14px;
+  background: #eff6ff;
+  color: #1e3a8a;
+  font-weight: 700;
+}
+
+.toc-link {
+  appearance: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+
+.toc-link.is-active {
+  color: #ffffff;
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, .22);
+}
+
+.toc-link.is-active .toc-number {
+  color: var(--accent);
+  background: #ffffff;
+}
+
+.toc-link.is-active .toc-arrow {
+  color: #ffffff;
+}
+
+.lazy-loading {
+  opacity: .72;
+  pointer-events: none;
+}
+
+.lazy-loading::after {
+  content: " 数式を準備しています…";
+  font-size: .85em;
+  font-weight: 700;
+}
+
+.lazy-chapter-visible {
+  animation: lazyChapterFade .22s ease;
+}
+
+@keyframes lazyChapterFade {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2647,7 +2718,7 @@
         </div>
 </div>
 <div class="orientation-note">
-        日本の高校数学では、\(f''(x)&gt;0\) を「下に凸」、
+        高校数学では、\(f''(x)&gt;0\) を「下に凸」、
         \(f''(x)&lt;0\) を「上に凸」と呼ぶのが一般的です。
       </div>
 </article>
@@ -15505,6 +15576,232 @@ drawLaplacianAll();
       }
     }
   })();
+</script>
+
+
+<script>
+(() => {
+  const chapterIds = [
+    'higher-derivatives',
+    'extrema',
+    'concavity',
+    'taylor',
+    'maclaurin',
+    'lhopital',
+    'mean-value-theorem',
+    'newton-method',
+    'partial-derivatives',
+    'total-differential',
+    'gradient',
+    'hessian',
+    'jacobian',
+    'laplacian'
+  ];
+
+  const convertedChapters = new Set();
+  let currentChapterId = null;
+  let requestToken = 0;
+
+  function getChapterRoots(chapterId) {
+    const anchor = document.getElementById(chapterId);
+
+    if (!anchor) {
+      return [];
+    }
+
+    const chapterSection = anchor.closest('section.section-grid');
+
+    if (chapterSection) {
+      return [chapterSection];
+    }
+
+    const roots = [anchor];
+    const next = anchor.nextElementSibling;
+
+    if (
+      next &&
+      next.matches('section.section-grid') &&
+      !next.querySelector('.chapter-anchor')
+    ) {
+      roots.push(next);
+    }
+
+    return roots;
+  }
+
+  function allChapterRoots() {
+    const roots = [];
+
+    chapterIds.forEach(id => {
+      getChapterRoots(id).forEach(root => {
+        if (!roots.includes(root)) {
+          roots.push(root);
+        }
+      });
+    });
+
+    return roots;
+  }
+
+  function setChapterVisibility(chapterId) {
+    allChapterRoots().forEach(root => {
+      root.hidden = true;
+      root.classList.remove('lazy-chapter-visible');
+    });
+
+    const selectedRoots = getChapterRoots(chapterId);
+
+    selectedRoots.forEach(root => {
+      root.hidden = false;
+      root.classList.add('lazy-chapter-visible');
+    });
+
+    return selectedRoots;
+  }
+
+  function updateButtons(chapterId, isLoading = false) {
+    document.querySelectorAll('.toc-link[href^="#"]').forEach(link => {
+      const id = decodeURIComponent(link.getAttribute('href').slice(1));
+      const active = id === chapterId;
+
+      link.classList.toggle('is-active', active);
+      link.classList.toggle('lazy-loading', active && isLoading);
+      link.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+  }
+
+  async function typesetChapter(chapterId, roots) {
+    if (convertedChapters.has(chapterId)) {
+      return;
+    }
+
+    if (!window.MathJax?.startup?.promise) {
+      throw new Error('MathJax is not available.');
+    }
+
+    await window.MathJax.startup.promise;
+    await window.MathJax.typesetPromise(roots);
+    convertedChapters.add(chapterId);
+  }
+
+  function redrawVisibleCanvases() {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.dispatchEvent(new Event('resize'));
+      });
+    });
+
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 180);
+  }
+
+  async function showChapter(chapterId, options = {}) {
+    if (!chapterIds.includes(chapterId)) {
+      return;
+    }
+
+    const token = ++requestToken;
+    const roots = setChapterVisibility(chapterId);
+    currentChapterId = chapterId;
+    updateButtons(chapterId, !convertedChapters.has(chapterId));
+
+    if (options.updateHistory !== false) {
+      history.replaceState(null, '', `#${chapterId}`);
+    }
+
+    try {
+      await typesetChapter(chapterId, roots);
+    } catch (error) {
+      console.error('章の数式変換に失敗しました。', error);
+    }
+
+    if (token !== requestToken) {
+      return;
+    }
+
+    updateButtons(chapterId, false);
+    redrawVisibleCanvases();
+
+    if (options.scroll !== false) {
+      const firstRoot = roots[0];
+
+      if (firstRoot) {
+        firstRoot.scrollIntoView({
+          behavior: options.smooth === false ? 'auto' : 'smooth',
+          block: 'start'
+        });
+      }
+    }
+  }
+
+  function prepareSelector() {
+    const tocDescription = document.querySelector('.toc-description');
+
+    if (tocDescription) {
+      tocDescription.textContent =
+        '選択した章だけを表示し、公式・具体例・注意点を同じ章で確認できます。';
+    }
+
+    const hero = document.querySelector('.hero');
+
+    if (hero && !hero.querySelector('.lazy-chapter-guide')) {
+      const guide = document.createElement('div');
+      guide.className = 'lazy-chapter-guide';
+      guide.textContent =
+        '学習したい項目を選択してください。';
+      hero.appendChild(guide);
+    }
+
+    document.querySelectorAll('.toc-link[href^="#"]').forEach(link => {
+      link.setAttribute('role', 'button');
+      link.setAttribute('aria-pressed', 'false');
+
+      link.addEventListener('click', event => {
+        event.preventDefault();
+
+        const chapterId =
+          decodeURIComponent(link.getAttribute('href').slice(1));
+
+        showChapter(chapterId, {
+          updateHistory: true,
+          scroll: true,
+          smooth: true
+        });
+      });
+    });
+
+    allChapterRoots().forEach(root => {
+      root.hidden = true;
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    prepareSelector();
+
+    const hashId = decodeURIComponent(location.hash.replace(/^#/, ''));
+
+    if (chapterIds.includes(hashId)) {
+      showChapter(hashId, {
+        updateHistory: false,
+        scroll: true,
+        smooth: false
+      });
+    }
+  });
+
+  window.addEventListener('hashchange', () => {
+    const hashId = decodeURIComponent(location.hash.replace(/^#/, ''));
+
+    if (chapterIds.includes(hashId) && hashId !== currentChapterId) {
+      showChapter(hashId, {
+        updateHistory: false,
+        scroll: true,
+        smooth: false
+      });
+    }
+  });
+})();
 </script>
 
 </body>
