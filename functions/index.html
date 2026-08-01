@@ -1,25 +1,30 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
+
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="robots" content="noindex,nofollow,noarchive">
-  <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet">
-  <meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet">
-  <title>関数別微分公式集</title>
-
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<meta content="noindex,nofollow,noarchive" name="robots"/>
+<meta content="noindex, nofollow, noarchive, nosnippet" name="googlebot"/>
+<meta content="noindex, nofollow, noarchive, nosnippet" name="bingbot"/>
+<title>関数別微分公式集</title>
+<script>
     window.MathJax = {
+      startup: {
+        typeset: false
+      },
       tex: {
         inlineMath: [['\\(', '\\)']],
         displayMath: [['\\[', '\\]']]
       },
-      svg: { fontCache: 'global' }
+      svg: {
+        fontCache: 'global'
+      }
     };
-  </script>
-  <script defer  src="../mathjax/tex-svg.js"></script>
-
-  <style>
+    </script>
+<script defer="" src="../mathjax/tex-svg.js"></script>
+<style>
     :root {
       --bg: #f4f7fb;
       --panel: #ffffff;
@@ -1048,446 +1053,630 @@
   }
 }
 
+
+
+    /* =====================================================
+       章選択テンプレート + MathJax遅延表示
+    ===================================================== */
+
+    :root {
+      --page-max-width: 1800px;
+      --page-gutter: clamp(8px, 2vw, 34px);
+      --section-gap: clamp(12px, 1.5vw, 24px);
+      --panel-padding-responsive: clamp(14px, 1.5vw, 26px);
+    }
+
+    html {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .app {
+      width: min(
+        var(--page-max-width),
+        calc(100% - (var(--page-gutter) * 2))
+      );
+      max-width: none;
+      padding: clamp(10px, 2vw, 30px) 0
+               clamp(30px, 4vw, 72px);
+    }
+
+    .hero,
+    .panel {
+      padding: var(--panel-padding-responsive);
+    }
+
+    .hero {
+      background:
+        linear-gradient(
+          135deg,
+          rgba(239, 246, 255, .98),
+          rgba(255, 255, 255, .98)
+        );
+    }
+
+    .chapter-selector {
+      margin-top: 22px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .chapter-selector-title {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+
+    .chapter-selector-description {
+      margin: 4px 0 14px;
+      color: var(--muted);
+      font-size: .94rem;
+    }
+
+    .chapter-selector-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .chapter-select-button {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fbfdff;
+      color: var(--text);
+      text-align: left;
+      font-weight: 800;
+      cursor: pointer;
+      transition:
+        transform .18s ease,
+        border-color .18s ease,
+        box-shadow .18s ease,
+        background .18s ease,
+        color .18s ease;
+    }
+
+    .chapter-select-button:hover,
+    .chapter-select-button:focus-visible {
+      transform: translateY(-2px);
+      border-color: #93c5fd;
+      background: #eff6ff;
+      box-shadow: 0 7px 18px rgba(37, 99, 235, .12);
+      outline: none;
+    }
+
+    .chapter-select-button.is-active {
+      color: #fff;
+      border-color: var(--accent);
+      background: var(--accent);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, .22);
+    }
+
+    .chapter-number {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: .82rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .chapter-select-button.is-active .chapter-number {
+      background: rgba(255,255,255,.2);
+      color: #fff;
+    }
+
+    .chapter-label {
+      overflow-wrap: anywhere;
+    }
+
+    .chapter-arrow {
+      color: var(--accent);
+      font-size: 1.15rem;
+    }
+
+    .chapter-select-button.is-active .chapter-arrow {
+      color: #fff;
+    }
+
+    .chapter-guide {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px dashed #93c5fd;
+      border-radius: 14px;
+      background: #f8fbff;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .lazy-chapter {
+      display: none !important;
+      margin-top: var(--section-gap);
+    }
+
+    .lazy-chapter.is-visible {
+      display: grid !important;
+    }
+
+    .lazy-chapter.chapter-stack.is-visible {
+      display: block !important;
+    }
+
+    .chapter-heading-panel {
+      grid-column: 1 / -1;
+    }
+
+    .chapter-heading-panel h2 {
+      margin-bottom: 4px;
+    }
+
+    .chapter-heading-panel p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .math-loading {
+      opacity: .72;
+      pointer-events: none;
+    }
+
+    .main-grid,
+    .section-grid {
+      gap: var(--section-gap);
+    }
+
+    .panel,
+    .hero,
+    .graph-panel,
+    .control-group,
+    .value-card,
+    .step,
+    .decision-card,
+    .formula-learning-card,
+    .learning-item,
+    .check-card {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .formula-box,
+    .calculation-line,
+    .decision-card .formula,
+    .quick-table-wrap,
+    .formula-learning-card,
+    mjx-container {
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .toc-panel,
+    .back-to-toc {
+      display: none !important;
+    }
+
+    @media (min-width: 1500px) {
+      .chapter-selector-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .main-grid {
+        grid-template-columns:
+          minmax(0, 1.65fr)
+          minmax(360px, .55fr);
+      }
+
+      .section-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
+      .chapter-selector-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .main-grid,
+      .section-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      :root {
+        --page-gutter: 6px;
+      }
+
+      .app {
+        width: calc(100% - 12px);
+        padding-top: 8px;
+      }
+
+      .hero,
+      .panel {
+        border-radius: 15px;
+      }
+
+      .chapter-selector-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .chapter-select-button {
+        padding: 11px 12px;
+      }
+
+      .main-grid,
+      .section-grid,
+      .summary-grid,
+      .decision-branches,
+      .check-grid,
+      .formula-learning-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+      }
+
+      .button-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .button-row button {
+        width: 100%;
+      }
+    }
 </style>
 </head>
-
 <body>
 <header class="site-header">
-  <div class="site-header-inner">
-    <a class="site-title" href="../index.html">
+<div class="site-header-inner">
+<a class="site-title" href="../index.html">
       Calculus Visualizer
     </a>
-
-    <nav class="site-nav" aria-label="公式集ナビゲーション">
-      <a href="../index.html">ホーム</a>
-      <a href="../basic/index.html">微分基本公式集</a>
-      <a class="current-page" href="../functions/index.html">  関数別微分公式集</a>
-      <a href="../analysis/index.html">微分公式・解析</a>
-      <a href="../advanced/index.html">微分応用・発展</a>
-    </nav>
-  </div>
+<nav aria-label="公式集ナビゲーション" class="site-nav">
+<a href="../index.html">ホーム</a>
+<a href="../basic/index.html">微分基本公式集</a>
+<a class="current-page" href="../functions/index.html">  関数別微分公式集</a>
+<a href="../analysis/index.html">微分公式・解析</a>
+<a href="../advanced/index.html">微分応用・発展</a>
+</nav>
+</div>
 </header>
-  <main class="app">
-    <header id="page-top" class="hero section-anchor">
-      <h1>関数別微分公式集</h1>
-    </header>
+<main class="app">
+<header class="hero section-anchor" id="page-top">
+<h1>関数別微分公式集</h1>
+<nav aria-label="関数別微分公式集の章選択" class="chapter-selector"><h2 class="chapter-selector-title">公式・テーマを選択</h2><p class="chapter-selector-description">選択した章だけを表示し、公式・具体例・注意点を同じ章で確認できます。</p><div class="chapter-selector-grid"><button aria-controls="interactive-graph" aria-expanded="false" class="chapter-select-button" data-chapter-target="interactive-graph" type="button"><span class="chapter-number">01</span><span class="chapter-label">操作・グラフ</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="core-rules" aria-expanded="false" class="chapter-select-button" data-chapter-target="core-rules" type="button"><span class="chapter-number">02</span><span class="chapter-label">基本的な微分法則</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="decision-guide" aria-expanded="false" class="chapter-select-button" data-chapter-target="decision-guide" type="button"><span class="chapter-number">03</span><span class="chapter-label">公式の判定・使い分け</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="power-functions" aria-expanded="false" class="chapter-select-button" data-chapter-target="power-functions" type="button"><span class="chapter-number">04</span><span class="chapter-label">べき関数・有理関数</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="exponential-functions" aria-expanded="false" class="chapter-select-button" data-chapter-target="exponential-functions" type="button"><span class="chapter-number">05</span><span class="chapter-label">指数関数</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="logarithmic-functions" aria-expanded="false" class="chapter-select-button" data-chapter-target="logarithmic-functions" type="button"><span class="chapter-number">06</span><span class="chapter-label">対数関数</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="trigonometric-functions" aria-expanded="false" class="chapter-select-button" data-chapter-target="trigonometric-functions" type="button"><span class="chapter-number">07</span><span class="chapter-label">三角関数</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="inverse-trigonometric-functions" aria-expanded="false" class="chapter-select-button" data-chapter-target="inverse-trigonometric-functions" type="button"><span class="chapter-number">08</span><span class="chapter-label">逆三角関数</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="hyperbolic-functions" aria-expanded="false" class="chapter-select-button" data-chapter-target="hyperbolic-functions" type="button"><span class="chapter-number">09</span><span class="chapter-label">双曲線関数</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="special-functions" aria-expanded="false" class="chapter-select-button" data-chapter-target="special-functions" type="button"><span class="chapter-number">10</span><span class="chapter-label">特殊関数</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="function-summary" aria-expanded="false" class="chapter-select-button" data-chapter-target="function-summary" type="button"><span class="chapter-number">11</span><span class="chapter-label">総まとめ</span><span aria-hidden="true" class="chapter-arrow">→</span></button></div></nav></header><div class="chapter-guide" id="chapterGuide">上のボタンから、確認したい公式・テーマを選択してください。</div>
 
-    <nav id="table-of-contents" class="panel toc-panel section-anchor" aria-label="目次">
-      <h2>目次</h2>
-
-      <div class="toc-grid">
-        <a class="toc-link" href="#interactive-graph">
-          <span class="toc-number">1</span>
-          <span>操作・グラフ</span>
-          <span class="toc-arrow">→</span>
-        </a>
-
-        <a class="toc-link" href="#power-functions">
-          <span class="toc-number">2</span>
-          <span>べき関数・有理関数</span>
-          <span class="toc-arrow">→</span>
-        </a>
-
-        <a class="toc-link" href="#exponential-functions">
-          <span class="toc-number">3</span>
-          <span>指数関数</span>
-          <span class="toc-arrow">→</span>
-        </a>
-
-        <a class="toc-link" href="#logarithmic-functions">
-          <span class="toc-number">4</span>
-          <span>対数関数</span>
-          <span class="toc-arrow">→</span>
-        </a>
-
-        <a class="toc-link" href="#trigonometric-functions">
-          <span class="toc-number">5</span>
-          <span>三角関数</span>
-          <span class="toc-arrow">→</span>
-        </a>
-
-        <a class="toc-link" href="#inverse-trigonometric-functions">
-          <span class="toc-number">6</span>
-          <span>逆三角関数</span>
-          <span class="toc-arrow">→</span>
-        </a>
-
-        <a class="toc-link" href="#hyperbolic-functions">
-          <span class="toc-number">7</span>
-          <span>双曲線関数</span>
-          <span class="toc-arrow">→</span>
-        </a>
-
-        <a class="toc-link" href="#special-functions">
-          <span class="toc-number">8</span>
-          <span>特殊関数</span>
-          <span class="toc-arrow">→</span>
-        </a>
-
-        <a class="toc-link" href="#function-summary">
-          <span class="toc-number">9</span>
-          <span>関数別微分公式一覧・総まとめ</span>
-          <span class="toc-arrow">→</span>
-        </a>
-      </div>
-    </nav>
-
-
-    <section id="interactive-graph" class="main-grid section-anchor">
-      <article class="panel graph-panel">
-        <h2>元の関数と合成後の関数</h2>
-
-        <div class="legend">
-          <span class="legend-item">
-            <span class="legend-line" style="background:var(--f-color);"></span>\(f(x)\)
+<div class="lazy-chapter chapter-stack" id="interactive-graph"><section class="main-grid section-anchor" id="interactive-graph-main">
+<article class="panel graph-panel">
+<h2>元の関数と合成後の関数</h2>
+<div class="legend">
+<span class="legend-item">
+<span class="legend-line" style="background:var(--f-color);"></span>\(f(x)\)
           </span>
-          <span class="legend-item">
-            <span class="legend-line" style="background:var(--g-color);"></span>\(g(x)\)
+<span class="legend-item">
+<span class="legend-line" style="background:var(--g-color);"></span>\(g(x)\)
           </span>
-          <span class="legend-item">
-            <span class="legend-line" style="background:var(--result-color);"></span><span id="mainResultLegend">\(h(x)=f(x)\pm g(x)\)</span>
+<span class="legend-item">
+<span class="legend-line" style="background:var(--result-color);"></span><span id="mainResultLegend">\(h(x)=f(x)\pm g(x)\)</span>
+</span>
+<span class="legend-item">
+<span class="legend-line" style="background:var(--derivative-color);"></span>接線
           </span>
-          <span class="legend-item">
-            <span class="legend-line" style="background:var(--derivative-color);"></span>接線
+<span class="legend-item">
+<span class="legend-dot" style="background:var(--point-color);"></span>点A
           </span>
-          <span class="legend-item">
-            <span class="legend-dot" style="background:var(--point-color);"></span>点A
-          </span>
-        </div>
-
-        <div id="canvasWrap" class="canvas-wrap">
-          <canvas id="graphCanvas"></canvas>
-        </div>
-
-        <p class="canvas-help">
+</div>
+<div class="canvas-wrap" id="canvasWrap">
+<canvas id="graphCanvas"></canvas>
+</div>
+<p class="canvas-help">
           点Aは横方向にドラッグできます。接線は合成後の関数 \(h(x)\) に対して描かれます。
         </p>
-      </article>
-
-      <aside class="panel">
-        <h2>操作と計算結果</h2>
-
-        <div class="controls">
-          <div class="control-group">
-            <label for="functionSelect" class="control-label">関数 \(f(x)\)</label>
-            <select id="functionSelect">
-              <option value="square">x²（x≥0側）</option>
-              <option value="cube">x³</option>
-              <option value="sin">sin x</option>
-              <option value="cos">cos x</option>
-              <option value="exp">eˣ</option>
-              <option value="identity">x</option>
-            </select>
-
-            <label for="secondFunctionSelect" class="control-label">関数 \(g(x)\)</label>
-            <select id="secondFunctionSelect">
-              <option value="sin">sin x</option>
-              <option value="cos">cos x</option>
-              <option value="identity">x</option>
-              <option value="square">x²</option>
-              <option value="exp">eˣ</option>
-            </select>
-
-            <label for="operationSelect" class="control-label">演算</label>
-            <select id="operationSelect">
-              <option value="sum">f(x) + g(x)</option>
-              <option value="difference">f(x) - g(x)</option>
-              <option value="constant">c f(x)</option>
-              <option value="product">f(x) × g(x)</option>
-              <option value="quotient">f(x) ÷ g(x)</option>
-              <option value="composition">f(g(x))</option>
-              <option value="inverse">f⁻¹(x)</option>
-              <option value="implicit">陰関数 F(x,y)=0</option>
-              <option value="logdiff">対数微分法</option>
-              <option value="powerRational">べき関数・有理関数</option>
-              <option value="exponentialFunctions">指数関数 eˣ・aˣ</option>
-              <option value="logarithmicFunctions">対数関数 ln x・logₐx</option>
-              <option value="trigonometricFunctions">三角関数 sin・cos・tan</option>
-              <option value="inverseTrigonometricFunctions">逆三角関数 arcsin・arccos・arctan</option>
-              <option value="hyperbolicFunctions">双曲線関数 sinh・cosh・tanh</option>
-              <option value="specialFunctions">特殊関数 Γ・ψ・erf</option>
-              <option value="functionSummary">関数別微分公式 総まとめ</option>
-            </select>
-          </div>
-
-          <div id="functionSummaryControlGroup" class="control-group" style="display:none;">
-            <label for="functionSummarySelect" class="control-label">確認する分類</label>
-            <select id="functionSummarySelect">
-              <option value="power">べき関数・有理関数</option>
-              <option value="exponential">指数関数</option>
-              <option value="logarithmic">対数関数</option>
-              <option value="trigonometric">三角関数</option>
-              <option value="inverseTrigonometric">逆三角関数</option>
-              <option value="hyperbolic">双曲線関数</option>
-              <option value="special">特殊関数</option>
-            </select>
-
-            <p class="power-control-note">
+</article>
+<aside class="panel">
+<h2>操作と計算結果</h2>
+<div class="controls">
+<div class="control-group">
+<label class="control-label" for="functionSelect">関数 \(f(x)\)</label>
+<select id="functionSelect">
+<option value="square">x²（x≥0側）</option>
+<option value="cube">x³</option>
+<option value="sin">sin x</option>
+<option value="cos">cos x</option>
+<option value="exp">eˣ</option>
+<option value="identity">x</option>
+</select>
+<label class="control-label" for="secondFunctionSelect">関数 \(g(x)\)</label>
+<select id="secondFunctionSelect">
+<option value="sin">sin x</option>
+<option value="cos">cos x</option>
+<option value="identity">x</option>
+<option value="square">x²</option>
+<option value="exp">eˣ</option>
+</select>
+<label class="control-label" for="operationSelect">演算</label>
+<select id="operationSelect">
+<option value="sum">f(x) + g(x)</option>
+<option value="difference">f(x) - g(x)</option>
+<option value="constant">c f(x)</option>
+<option value="product">f(x) × g(x)</option>
+<option value="quotient">f(x) ÷ g(x)</option>
+<option value="composition">f(g(x))</option>
+<option value="inverse">f⁻¹(x)</option>
+<option value="implicit">陰関数 F(x,y)=0</option>
+<option value="logdiff">対数微分法</option>
+<option value="powerRational">べき関数・有理関数</option>
+<option value="exponentialFunctions">指数関数 eˣ・aˣ</option>
+<option value="logarithmicFunctions">対数関数 ln x・logₐx</option>
+<option value="trigonometricFunctions">三角関数 sin・cos・tan</option>
+<option value="inverseTrigonometricFunctions">逆三角関数 arcsin・arccos・arctan</option>
+<option value="hyperbolicFunctions">双曲線関数 sinh・cosh・tanh</option>
+<option value="specialFunctions">特殊関数 Γ・ψ・erf</option>
+<option value="functionSummary">関数別微分公式 総まとめ</option>
+</select>
+</div>
+<div class="control-group" id="functionSummaryControlGroup" style="display:none;">
+<label class="control-label" for="functionSummarySelect">確認する分類</label>
+<select id="functionSummarySelect">
+<option value="power">べき関数・有理関数</option>
+<option value="exponential">指数関数</option>
+<option value="logarithmic">対数関数</option>
+<option value="trigonometric">三角関数</option>
+<option value="inverseTrigonometric">逆三角関数</option>
+<option value="hyperbolic">双曲線関数</option>
+<option value="special">特殊関数</option>
+</select>
+<p class="power-control-note">
               分類を選ぶと、代表関数と導関数のグラフを表示します。
             </p>
-          </div>
-
-          <div id="specialFunctionControlGroup" class="control-group" style="display:none;">
-            <label for="specialFunctionTypeSelect" class="control-label">特殊関数の種類</label>
-            <select id="specialFunctionTypeSelect">
-              <option value="gamma">ガンマ関数 Γ(x)</option>
-              <option value="digamma">ディガンマ関数 ψ(x)</option>
-              <option value="erf">誤差関数 erf(x)</option>
-              <option value="erfc">相補誤差関数 erfc(x)</option>
-            </select>
-
-            <p class="power-control-note">
+</div>
+<div class="control-group" id="specialFunctionControlGroup" style="display:none;">
+<label class="control-label" for="specialFunctionTypeSelect">特殊関数の種類</label>
+<select id="specialFunctionTypeSelect">
+<option value="gamma">ガンマ関数 Γ(x)</option>
+<option value="digamma">ディガンマ関数 ψ(x)</option>
+<option value="erf">誤差関数 erf(x)</option>
+<option value="erfc">相補誤差関数 erfc(x)</option>
+</select>
+<p class="power-control-note">
               ガンマ関数とディガンマ関数は、0以下の整数で極を持ちます。
               数値計算には近似式を使用しています。
             </p>
-          </div>
-
-          <div id="hyperbolicControlGroup" class="control-group" style="display:none;">
-            <label for="hyperbolicTypeSelect" class="control-label">双曲線関数の種類</label>
-            <select id="hyperbolicTypeSelect">
-              <option value="sinh">y = sinh x</option>
-              <option value="cosh">y = cosh x</option>
-              <option value="tanh">y = tanh x</option>
-              <option value="arsinh">y = arsinh x</option>
-              <option value="arcosh">y = arcosh x</option>
-              <option value="artanh">y = artanh x</option>
-            </select>
-
-            <label for="hyperbolicInnerSelect" class="control-label">内側 u(x)</label>
-            <select id="hyperbolicInnerSelect">
-              <option value="identity">u(x) = x</option>
-              <option value="double">u(x) = 2x</option>
-              <option value="square">u(x) = x²</option>
-              <option value="expMinusOne">u(x) = eˣ - 1</option>
-            </select>
-
-            <p class="power-control-note">
+</div>
+<div class="control-group" id="hyperbolicControlGroup" style="display:none;">
+<label class="control-label" for="hyperbolicTypeSelect">双曲線関数の種類</label>
+<select id="hyperbolicTypeSelect">
+<option value="sinh">y = sinh x</option>
+<option value="cosh">y = cosh x</option>
+<option value="tanh">y = tanh x</option>
+<option value="arsinh">y = arsinh x</option>
+<option value="arcosh">y = arcosh x</option>
+<option value="artanh">y = artanh x</option>
+</select>
+<label class="control-label" for="hyperbolicInnerSelect">内側 u(x)</label>
+<select id="hyperbolicInnerSelect">
+<option value="identity">u(x) = x</option>
+<option value="double">u(x) = 2x</option>
+<option value="square">u(x) = x²</option>
+<option value="expMinusOne">u(x) = eˣ - 1</option>
+</select>
+<p class="power-control-note">
               arcosh は入力が1以上、artanh は -1より大きく1未満で定義されます。
             </p>
-          </div>
-
-          <div id="inverseTrigonometricControlGroup" class="control-group" style="display:none;">
-            <label for="inverseTrigonometricTypeSelect" class="control-label">逆三角関数の種類</label>
-            <select id="inverseTrigonometricTypeSelect">
-              <option value="arcsin">y = arcsin x</option>
-              <option value="arccos">y = arccos x</option>
-              <option value="arctan">y = arctan x</option>
-            </select>
-
-            <label for="inverseTrigonometricInnerSelect" class="control-label">内側 u(x)</label>
-            <select id="inverseTrigonometricInnerSelect">
-              <option value="identity">u(x) = x</option>
-              <option value="half">u(x) = x/2</option>
-              <option value="sin">u(x) = sin x</option>
-              <option value="tanhLike">u(x) = x/(1+|x|)</option>
-            </select>
-
-            <p class="power-control-note">
+</div>
+<div class="control-group" id="inverseTrigonometricControlGroup" style="display:none;">
+<label class="control-label" for="inverseTrigonometricTypeSelect">逆三角関数の種類</label>
+<select id="inverseTrigonometricTypeSelect">
+<option value="arcsin">y = arcsin x</option>
+<option value="arccos">y = arccos x</option>
+<option value="arctan">y = arctan x</option>
+</select>
+<label class="control-label" for="inverseTrigonometricInnerSelect">内側 u(x)</label>
+<select id="inverseTrigonometricInnerSelect">
+<option value="identity">u(x) = x</option>
+<option value="half">u(x) = x/2</option>
+<option value="sin">u(x) = sin x</option>
+<option value="tanhLike">u(x) = x/(1+|x|)</option>
+</select>
+<p class="power-control-note">
               arcsin・arccos は入力が -1 から 1 の範囲にある必要があります。
             </p>
-          </div>
-
-          <div id="trigonometricControlGroup" class="control-group" style="display:none;">
-            <label for="trigonometricTypeSelect" class="control-label">三角関数の種類</label>
-            <select id="trigonometricTypeSelect">
-              <option value="sin">y = sin x</option>
-              <option value="cos">y = cos x</option>
-              <option value="tan">y = tan x</option>
-              <option value="cot">y = cot x</option>
-              <option value="sec">y = sec x</option>
-              <option value="csc">y = csc x</option>
-            </select>
-
-            <label for="trigonometricInnerSelect" class="control-label">内側 u(x)</label>
-            <select id="trigonometricInnerSelect">
-              <option value="identity">u(x) = x</option>
-              <option value="double">u(x) = 2x</option>
-              <option value="square">u(x) = x²</option>
-              <option value="sin">u(x) = sin x</option>
-            </select>
-
-            <p class="power-control-note">
+</div>
+<div class="control-group" id="trigonometricControlGroup" style="display:none;">
+<label class="control-label" for="trigonometricTypeSelect">三角関数の種類</label>
+<select id="trigonometricTypeSelect">
+<option value="sin">y = sin x</option>
+<option value="cos">y = cos x</option>
+<option value="tan">y = tan x</option>
+<option value="cot">y = cot x</option>
+<option value="sec">y = sec x</option>
+<option value="csc">y = csc x</option>
+</select>
+<label class="control-label" for="trigonometricInnerSelect">内側 u(x)</label>
+<select id="trigonometricInnerSelect">
+<option value="identity">u(x) = x</option>
+<option value="double">u(x) = 2x</option>
+<option value="square">u(x) = x²</option>
+<option value="sin">u(x) = sin x</option>
+</select>
+<p class="power-control-note">
               角度はラジアンで扱います。合成関数ではチェーンルールが自動で適用されます。
             </p>
-          </div>
-
-          <div id="logarithmicControlGroup" class="control-group" style="display:none;">
-            <label for="logarithmicTypeSelect" class="control-label">対数関数の種類</label>
-            <select id="logarithmicTypeSelect">
-              <option value="naturalLog">自然対数 y = ln x</option>
-              <option value="generalLog">一般対数 y = logₐx</option>
-              <option value="lnComposite">合成対数 y = ln u(x)</option>
-              <option value="generalComposite">一般形 y = logₐu(x)</option>
-            </select>
-
-            <div id="logarithmicBaseRow" class="control-row" style="display:none;margin-top:10px;">
-              <label for="logarithmicBaseInput" class="control-label">底 a</label>
-              <input id="logarithmicBaseRange" type="range" min="0.1" max="10" step="0.1" value="10">
-              <input id="logarithmicBaseInput" type="number" min="0.0001" step="any" value="10">
-            </div>
-
-            <div id="logarithmicInnerRow" style="display:none;margin-top:10px;">
-              <label for="logarithmicInnerSelect" class="control-label">内側 u(x)</label>
-              <select id="logarithmicInnerSelect">
-                <option value="identity">u(x) = x</option>
-                <option value="squarePlusOne">u(x) = x² + 1</option>
-                <option value="sinPlusTwo">u(x) = sin x + 2</option>
-                <option value="expPlusOne">u(x) = eˣ + 1</option>
-              </select>
-            </div>
-
-            <p class="power-control-note">
+</div>
+<div class="control-group" id="logarithmicControlGroup" style="display:none;">
+<label class="control-label" for="logarithmicTypeSelect">対数関数の種類</label>
+<select id="logarithmicTypeSelect">
+<option value="naturalLog">自然対数 y = ln x</option>
+<option value="generalLog">一般対数 y = logₐx</option>
+<option value="lnComposite">合成対数 y = ln u(x)</option>
+<option value="generalComposite">一般形 y = logₐu(x)</option>
+</select>
+<div class="control-row" id="logarithmicBaseRow" style="display:none;margin-top:10px;">
+<label class="control-label" for="logarithmicBaseInput">底 a</label>
+<input id="logarithmicBaseRange" max="10" min="0.1" step="0.1" type="range" value="10"/>
+<input id="logarithmicBaseInput" min="0.0001" step="any" type="number" value="10"/>
+</div>
+<div id="logarithmicInnerRow" style="display:none;margin-top:10px;">
+<label class="control-label" for="logarithmicInnerSelect">内側 u(x)</label>
+<select id="logarithmicInnerSelect">
+<option value="identity">u(x) = x</option>
+<option value="squarePlusOne">u(x) = x² + 1</option>
+<option value="sinPlusTwo">u(x) = sin x + 2</option>
+<option value="expPlusOne">u(x) = eˣ + 1</option>
+</select>
+</div>
+<p class="power-control-note">
               対数の中身は正である必要があります。一般対数では \(a&gt;0\)、\(a\neq1\) が必要です。
             </p>
-          </div>
-
-          <div id="exponentialControlGroup" class="control-group" style="display:none;">
-            <label for="exponentialTypeSelect" class="control-label">指数関数の種類</label>
-            <select id="exponentialTypeSelect">
-              <option value="naturalExp">自然指数関数 y = eˣ</option>
-              <option value="generalExp">一般の指数関数 y = aˣ</option>
-            </select>
-
-            <div id="exponentialBaseRow" class="control-row" style="display:none;margin-top:10px;">
-              <label for="exponentialBaseInput" class="control-label">底 a</label>
-              <input id="exponentialBaseRange" type="range" min="0.1" max="5" step="0.1" value="2">
-              <input id="exponentialBaseInput" type="number" min="0.0001" step="any" value="2">
-            </div>
-
-            <p class="power-control-note">
+</div>
+<div class="control-group" id="exponentialControlGroup" style="display:none;">
+<label class="control-label" for="exponentialTypeSelect">指数関数の種類</label>
+<select id="exponentialTypeSelect">
+<option value="naturalExp">自然指数関数 y = eˣ</option>
+<option value="generalExp">一般の指数関数 y = aˣ</option>
+</select>
+<div class="control-row" id="exponentialBaseRow" style="display:none;margin-top:10px;">
+<label class="control-label" for="exponentialBaseInput">底 a</label>
+<input id="exponentialBaseRange" max="5" min="0.1" step="0.1" type="range" value="2"/>
+<input id="exponentialBaseInput" min="0.0001" step="any" type="number" value="2"/>
+</div>
+<p class="power-control-note">
               底は \(a&gt;0\)、\(a\neq1\) が基本です。数値入力はスライダー範囲外にも対応します。
             </p>
-          </div>
-
-          <div id="powerControlGroup" class="control-group" style="display:none;">
-            <label for="powerTypeSelect" class="control-label">公式の種類</label>
-            <select id="powerTypeSelect">
-              <option value="integerPower">べき関数 xⁿ</option>
-              <option value="sqrt">平方根 √x</option>
-              <option value="cubeRoot">立方根 ∛x</option>
-              <option value="negativePower">負の整数べき x⁻ⁿ</option>
-              <option value="reciprocal">逆数 1/x</option>
-              <option value="reciprocalSquare">1/x²</option>
-              <option value="rationalPower">有理数べき x^(p/q)</option>
-            </select>
-
-            <div id="powerNRow" class="control-row" style="margin-top:10px;">
-              <label for="powerNInput" class="control-label">指数 n</label>
-              <input id="powerNRange" type="range" min="-6" max="8" step="1" value="3">
-              <input id="powerNInput" type="number" step="1" value="3">
-            </div>
-
-            <div id="rationalPQRow" style="display:none;margin-top:10px;">
-              <div class="control-row">
-                <label for="powerPInput" class="control-label">分子 p</label>
-                <input id="powerPRange" type="range" min="-6" max="8" step="1" value="2">
-                <input id="powerPInput" type="number" step="1" value="2">
-              </div>
-              <div class="control-row" style="margin-top:10px;">
-                <label for="powerQInput" class="control-label">分母 q</label>
-                <input id="powerQRange" type="range" min="1" max="8" step="1" value="3">
-                <input id="powerQInput" type="number" min="1" step="1" value="3">
-              </div>
-            </div>
-
-            <p class="power-control-note">
+</div>
+<div class="control-group" id="powerControlGroup" style="display:none;">
+<label class="control-label" for="powerTypeSelect">公式の種類</label>
+<select id="powerTypeSelect">
+<option value="integerPower">べき関数 xⁿ</option>
+<option value="sqrt">平方根 √x</option>
+<option value="cubeRoot">立方根 ∛x</option>
+<option value="negativePower">負の整数べき x⁻ⁿ</option>
+<option value="reciprocal">逆数 1/x</option>
+<option value="reciprocalSquare">1/x²</option>
+<option value="rationalPower">有理数べき x^(p/q)</option>
+</select>
+<div class="control-row" id="powerNRow" style="margin-top:10px;">
+<label class="control-label" for="powerNInput">指数 n</label>
+<input id="powerNRange" max="8" min="-6" step="1" type="range" value="3"/>
+<input id="powerNInput" step="1" type="number" value="3"/>
+</div>
+<div id="rationalPQRow" style="display:none;margin-top:10px;">
+<div class="control-row">
+<label class="control-label" for="powerPInput">分子 p</label>
+<input id="powerPRange" max="8" min="-6" step="1" type="range" value="2"/>
+<input id="powerPInput" step="1" type="number" value="2"/>
+</div>
+<div class="control-row" style="margin-top:10px;">
+<label class="control-label" for="powerQInput">分母 q</label>
+<input id="powerQRange" max="8" min="1" step="1" type="range" value="3"/>
+<input id="powerQInput" min="1" step="1" type="number" value="3"/>
+</div>
+</div>
+<p class="power-control-note">
               数値入力はスライダーの範囲を超えても計算できます。
             </p>
-          </div>
-
-          <div id="logDiffControlGroup" class="control-group" style="display:none;">
-            <label for="logDiffSelect" class="control-label">対数微分の例</label>
-            <select id="logDiffSelect">
-              <option value="xPowerX">y = xˣ</option>
-              <option value="polyPowerX">y = (x² + 1)ˣ</option>
-              <option value="xPowerSin">y = x^(sin x)</option>
-            </select>
-          </div>
-
-          <div id="implicitControlGroup" class="control-group" style="display:none;">
-            <label for="implicitSelect" class="control-label">陰関数</label>
-            <select id="implicitSelect">
-              <option value="circle">x² + y² = 4</option>
-              <option value="ellipse">x²/9 + y²/4 = 1</option>
-              <option value="hyperbola">x² - y² = 1</option>
-            </select>
-
-            <label for="branchSelect" class="control-label">枝</label>
-            <select id="branchSelect">
-              <option value="upper">上側・正の枝</option>
-              <option value="lower">下側・負の枝</option>
-            </select>
-          </div>
-
-          <div class="control-group">
-            <div id="constantControlRow" class="control-row" style="display:none;margin-bottom:10px;">
-              <label for="cRange" class="control-label">定数 c</label>
-              <input id="cRange" type="range" min="-5" max="5" step="0.1" value="2">
-              <input id="cInput" type="number" step="any" value="2">
-            </div>
-
-            <div class="control-row">
-              <label for="aRange" class="control-label">点A</label>
-              <input id="aRange" type="range" min="-4" max="4" step="0.1" value="0">
-              <input id="aInput" type="number" step="any" value="0">
-            </div>
-          </div>
-
-          <div class="button-row">
-            <button id="toggleComponentsButton" type="button">f・gを非表示</button>
-            <button id="toggleTangentButton" type="button" class="secondary">接線を非表示</button>
-            <button id="resetButton" type="button" class="secondary">初期値に戻す</button>
-          </div>
-        </div>
-
-        <div class="summary-grid">
-          <div id="cCard" class="value-card" style="display:none;">
-            <div class="label">\(c\)</div>
-            <div id="cValue" class="value">2</div>
-          </div>
-
-          <div class="value-card">
-            <div class="label">\(a\)</div>
-            <div id="aValue" class="value">0</div>
-          </div>
-
-          <div class="value-card">
-            <div class="label">\(f(a)\)</div>
-            <div id="faValue" class="value">0</div>
-          </div>
-
-          <div class="value-card">
-            <div id="gaLabel" class="label">\(g(a)\)</div>
-            <div id="gaValue" class="value">0</div>
-          </div>
-
-          <div class="value-card">
-            <div id="haLabel" class="label">\(h(a)\)</div>
-            <div id="haValue" class="value">0</div>
-          </div>
-
-          <div class="value-card">
-            <div class="label">\(f'(a)\)</div>
-            <div id="fdaValue" class="value">0</div>
-          </div>
-
-          <div class="value-card">
-            <div id="gdaLabel" class="label">\(g'(a)\)</div>
-            <div id="gdaValue" class="value">1</div>
-          </div>
-
-          <div class="value-card highlight-card">
-            <div class="label">\(h'(a)\)</div>
-            <div id="hdaValue" class="value">1</div>
-          </div>
-
-          <div class="value-card highlight-card">
-            <div id="ruleLabel" class="label">\(f'(a)\pm g'(a)\)</div>
-            <div id="ruleValue" class="value">1</div>
-          </div>
-        </div>
-
-        <div class="formula-box">
+</div>
+<div class="control-group" id="logDiffControlGroup" style="display:none;">
+<label class="control-label" for="logDiffSelect">対数微分の例</label>
+<select id="logDiffSelect">
+<option value="xPowerX">y = xˣ</option>
+<option value="polyPowerX">y = (x² + 1)ˣ</option>
+<option value="xPowerSin">y = x^(sin x)</option>
+</select>
+</div>
+<div class="control-group" id="implicitControlGroup" style="display:none;">
+<label class="control-label" for="implicitSelect">陰関数</label>
+<select id="implicitSelect">
+<option value="circle">x² + y² = 4</option>
+<option value="ellipse">x²/9 + y²/4 = 1</option>
+<option value="hyperbola">x² - y² = 1</option>
+</select>
+<label class="control-label" for="branchSelect">枝</label>
+<select id="branchSelect">
+<option value="upper">上側・正の枝</option>
+<option value="lower">下側・負の枝</option>
+</select>
+</div>
+<div class="control-group">
+<div class="control-row" id="constantControlRow" style="display:none;margin-bottom:10px;">
+<label class="control-label" for="cRange">定数 c</label>
+<input id="cRange" max="5" min="-5" step="0.1" type="range" value="2"/>
+<input id="cInput" step="any" type="number" value="2"/>
+</div>
+<div class="control-row">
+<label class="control-label" for="aRange">点A</label>
+<input id="aRange" max="4" min="-4" step="0.1" type="range" value="0"/>
+<input id="aInput" step="any" type="number" value="0"/>
+</div>
+</div>
+<div class="button-row">
+<button id="toggleComponentsButton" type="button">f・gを非表示</button>
+<button class="secondary" id="toggleTangentButton" type="button">接線を非表示</button>
+<button class="secondary" id="resetButton" type="button">初期値に戻す</button>
+</div>
+</div>
+<div class="summary-grid">
+<div class="value-card" id="cCard" style="display:none;">
+<div class="label">\(c\)</div>
+<div class="value" id="cValue">2</div>
+</div>
+<div class="value-card">
+<div class="label">\(a\)</div>
+<div class="value" id="aValue">0</div>
+</div>
+<div class="value-card">
+<div class="label">\(f(a)\)</div>
+<div class="value" id="faValue">0</div>
+</div>
+<div class="value-card">
+<div class="label" id="gaLabel">\(g(a)\)</div>
+<div class="value" id="gaValue">0</div>
+</div>
+<div class="value-card">
+<div class="label" id="haLabel">\(h(a)\)</div>
+<div class="value" id="haValue">0</div>
+</div>
+<div class="value-card">
+<div class="label">\(f'(a)\)</div>
+<div class="value" id="fdaValue">0</div>
+</div>
+<div class="value-card">
+<div class="label" id="gdaLabel">\(g'(a)\)</div>
+<div class="value" id="gdaValue">1</div>
+</div>
+<div class="value-card highlight-card">
+<div class="label">\(h'(a)\)</div>
+<div class="value" id="hdaValue">1</div>
+</div>
+<div class="value-card highlight-card">
+<div class="label" id="ruleLabel">\(f'(a)\pm g'(a)\)</div>
+<div class="value" id="ruleValue">1</div>
+</div>
+</div>
+<div class="formula-box">
           \[
           \frac{d}{dx}\{f(x)+g(x)\}=f'(x)+g'(x)
           \]
@@ -1555,13 +1744,13 @@
           \]
           \[
           \frac{d}{dx}a^x=a^x\ln a
-          \qquad(a>0)
+          \qquad(a&gt;0)
           \]
           \[
           \frac{d}{dx}\ln x
           =
           \frac{1}{x}
-          \qquad(x>0)
+          \qquad(x&gt;0)
           \]
           \[
           \frac{d}{dx}\log_a x
@@ -1627,54 +1816,44 @@
           -\frac{2}{\sqrt{\pi}}e^{-x^2}
           \]
         </div>
-
-        <div class="calculation">
-          <div id="calculation1" class="calculation-line"></div>
-          <div id="calculation2" class="calculation-line"></div>
-          <div id="calculation3" class="calculation-line"></div>
-        </div>
-
-        <div id="statusMessage" class="status-message"></div>
-      </aside>
-    </section>
-
-    <section class="panel derivative-panel">
-      <h2>導関数の比較</h2>
-
-      <div class="legend">
-        <span class="legend-item">
-          <span class="legend-line" style="background:var(--f-color);"></span>\(f'(x)\)
+<div class="calculation">
+<div class="calculation-line" id="calculation1"></div>
+<div class="calculation-line" id="calculation2"></div>
+<div class="calculation-line" id="calculation3"></div>
+</div>
+<div class="status-message" id="statusMessage"></div>
+</aside>
+</section><section class="panel derivative-panel">
+<h2>導関数の比較</h2>
+<div class="legend">
+<span class="legend-item">
+<span class="legend-line" style="background:var(--f-color);"></span>\(f'(x)\)
         </span>
-        <span class="legend-item">
-          <span class="legend-line" style="background:var(--g-color);"></span>\(g'(x)\)
+<span class="legend-item">
+<span class="legend-line" style="background:var(--g-color);"></span>\(g'(x)\)
         </span>
-        <span class="legend-item">
-          <span class="legend-line" style="background:var(--derivative-color);"></span><span id="derivativeResultLegend">\(h'(x)=f'(x)\pm g'(x)\)</span>
-        </span>
-      </div>
-
-      <div id="derivativeCanvasWrap" class="derivative-canvas-wrap">
-        <canvas id="derivativeCanvas"></canvas>
-      </div>
-
-      <p class="canvas-help">
+<span class="legend-item">
+<span class="legend-line" style="background:var(--derivative-color);"></span><span id="derivativeResultLegend">\(h'(x)=f'(x)\pm g'(x)\)</span>
+</span>
+</div>
+<div class="derivative-canvas-wrap" id="derivativeCanvasWrap">
+<canvas id="derivativeCanvas"></canvas>
+</div>
+<p class="canvas-help">
         桃色の導関数 \(h'(x)\) が、紫色の \(f'(x)\) と橙色の \(g'(x)\) の和・差になっています。
       </p>
-    </section>
+</section></div>
 
-
-    <div style="margin-top:14px;">
-      <a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
-    </div>
-
-    <section class="section-grid">
-      <article class="panel">
-        <h2>和・差の微分公式</h2>
-
-        <div class="step-flow">
-          <div class="step">
-            <strong>和の微分：</strong>
-            <p>
+<div style="margin-top:14px;">
+<a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
+</div>
+<section class="section-grid lazy-chapter" id="core-rules"><article class="panel chapter-heading-panel"><h2>基本的な微分法則</h2></article>
+<article class="panel">
+<h2>和・差の微分公式</h2>
+<div class="step-flow">
+<div class="step">
+<strong>和の微分：</strong>
+<p>
               2つの関数の和を微分すると、それぞれの導関数の和になります。
             </p>
             \[
@@ -1685,11 +1864,10 @@
             <p>
               微分は和に対して項ごとに分配できます。
             </p>
-          </div>
-
-          <div class="step">
-            <strong>差の微分：</strong>
-            <p>
+</div>
+<div class="step">
+<strong>差の微分：</strong>
+<p>
               2つの関数の差を微分すると、それぞれの導関数の差になります。
             </p>
             \[
@@ -1700,11 +1878,10 @@
             <p>
               マイナスの符号もそのまま保たれます。
             </p>
-          </div>
-
-          <div class="step">
-            <strong>定数倍の微分：</strong>
-            <p>
+</div>
+<div class="step">
+<strong>定数倍の微分：</strong>
+<p>
               関数 \(f(x)\) に定数 \(c\) を掛けたものを微分すると、
               定数 \(c\) はそのまま残ります。
             </p>
@@ -1716,11 +1893,10 @@
             <p>
               定数は微分せず、関数部分だけを微分します。
             </p>
-          </div>
-
-          <div class="step">
-            <strong>積の微分：</strong>
-            <p>
+</div>
+<div class="step">
+<strong>積の微分：</strong>
+<p>
               2つの関数の積を微分するときは、
               一方だけを微分した項を2つ作って足します。
             </p>
@@ -1732,11 +1908,10 @@
             <p>
               単純に \(f'(x)g'(x)\) とはならない点が重要です。
             </p>
-          </div>
-
-          <div class="step">
-            <strong>商の微分：</strong>
-            <p>
+</div>
+<div class="step">
+<strong>商の微分：</strong>
+<p>
               分子を微分した項から、分母を微分した項を引き、
               分母全体を2乗します。
             </p>
@@ -1751,11 +1926,10 @@
             <p>
               \(g(x)=0\) となる点では、元の関数も導関数も定義できません。
             </p>
-          </div>
-
-          <div class="step">
-            <strong>合成関数：</strong>
-            <p>
+</div>
+<div class="step">
+<strong>合成関数：</strong>
+<p>
               関数 \(g(x)\) の出力を、別の関数 \(f\) の入力として使う関数です。
             </p>
             \[
@@ -1764,11 +1938,10 @@
             <p>
               外側が \(f\)、内側が \(g\) です。
             </p>
-          </div>
-
-          <div class="step">
-            <strong>チェーンルール：</strong>
-            <p>
+</div>
+<div class="step">
+<strong>チェーンルール：</strong>
+<p>
               外側の関数を内側の値で微分し、
               さらに内側の導関数を掛けます。
             </p>
@@ -1780,11 +1953,10 @@
             <p>
               「外側を微分して、内側の微分を掛ける」と覚えます。
             </p>
-          </div>
-
-          <div class="step">
-            <strong>逆関数：</strong>
-            <p>
+</div>
+<div class="step">
+<strong>逆関数：</strong>
+<p>
               関数 \(f\) の入力と出力を入れ替えた関数です。
             </p>
             \[
@@ -1795,11 +1967,10 @@
             <p>
               元の関数と逆関数のグラフは、直線 \(y=x\) に関して対称です。
             </p>
-          </div>
-
-          <div class="step">
-            <strong>逆関数の微分：</strong>
-            <p>
+</div>
+<div class="step">
+<strong>逆関数の微分：</strong>
+<p>
               逆関数の傾きは、対応する元の関数の傾きの逆数です。
             </p>
             \[
@@ -1810,11 +1981,10 @@
             <p>
               元の関数の導関数が0になる点では、この公式は使えません。
             </p>
-          </div>
-
-          <div class="step">
-            <strong>陰関数：</strong>
-            <p>
+</div>
+<div class="step">
+<strong>陰関数：</strong>
+<p>
               \(y\) が明示的に \(y=f(x)\) と書かれていなくても、
               \(x\) と \(y\) の関係式によって曲線が定まる場合があります。
             </p>
@@ -1824,11 +1994,10 @@
             <p>
               たとえば円 \(x^2+y^2=4\) は陰関数で表された曲線です。
             </p>
-          </div>
-
-          <div class="step">
-            <strong>陰関数微分：</strong>
-            <p>
+</div>
+<div class="step">
+<strong>陰関数微分：</strong>
+<p>
               \(y\) を \(x\) の関数と考え、両辺を \(x\) で微分します。
             </p>
             \[
@@ -1842,11 +2011,10 @@
             <p>
               \(F_y=0\) となる点では、通常の有限な傾きとして表せません。
             </p>
-          </div>
-
-          <div class="step">
-            <strong>対数微分法：</strong>
-            <p>
+</div>
+<div class="step">
+<strong>対数微分法：</strong>
+<p>
               変数が指数にも底にも含まれる関数や、
               積・商が複雑な関数に対して、両辺の自然対数を取ってから微分します。
             </p>
@@ -1859,11 +2027,10 @@
             <p>
               対数によって指数を前へ下ろせることが重要です。
             </p>
-          </div>
-
-          <div class="step">
-            <strong>一般公式：</strong>
-            <p>
+</div>
+<div class="step">
+<strong>一般公式：</strong>
+<p>
               両辺を微分すると、
             </p>
             \[
@@ -1887,16 +2054,14 @@
             \right)
             \]
           </div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2>差商による証明</h2>
-
-        <div class="step-flow">
-          <div class="step">
-            <strong>和の場合：</strong>
-            <p>
+</div>
+</article>
+<article class="panel">
+<h2>差商による証明</h2>
+<div class="step-flow">
+<div class="step">
+<strong>和の場合：</strong>
+<p>
               差商を2つに分けます。
             </p>
             \[
@@ -1915,11 +2080,10 @@
             <p>
               \(h\to0\) とすると、各項が \(f'(x)\)、\(g'(x)\) になります。
             </p>
-          </div>
-
-          <div class="step">
-            <strong>差の場合：</strong>
-            <p>
+</div>
+<div class="step">
+<strong>差の場合：</strong>
+<p>
               同様に、差でも各項へ分けられます。
             </p>
             \[
@@ -1938,11 +2102,10 @@
             <p>
               したがって、\((f-g)'=f'-g'\) です。
             </p>
-          </div>
-
-          <div class="step">
-            <strong>定数倍の場合：</strong>
-            <p>
+</div>
+<div class="step">
+<strong>定数倍の場合：</strong>
+<p>
               \(h(x)=cf(x)\) の差商では、定数 \(c\) を外へ出せます。
             </p>
             \[
@@ -1957,11 +2120,10 @@
               \]
               となります。
             </p>
-          </div>
-
-          <div class="step">
-            <strong>積の場合：</strong>
-            <p>
+</div>
+<div class="step">
+<strong>積の場合：</strong>
+<p>
               差商に \(f(x+h)g(x)\) を足して引きます。
             </p>
             \[
@@ -1990,11 +2152,10 @@
               \]
               となります。
             </p>
-          </div>
-
-          <div class="step">
-            <strong>商の場合：</strong>
-            <p>
+</div>
+<div class="step">
+<strong>商の場合：</strong>
+<p>
               \(h(x)=\dfrac{f(x)}{g(x)}\) とおき、
               \(f(x)=h(x)g(x)\) と書き換えます。
             </p>
@@ -2011,10 +2172,9 @@
             \frac{f'(x)g(x)-f(x)g'(x)}{g(x)^2}
             \]
           </div>
-
-          <div class="step">
-            <strong>合成関数の場合：</strong>
-            <p>
+<div class="step">
+<strong>合成関数の場合：</strong>
+<p>
               \(u=g(x)\)、\(y=f(u)\) とおきます。
             </p>
             \[
@@ -2034,11 +2194,10 @@
             <p>
               中間変数 \(u\) を経由する変化率を掛け合わせる考え方です。
             </p>
-          </div>
-
-          <div class="step">
-            <strong>逆関数の場合：</strong>
-            <p>
+</div>
+<div class="step">
+<strong>逆関数の場合：</strong>
+<p>
               \(y=f^{-1}(x)\) とおくと、
             </p>
             \[
@@ -2064,10 +2223,9 @@
             \frac{1}{f'(f^{-1}(x))}
             \]
           </div>
-
-          <div class="step">
-            <strong>陰関数の場合：</strong>
-            <p>
+<div class="step">
+<strong>陰関数の場合：</strong>
+<p>
               \(F(x,y)=0\) の両辺を \(x\) で微分します。
             </p>
             \[
@@ -2088,10 +2246,9 @@
             -\frac{F_x}{F_y}
             \]
           </div>
-
-          <div class="step">
-            <strong>対数微分法の場合：</strong>
-            <p>
+<div class="step">
+<strong>対数微分法の場合：</strong>
+<p>
               \(y=u(x)^{v(x)}\) の両辺の自然対数を取ります。
             </p>
             \[
@@ -2110,31 +2267,28 @@
             <p>
               両辺に \(y=u(x)^{v(x)}\) を掛けると一般公式が得られます。
             </p>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2>具体例</h2>
-        <div id="exampleContent"></div>
-      </article>
-
-      <article class="panel">
-        <h2>重要な考え方</h2>
-        <div class="step-flow">
-          <div class="step">
-            <strong>項ごとに微分：</strong>
-            <p>
+</div>
+</div>
+</article>
+<article class="panel">
+<h2>具体例</h2>
+<div id="exampleContent"></div>
+</article>
+<article class="panel">
+<h2>重要な考え方</h2>
+<div class="step-flow">
+<div class="step">
+<strong>項ごとに微分：</strong>
+<p>
               和や差でつながっている式は、各項を別々に微分できます。
             </p>
             \[
             (x^3+\sin x)'=3x^2+\cos x
             \]
           </div>
-
-          <div class="step">
-            <strong>積とは異なる：</strong>
-            <p>
+<div class="step">
+<strong>積とは異なる：</strong>
+<p>
               和・差は項ごとに微分できますが、積は単純に \(f'g'\) にはなりません。
             </p>
             \[
@@ -2143,189 +2297,172 @@
             <p>
               積を選択すると、積の微分公式をグラフと数値で確認できます。
             </p>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <section class="section-grid">
-      <article class="panel" style="grid-column:1 / -1;">
-        <h2>「この形ならこの公式」判定図</h2>
-        <p>
+</div>
+</div>
+</article>
+</section>
+<section class="section-grid lazy-chapter" id="decision-guide"><article class="panel chapter-heading-panel"><h2>公式の判定・使い分け</h2></article>
+<article class="panel" style="grid-column:1 / -1;">
+<h2>「この形ならこの公式」判定図</h2>
+<p>
           式の見た目から、最初に使う微分法を判断します。
           複雑な式では、外側の構造から順に見ていくのが基本です。
         </p>
-
-        <div class="decision-flow">
-          <div class="decision-node start">
+<div class="decision-flow">
+<div class="decision-node start">
             微分したい式の「いちばん外側の形」を確認する
           </div>
-
-          <div class="decision-arrow">↓</div>
-
-          <div class="decision-branches">
-            <div class="decision-card">
-              <h3>足し算・引き算でつながっている</h3>
-              <p>\(f(x)+g(x)\)、\(f(x)-g(x)\)</p>
-              <div class="formula">
+<div class="decision-arrow">↓</div>
+<div class="decision-branches">
+<div class="decision-card">
+<h3>足し算・引き算でつながっている</h3>
+<p>\(f(x)+g(x)\)、\(f(x)-g(x)\)</p>
+<div class="formula">
                 \[
                 (f\pm g)'=f'\pm g'
                 \]
               </div>
-            </div>
-
-            <div class="decision-card">
-              <h3>定数が前に掛かっている</h3>
-              <p>\(cf(x)\)</p>
-              <div class="formula">
+</div>
+<div class="decision-card">
+<h3>定数が前に掛かっている</h3>
+<p>\(cf(x)\)</p>
+<div class="formula">
                 \[
                 (cf)'=cf'
                 \]
               </div>
-            </div>
-
-            <div class="decision-card">
-              <h3>関数どうしが掛け算になっている</h3>
-              <p>\(f(x)g(x)\)</p>
-              <div class="formula">
+</div>
+<div class="decision-card">
+<h3>関数どうしが掛け算になっている</h3>
+<p>\(f(x)g(x)\)</p>
+<div class="formula">
                 \[
                 (fg)'=f'g+fg'
                 \]
               </div>
-            </div>
-
-            <div class="decision-card">
-              <h3>関数どうしが割り算になっている</h3>
-              <p>\(\dfrac{f(x)}{g(x)}\)</p>
-              <div class="formula">
+</div>
+<div class="decision-card">
+<h3>関数どうしが割り算になっている</h3>
+<p>\(\dfrac{f(x)}{g(x)}\)</p>
+<div class="formula">
                 \[
                 \left(\frac{f}{g}\right)'
                 =
                 \frac{f'g-fg'}{g^2}
                 \]
               </div>
-            </div>
-
-            <div class="decision-card">
-              <h3>関数の中に別の関数が入っている</h3>
-              <p>\(f(g(x))\)</p>
-              <div class="formula">
+</div>
+<div class="decision-card">
+<h3>関数の中に別の関数が入っている</h3>
+<p>\(f(g(x))\)</p>
+<div class="formula">
                 \[
                 (f\circ g)'
                 =
                 (f'\circ g)g'
                 \]
               </div>
-            </div>
-
-            <div class="decision-card">
-              <h3>逆関数になっている</h3>
-              <p>\(f^{-1}(x)\)</p>
-              <div class="formula">
+</div>
+<div class="decision-card">
+<h3>逆関数になっている</h3>
+<p>\(f^{-1}(x)\)</p>
+<div class="formula">
                 \[
                 (f^{-1})'(x)
                 =
                 \frac{1}{f'(f^{-1}(x))}
                 \]
               </div>
-            </div>
-
-            <div class="decision-card">
-              <h3>\(y=\cdots\) の形に簡単に直せない</h3>
-              <p>\(F(x,y)=0\)</p>
-              <div class="formula">
+</div>
+<div class="decision-card">
+<h3>\(y=\cdots\) の形に簡単に直せない</h3>
+<p>\(F(x,y)=0\)</p>
+<div class="formula">
                 \[
                 \frac{dy}{dx}
                 =
                 -\frac{F_x}{F_y}
                 \]
               </div>
-            </div>
-
-            <div class="decision-card">
-              <h3>変数が底にも指数にもある</h3>
-              <p>\(x^x\)、\(f(x)^{g(x)}\)</p>
-              <div class="formula">
+</div>
+<div class="decision-card">
+<h3>変数が底にも指数にもある</h3>
+<p>\(x^x\)、\(f(x)^{g(x)}\)</p>
+<div class="formula">
                 \[
                 \ln y
                 \text{ を取ってから微分}
                 \]
               </div>
-            </div>
-          </div>
-
-          <div class="decision-arrow">↓</div>
-
-          <div class="decision-node">
+</div>
+</div>
+<div class="decision-arrow">↓</div>
+<div class="decision-node">
             1つの公式で終わらない場合は、式を分解して複数の公式を組み合わせる
           </div>
-        </div>
-      </article>
-
-      <article class="panel" style="grid-column:1 / -1;">
-        <h2>使い分け早見表</h2>
-
-        <div class="quick-table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>式の形</th>
-                <th>使う公式</th>
-                <th>例</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>\(f+g,\ f-g\)</td>
-                <td>和・差の微分</td>
-                <td>\((x^2+\sin x)'=2x+\cos x\)</td>
-              </tr>
-              <tr>
-                <td>\(cf\)</td>
-                <td>定数倍</td>
-                <td>\((3e^x)'=3e^x\)</td>
-              </tr>
-              <tr>
-                <td>\(fg\)</td>
-                <td>積の微分</td>
-                <td>\((x^2\sin x)'=2x\sin x+x^2\cos x\)</td>
-              </tr>
-              <tr>
-                <td>\(\dfrac{f}{g}\)</td>
-                <td>商の微分</td>
-                <td>\(\left(\dfrac{x}{\sin x}\right)'\)</td>
-              </tr>
-              <tr>
-                <td>\(f(g(x))\)</td>
-                <td>チェーンルール</td>
-                <td>\((\sin(x^2))'=2x\cos(x^2)\)</td>
-              </tr>
-              <tr>
-                <td>\(f^{-1}(x)\)</td>
-                <td>逆関数の微分</td>
-                <td>\((\arcsin x)'=\dfrac{1}{\sqrt{1-x^2}}\)</td>
-              </tr>
-              <tr>
-                <td>\(F(x,y)=0\)</td>
-                <td>陰関数微分</td>
-                <td>\(x^2+y^2=1\)</td>
-              </tr>
-              <tr>
-                <td>\(f(x)^{g(x)}\)</td>
-                <td>対数微分法</td>
-                <td>\((x^x)'=x^x(\ln x+1)\)</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </article>
-
-      <article class="panel" style="grid-column:1 / -1;">
-        <h2>複数の公式を組み合わせる例</h2>
-
-        <div class="step-flow">
-          <div class="step">
-            <strong>例：</strong>
+</div>
+</article>
+<article class="panel" style="grid-column:1 / -1;">
+<h2>使い分け早見表</h2>
+<div class="quick-table-wrap">
+<table>
+<thead>
+<tr>
+<th>式の形</th>
+<th>使う公式</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\(f+g,\ f-g\)</td>
+<td>和・差の微分</td>
+<td>\((x^2+\sin x)'=2x+\cos x\)</td>
+</tr>
+<tr>
+<td>\(cf\)</td>
+<td>定数倍</td>
+<td>\((3e^x)'=3e^x\)</td>
+</tr>
+<tr>
+<td>\(fg\)</td>
+<td>積の微分</td>
+<td>\((x^2\sin x)'=2x\sin x+x^2\cos x\)</td>
+</tr>
+<tr>
+<td>\(\dfrac{f}{g}\)</td>
+<td>商の微分</td>
+<td>\(\left(\dfrac{x}{\sin x}\right)'\)</td>
+</tr>
+<tr>
+<td>\(f(g(x))\)</td>
+<td>チェーンルール</td>
+<td>\((\sin(x^2))'=2x\cos(x^2)\)</td>
+</tr>
+<tr>
+<td>\(f^{-1}(x)\)</td>
+<td>逆関数の微分</td>
+<td>\((\arcsin x)'=\dfrac{1}{\sqrt{1-x^2}}\)</td>
+</tr>
+<tr>
+<td>\(F(x,y)=0\)</td>
+<td>陰関数微分</td>
+<td>\(x^2+y^2=1\)</td>
+</tr>
+<tr>
+<td>\(f(x)^{g(x)}\)</td>
+<td>対数微分法</td>
+<td>\((x^x)'=x^x(\ln x+1)\)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</article>
+<article class="panel" style="grid-column:1 / -1;">
+<h2>複数の公式を組み合わせる例</h2>
+<div class="step-flow">
+<div class="step">
+<strong>例：</strong>
             \[
             y=x^2\sin(x^3)
             \]
@@ -2341,54 +2478,47 @@
             x^2\cos(x^3)\cdot3x^2
             \]
           </div>
-
-          <div class="step">
-            <strong>判断の順番：</strong>
-            <p>
+<div class="step">
+<strong>判断の順番：</strong>
+<p>
               ① 一番外側の演算を見る
               → ② 各部分の中身を見る
               → ③ 必要な公式を内側まで繰り返す
             </p>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <section id="power-functions" class="section-grid section-anchor">
-      <article class="panel" style="grid-column:1 / -1;">
-        <h2>べき関数・有理関数</h2>
-
-        <div class="formula-learning-grid">
-          <section class="formula-learning-card">
-            <h3>公式A：べき関数 \(f(x)=x^n\)</h3>
-
-            <div class="learning-item">
-              <strong>① 公式</strong>
+</div>
+</div>
+</article>
+</section>
+<section class="section-grid section-anchor lazy-chapter" id="power-functions">
+<article class="panel" style="grid-column:1 / -1;">
+<h2>べき関数・有理関数</h2>
+<div class="formula-learning-grid">
+<section class="formula-learning-card">
+<h3>公式A：べき関数 \(f(x)=x^n\)</h3>
+<div class="learning-item">
+<strong>① 公式</strong>
               \[
               \frac{d}{dx}x^n=nx^{n-1}
               \]
               <p>整数 \(n\) だけでなく、定義域に注意すれば実数指数まで拡張できます。</p>
-            </div>
-
-            <div class="learning-item">
-              <strong>② グラフ</strong>
-              <p>
+</div>
+<div class="learning-item">
+<strong>② グラフ</strong>
+<p>
                 \(n\) が偶数なら左右対称、奇数なら原点対称です。
-                \(n\) が大きいほど、\(|x|>1\) で急激に増加します。
+                \(n\) が大きいほど、\(|x|&gt;1\) で急激に増加します。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>③ 接線</strong>
-              <p>点 \(x=a\) における傾きは \(na^{n-1}\) です。</p>
+</div>
+<div class="learning-item">
+<strong>③ 接線</strong>
+<p>点 \(x=a\) における傾きは \(na^{n-1}\) です。</p>
               \[
               y-a^n=na^{n-1}(x-a)
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>④ 証明</strong>
-              <p>整数 \(n\) では二項定理を使います。</p>
+<div class="learning-item">
+<strong>④ 証明</strong>
+<p>整数 \(n\) では二項定理を使います。</p>
               \[
               \frac{(x+h)^n-x^n}{h}
               =
@@ -2400,75 +2530,65 @@
               nx^{n-1}
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑤ よくある間違い</strong>
-              <p>\(x^n\) を \(x^{n-1}\) にするだけで、係数 \(n\) を付け忘れること。</p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑥ 覚え方</strong>
-              <p>「指数を前へ下ろし、指数を1つ減らす」。</p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑦ 具体例</strong>
+<div class="learning-item">
+<strong>⑤ よくある間違い</strong>
+<p>\(x^n\) を \(x^{n-1}\) にするだけで、係数 \(n\) を付け忘れること。</p>
+</div>
+<div class="learning-item">
+<strong>⑥ 覚え方</strong>
+<p>「指数を前へ下ろし、指数を1つ減らす」。</p>
+</div>
+<div class="learning-item">
+<strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}x^5=5x^4
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item">
+<strong>⑧ 解説</strong>
+<p>
                 べき関数の微分は、入力を少し増やしたときに
                 面積・体積・エネルギーなどの量がどれほど増えるかを表します。
                 指数 \(n\) は、変化の急激さを決める役割を持ちます。
               </p>
-            </div>
-
-            <div class="usage-box">
-              <strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box">
+<strong>この公式はどこで使われる？</strong>
+<p>
                 多項式近似、物体の位置・速度・加速度、面積・体積の変化、
                 最適化、回帰分析、機械学習の損失関数などで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>公式B：根号関数 \(f(x)=\sqrt{x}=x^{1/2}\)</h3>
-
-            <div class="learning-item">
-              <strong>① 公式</strong>
+</div>
+</section>
+<section class="formula-learning-card">
+<h3>公式B：根号関数 \(f(x)=\sqrt{x}=x^{1/2}\)</h3>
+<div class="learning-item">
+<strong>① 公式</strong>
               \[
               \frac{d}{dx}\sqrt{x}
               =
               \frac{1}{2\sqrt{x}}
-              \qquad(x>0)
+              \qquad(x&gt;0)
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>② グラフ</strong>
-              <p>
+<div class="learning-item">
+<strong>② グラフ</strong>
+<p>
                 \(x\ge0\) で定義され、増加しますが、次第に傾きが小さくなります。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>③ 接線</strong>
+</div>
+<div class="learning-item">
+<strong>③ 接線</strong>
               \[
               y-\sqrt{a}
               =
               \frac{1}{2\sqrt{a}}(x-a)
-              \qquad(a>0)
+              \qquad(a&gt;0)
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>④ 証明</strong>
-              <p>差商を有理化します。</p>
+<div class="learning-item">
+<strong>④ 証明</strong>
+<p>差商を有理化します。</p>
               \[
               \frac{\sqrt{x+h}-\sqrt{x}}{h}
               =
@@ -2480,48 +2600,41 @@
               \frac{1}{2\sqrt{x}}
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑤ よくある間違い</strong>
-              <p>\((\sqrt{x})'=\sqrt{x-1}\) としてしまうこと。べき乗則を使います。</p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑥ 覚え方</strong>
-              <p>\(\sqrt{x}=x^{1/2}\) と書き換えて、指数を前へ下ろします。</p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑦ 具体例</strong>
+<div class="learning-item">
+<strong>⑤ よくある間違い</strong>
+<p>\((\sqrt{x})'=\sqrt{x-1}\) としてしまうこと。べき乗則を使います。</p>
+</div>
+<div class="learning-item">
+<strong>⑥ 覚え方</strong>
+<p>\(\sqrt{x}=x^{1/2}\) と書き換えて、指数を前へ下ろします。</p>
+</div>
+<div class="learning-item">
+<strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}\sqrt{3x+1}
               =
               \frac{3}{2\sqrt{3x+1}}
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item">
+<strong>⑧ 解説</strong>
+<p>
                 平方根は、距離・標準偏差・ユークリッドノルムなど、
                 「2乗した量を元の尺度へ戻す」場面に現れます。
               </p>
-            </div>
-
-            <div class="usage-box">
-              <strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box">
+<strong>この公式はどこで使われる？</strong>
+<p>
                 距離計算、標準偏差、物理学の速度公式、誤差評価、
                 機械学習のL2ノルムなどで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>公式C：立方根 \(f(x)=\sqrt[3]{x}=x^{1/3}\)</h3>
-
-            <div class="learning-item">
-              <strong>① 公式</strong>
+</div>
+</section>
+<section class="formula-learning-card">
+<h3>公式C：立方根 \(f(x)=\sqrt[3]{x}=x^{1/3}\)</h3>
+<div class="learning-item">
+<strong>① 公式</strong>
               \[
               \frac{d}{dx}\sqrt[3]{x}
               =
@@ -2529,17 +2642,15 @@
               \qquad(x\ne0)
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>② グラフ</strong>
-              <p>
+<div class="learning-item">
+<strong>② グラフ</strong>
+<p>
                 すべての実数で定義される奇関数です。
                 原点では接線が垂直になります。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>③ 接線</strong>
+</div>
+<div class="learning-item">
+<strong>③ 接線</strong>
               \[
               y-\sqrt[3]{a}
               =
@@ -2547,10 +2658,9 @@
               \qquad(a\ne0)
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>④ 証明</strong>
-              <p>
+<div class="learning-item">
+<strong>④ 証明</strong>
+<p>
                 \(y^3=x\) とおいて陰関数微分を使うと、
               </p>
               \[
@@ -2564,48 +2674,41 @@
               \frac{1}{3x^{2/3}}
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑤ よくある間違い</strong>
-              <p>原点でも通常の有限な導関数が存在すると考えてしまうこと。</p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑥ 覚え方</strong>
-              <p>\(\sqrt[3]{x}=x^{1/3}\) として、べき乗則を使います。</p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑦ 具体例</strong>
+<div class="learning-item">
+<strong>⑤ よくある間違い</strong>
+<p>原点でも通常の有限な導関数が存在すると考えてしまうこと。</p>
+</div>
+<div class="learning-item">
+<strong>⑥ 覚え方</strong>
+<p>\(\sqrt[3]{x}=x^{1/3}\) として、べき乗則を使います。</p>
+</div>
+<div class="learning-item">
+<strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}\sqrt[3]{x^2+1}
               =
               \frac{2x}{3(x^2+1)^{2/3}}
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item">
+<strong>⑧ 解説</strong>
+<p>
                 立方根は、体積から長さを求めるような
                 「3次元の量を1次元へ戻す」処理として理解できます。
               </p>
-            </div>
-
-            <div class="usage-box">
-              <strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box">
+<strong>この公式はどこで使われる？</strong>
+<p>
                 体積から寸法を求める計算、スケーリング則、
                 物理・工学の相似関係などで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>公式D：負の整数べき \(f(x)=x^{-n}\)</h3>
-
-            <div class="learning-item">
-              <strong>① 公式</strong>
+</div>
+</section>
+<section class="formula-learning-card">
+<h3>公式D：負の整数べき \(f(x)=x^{-n}\)</h3>
+<div class="learning-item">
+<strong>① 公式</strong>
               \[
               \frac{d}{dx}x^{-n}
               =
@@ -2614,17 +2717,15 @@
               -\frac{n}{x^{n+1}}
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>② グラフ</strong>
-              <p>
+<div class="learning-item">
+<strong>② グラフ</strong>
+<p>
                 \(x=0\) では定義されず、垂直漸近線を持ちます。
                 偶奇によって左右の符号や対称性が変わります。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>③ 接線</strong>
+</div>
+<div class="learning-item">
+<strong>③ 接線</strong>
               \[
               y-a^{-n}
               =
@@ -2632,83 +2733,72 @@
               \qquad(a\ne0)
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>④ 証明</strong>
-              <p>
+<div class="learning-item">
+<strong>④ 証明</strong>
+<p>
                 \(x^{-n}=1/x^n\) と書き、商の微分またはべき乗則を使います。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑤ よくある間違い</strong>
-              <p>指数の符号を変え忘れ、\(-n+1\) としてしまうこと。</p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑥ 覚え方</strong>
-              <p>指数が負でも「前へ下ろして1減らす」は同じです。</p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑦ 具体例</strong>
+</div>
+<div class="learning-item">
+<strong>⑤ よくある間違い</strong>
+<p>指数の符号を変え忘れ、\(-n+1\) としてしまうこと。</p>
+</div>
+<div class="learning-item">
+<strong>⑥ 覚え方</strong>
+<p>指数が負でも「前へ下ろして1減らす」は同じです。</p>
+</div>
+<div class="learning-item">
+<strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}\frac{1}{x^3}
               =
               -\frac{3}{x^4}
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item">
+<strong>⑧ 解説</strong>
+<p>
                 負のべきは、距離が増えるほど影響が弱くなる現象を表しやすく、
                 「反比例的な減衰」の数学的モデルになります。
               </p>
-            </div>
-
-            <div class="usage-box">
-              <strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box">
+<strong>この公式はどこで使われる？</strong>
+<p>
                 万有引力・静電気力の逆二乗則、信号減衰、
                 有理関数の解析、確率分布の裾の評価などで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>公式E：有理数べき \(f(x)=x^{p/q}\)</h3>
-
-            <div class="learning-item">
-              <strong>① 公式</strong>
+</div>
+</section>
+<section class="formula-learning-card">
+<h3>公式E：有理数べき \(f(x)=x^{p/q}\)</h3>
+<div class="learning-item">
+<strong>① 公式</strong>
               \[
               \frac{d}{dx}x^{p/q}
               =
               \frac{p}{q}x^{p/q-1}
               \]
               <p>実数範囲では、分母 \(q\) の偶奇に応じた定義域の確認が必要です。</p>
-            </div>
-
-            <div class="learning-item">
-              <strong>② グラフ</strong>
-              <p>
+</div>
+<div class="learning-item">
+<strong>② グラフ</strong>
+<p>
                 指数が1より大きいか、0と1の間か、負かによって
                 増加の仕方・原点付近・漸近線が変わります。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>③ 接線</strong>
+</div>
+<div class="learning-item">
+<strong>③ 接線</strong>
               \[
               y-a^{p/q}
               =
               \frac{p}{q}a^{p/q-1}(x-a)
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>④ 証明</strong>
-              <p>
+<div class="learning-item">
+<strong>④ 証明</strong>
+<p>
                 \(y=x^{p/q}\) とおき、\(y^q=x^p\) を陰関数微分します。
               </p>
               \[
@@ -2718,74 +2808,64 @@
               y'=\frac{p}{q}x^{p/q-1}
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑤ よくある間違い</strong>
-              <p>指数だけを小数で扱い、定義域や分母の偶奇を無視すること。</p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑥ 覚え方</strong>
-              <p>分数指数でも、指数を1つの数としてそのまま前へ下ろします。</p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑦ 具体例</strong>
+<div class="learning-item">
+<strong>⑤ よくある間違い</strong>
+<p>指数だけを小数で扱い、定義域や分母の偶奇を無視すること。</p>
+</div>
+<div class="learning-item">
+<strong>⑥ 覚え方</strong>
+<p>分数指数でも、指数を1つの数としてそのまま前へ下ろします。</p>
+</div>
+<div class="learning-item">
+<strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}x^{2/3}
               =
               \frac{2}{3}x^{-1/3}
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item">
+<strong>⑧ 解説</strong>
+<p>
                 有理数べきは、平方根・立方根・逆数などを
                 1つの統一された「べき乗則」で扱うための橋渡しです。
               </p>
-            </div>
-
-            <div class="usage-box">
-              <strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box">
+<strong>この公式はどこで使われる？</strong>
+<p>
                 スケーリング則、成長モデル、幾何学、物理学の次元解析、
                 統計モデルの変数変換などで使われます。
               </p>
-            </div>
-          </section>
-        </div>
-      
-        <a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
-      </article>
-    </section>
-
-    <section id="exponential-functions" class="section-grid section-anchor">
-      <article class="panel" style="grid-column:1 / -1;">
-        <h2>指数関数</h2>
-
-        <div class="formula-learning-grid">
-          <section class="formula-learning-card">
-            <h3>公式A：自然指数関数 \(f(x)=e^x\)</h3>
-
-            <div class="learning-item">
-              <strong>① 公式</strong>
+</div>
+</section>
+</div>
+<a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
+</article>
+</section>
+<section class="section-grid section-anchor lazy-chapter" id="exponential-functions">
+<article class="panel" style="grid-column:1 / -1;">
+<h2>指数関数</h2>
+<div class="formula-learning-grid">
+<section class="formula-learning-card">
+<h3>公式A：自然指数関数 \(f(x)=e^x\)</h3>
+<div class="learning-item">
+<strong>① 公式</strong>
               \[
               \frac{d}{dx}e^x=e^x
               \]
               <p>
                 微分しても関数の形が変わらないことが、自然指数関数の最重要性質です。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>② グラフ</strong>
-              <p>
+</div>
+<div class="learning-item">
+<strong>② グラフ</strong>
+<p>
                 \(e^x\) は常に正で、左側では0へ近づき、右側では急速に増加します。
                 導関数も \(e^x\) なので、元の関数と導関数のグラフは完全に一致します。
               </p>
               \[
-              e^x>0
+              e^x&gt;0
               \]
               \[
               \lim_{x\to-\infty}e^x=0,
@@ -2793,10 +2873,9 @@
               \lim_{x\to\infty}e^x=\infty
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>③ 接線</strong>
-              <p>点 \(x=a\) における関数値と傾きは、どちらも \(e^a\) です。</p>
+<div class="learning-item">
+<strong>③ 接線</strong>
+<p>点 \(x=a\) における関数値と傾きは、どちらも \(e^a\) です。</p>
               \[
               y-e^a=e^a(x-a)
               \]
@@ -2806,10 +2885,9 @@
               \]
               となります。
             </div>
-
-            <div class="learning-item">
-              <strong>④ 証明</strong>
-              <p>微分係数の定義から、</p>
+<div class="learning-item">
+<strong>④ 証明</strong>
+<p>微分係数の定義から、</p>
               \[
               \frac{d}{dx}e^x
               =
@@ -2834,92 +2912,80 @@
               \]
               です。
             </div>
-
-            <div class="learning-item">
-              <strong>⑤ よくある間違い</strong>
-              <p>
+<div class="learning-item">
+<strong>⑤ よくある間違い</strong>
+<p>
                 \(e^x\) をべき関数 \(x^e\) と同じように考え、
                 \(ex^{e-1}\) としてしまうこと。
                 \(e^x\) では変数は指数にあります。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑥ 覚え方</strong>
-              <p>
+</div>
+<div class="learning-item">
+<strong>⑥ 覚え方</strong>
+<p>
                 「\(e^x\) は微分しても、そのまま \(e^x\)」。
                 自分自身が自分自身の変化率になっています。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑦ 具体例</strong>
+</div>
+<div class="learning-item">
+<strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}e^{3x}
               =
               3e^{3x}
               \]
               <p>合成関数なので、内側 \(3x\) の微分3を掛けます。</p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑧ 解説</strong>
-              <p>
+</div>
+<div class="learning-item">
+<strong>⑧ 解説</strong>
+<p>
                 ある量の増加速度が、その時点の量そのものに比例するとき、
                 解は指数関数になります。
                 「多いほど、さらに速く増える」という自己増幅型の変化です。
               </p>
-            </div>
-
-            <div class="usage-box">
-              <strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box">
+<strong>この公式はどこで使われる？</strong>
+<p>
                 人口増加、複利、細菌増殖、放射性崩壊、連続時間モデル、
                 微分方程式、ニューラルネットワークの指数計算などで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>公式B：一般の指数関数 \(f(x)=a^x\)</h3>
-
-            <div class="learning-item">
-              <strong>① 公式</strong>
+</div>
+</section>
+<section class="formula-learning-card">
+<h3>公式B：一般の指数関数 \(f(x)=a^x\)</h3>
+<div class="learning-item">
+<strong>① 公式</strong>
               \[
               \frac{d}{dx}a^x
               =
               a^x\ln a
-              \qquad(a>0)
+              \qquad(a&gt;0)
               \]
               <p>
                 \(a=e\) のとき \(\ln e=1\) なので、自然指数関数の公式へ戻ります。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>② グラフ</strong>
-              <p>
-                \(a>1\) なら単調増加、\(0<a<1\) なら単調減少します。
-                どちらも常に正で、点 \((0,1)\) を通ります。
-              </p>
+</div>
+<div class="learning-item">
+<strong>② グラフ</strong>
+<p>
+                \(a&gt;1\) なら単調増加、\(0<a<1\) <="" \((0,1)\)="" p="" どちらも常に正で、点="" なら単調減少します。="" を通ります。="">
               \[
               a^0=1
               \]
-            </div>
-
-            <div class="learning-item">
-              <strong>③ 接線</strong>
-              <p>点 \(x=b\) における傾きは \(a^b\ln a\) です。</p>
+            </a<1\)></p></div>
+<div class="learning-item">
+<strong>③ 接線</strong>
+<p>点 \(x=b\) における傾きは \(a^b\ln a\) です。</p>
               \[
               y-a^b
               =
               a^b\ln a\,(x-b)
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>④ 証明</strong>
-              <p>
+<div class="learning-item">
+<strong>④ 証明</strong>
+<p>
                 \(a^x\) を自然指数関数で表します。
               </p>
               \[
@@ -2934,18 +3000,16 @@
               a^x\ln a
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑤ よくある間違い</strong>
-              <p>
+<div class="learning-item">
+<strong>⑤ よくある間違い</strong>
+<p>
                 \((a^x)'=a^x\) として、\(\ln a\) を付け忘れること。
                 そのまま変わらないのは、底が \(e\) の場合だけです。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑥ 覚え方</strong>
-              <p>
+</div>
+<div class="learning-item">
+<strong>⑥ 覚え方</strong>
+<p>
                 「指数関数は自分自身を残し、底の自然対数を掛ける」。
               </p>
               \[
@@ -2954,9 +3018,8 @@
               a^x\ln a
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑦ 具体例</strong>
+<div class="learning-item">
+<strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}2^x
               =
@@ -2968,29 +3031,25 @@
               2\ln10\cdot10^{2x}
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item">
+<strong>⑧ 解説</strong>
+<p>
                 底 \(a\) は、1単位進んだときの倍率を表します。
                 \(\ln a\) は、その離散的な倍率を連続的な変化率へ変換する係数です。
               </p>
-            </div>
-
-            <div class="usage-box">
-              <strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box">
+<strong>この公式はどこで使われる？</strong>
+<p>
                 金利・複利、コンピュータ科学の指数的計算量、デシベル、
                 半減期、成長率比較、指数回帰などで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>公式C：合成された指数関数 \(f(x)=e^{u(x)},\ a^{u(x)}\)</h3>
-
-            <div class="learning-item">
-              <strong>① 公式</strong>
+</div>
+</section>
+<section class="formula-learning-card">
+<h3>公式C：合成された指数関数 \(f(x)=e^{u(x)},\ a^{u(x)}\)</h3>
+<div class="learning-item">
+<strong>① 公式</strong>
               \[
               \frac{d}{dx}e^{u(x)}
               =
@@ -3002,18 +3061,16 @@
               a^{u(x)}\ln a\cdot u'(x)
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>② グラフ</strong>
-              <p>
+<div class="learning-item">
+<strong>② グラフ</strong>
+<p>
                 内側の関数 \(u(x)\) によって、増減・対称性・極値が変化します。
                 ただし指数関数部分は常に正です。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>③ 接線</strong>
-              <p>
+</div>
+<div class="learning-item">
+<strong>③ 接線</strong>
+<p>
                 \(f(x)=e^{u(x)}\) の点 \(x=a\) における接線は、
               </p>
               \[
@@ -3023,32 +3080,28 @@
               \]
               です。
             </div>
-
-            <div class="learning-item">
-              <strong>④ 証明</strong>
-              <p>
+<div class="learning-item">
+<strong>④ 証明</strong>
+<p>
                 外側を指数関数、内側を \(u(x)\) とみなし、
                 チェーンルールを適用します。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑤ よくある間違い</strong>
-              <p>
+</div>
+<div class="learning-item">
+<strong>⑤ よくある間違い</strong>
+<p>
                 内側の微分 \(u'(x)\) を掛け忘れること。
                 \(e^{x^2}\) の微分は \(e^{x^2}\) だけではありません。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑥ 覚え方</strong>
-              <p>
+</div>
+<div class="learning-item">
+<strong>⑥ 覚え方</strong>
+<p>
                 「外側はそのまま、内側を微分して掛ける」。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑦ 具体例</strong>
+</div>
+<div class="learning-item">
+<strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}e^{-x^2}
               =
@@ -3060,64 +3113,55 @@
               3^{\sin x}\ln3\cos x
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item">
+<strong>⑧ 解説</strong>
+<p>
                 指数関数の成長・減衰に、別の変化 \(u(x)\) が組み込まれた形です。
                 外側の指数的な反応と、内側の変化速度を掛け合わせて考えます。
               </p>
-            </div>
-
-            <div class="usage-box">
-              <strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box">
+<strong>この公式はどこで使われる？</strong>
+<p>
                 正規分布、ガウス関数、機械学習のsoftmax、
                 確率密度、熱伝導、波動・量子力学などで使われます。
               </p>
-            </div>
-          </section>
-        </div>
-      
-        <a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
-      </article>
-    </section>
-
-    <section id="logarithmic-functions" class="section-grid section-anchor">
-      <article class="panel" style="grid-column:1 / -1;">
-        <h2>対数関数</h2>
-
-        <div class="formula-learning-grid">
-          <section class="formula-learning-card">
-            <h3>公式A：自然対数 \(f(x)=\ln x\)</h3>
-
-            <div class="learning-item">
-              <strong>① 公式</strong>
+</div>
+</section>
+</div>
+<a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
+</article>
+</section>
+<section class="section-grid section-anchor lazy-chapter" id="logarithmic-functions">
+<article class="panel" style="grid-column:1 / -1;">
+<h2>対数関数</h2>
+<div class="formula-learning-grid">
+<section class="formula-learning-card">
+<h3>公式A：自然対数 \(f(x)=\ln x\)</h3>
+<div class="learning-item">
+<strong>① 公式</strong>
               \[
               \frac{d}{dx}\ln x=\frac{1}{x}
-              \qquad(x>0)
+              \qquad(x&gt;0)
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>② グラフ</strong>
-              <p>
-                \(x>0\) で定義され、点 \((1,0)\) を通ります。
+<div class="learning-item">
+<strong>② グラフ</strong>
+<p>
+                \(x&gt;0\) で定義され、点 \((1,0)\) を通ります。
                 \(x=0\) は垂直漸近線です。常に増加しますが、傾きは次第に小さくなります。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>③ 接線</strong>
+</div>
+<div class="learning-item">
+<strong>③ 接線</strong>
               \[
               y-\ln a=\frac{1}{a}(x-a)
-              \qquad(a>0)
+              \qquad(a&gt;0)
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>④ 証明</strong>
-              <p>\(\ln x\) は \(e^x\) の逆関数です。</p>
+<div class="learning-item">
+<strong>④ 証明</strong>
+<p>\(\ln x\) は \(e^x\) の逆関数です。</p>
               \[
               y=\ln x
               \quad\Longleftrightarrow\quad
@@ -3131,80 +3175,68 @@
               \frac{dy}{dx}=\frac{1}{e^y}=\frac{1}{x}
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑤ よくある間違い</strong>
-              <p>
+<div class="learning-item">
+<strong>⑤ よくある間違い</strong>
+<p>
                 \((\ln x)'=1/\ln x\) としてしまうこと。
                 分母は対数そのものではなく、元の入力 \(x\) です。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑥ 覚え方</strong>
-              <p>「自然対数の微分は、入力の逆数」。</p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑦ 具体例</strong>
+</div>
+<div class="learning-item">
+<strong>⑥ 覚え方</strong>
+<p>「自然対数の微分は、入力の逆数」。</p>
+</div>
+<div class="learning-item">
+<strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}\ln(x^2+1)
               =
               \frac{2x}{x^2+1}
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item">
+<strong>⑧ 解説</strong>
+<p>
                 対数関数は、絶対的な増加量ではなく割合の変化を捉えます。
                 値が大きくなるほど、同じ増加量の意味が小さくなるため、
                 導関数は \(1/x\) のように小さくなります。
               </p>
-            </div>
-
-            <div class="usage-box">
-              <strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box">
+<strong>この公式はどこで使われる？</strong>
+<p>
                 対数尤度、クロスエントロピー、KLダイバージェンス、
                 成長率、複利、情報量、エントロピーなどで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>公式B：一般の対数 \(f(x)=\log_a x\)</h3>
-
-            <div class="learning-item">
-              <strong>① 公式</strong>
+</div>
+</section>
+<section class="formula-learning-card">
+<h3>公式B：一般の対数 \(f(x)=\log_a x\)</h3>
+<div class="learning-item">
+<strong>① 公式</strong>
               \[
               \frac{d}{dx}\log_a x
               =
               \frac{1}{x\ln a}
-              \qquad(a>0,\ a\neq1)
+              \qquad(a&gt;0,\ a\neq1)
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>② グラフ</strong>
-              <p>
-                \(a>1\) なら増加、\(0<a<1\) なら減少します。
-                どちらも \((1,0)\) を通り、\(x=0\) を垂直漸近線に持ちます。
-              </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>③ 接線</strong>
+<div class="learning-item">
+<strong>② グラフ</strong>
+<p>
+                \(a&gt;1\) なら増加、\(0<a<1\) <="" \((1,0)\)="" p="" どちらも="" なら減少します。="" を垂直漸近線に持ちます。="" を通り、\(x="0\)">
+</a<1\)></p></div>
+<div class="learning-item">
+<strong>③ 接線</strong>
               \[
               y-\log_a b
               =
               \frac{1}{b\ln a}(x-b)
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>④ 証明</strong>
-              <p>底の変換公式を使います。</p>
+<div class="learning-item">
+<strong>④ 証明</strong>
+<p>底の変換公式を使います。</p>
               \[
               \log_a x=\frac{\ln x}{\ln a}
               \]
@@ -3216,51 +3248,44 @@
               \frac{1}{x\ln a}
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑤ よくある間違い</strong>
-              <p>
+<div class="learning-item">
+<strong>⑤ よくある間違い</strong>
+<p>
                 常用対数 \(\log_{10}x\) の微分を \(1/x\) とすること。
                 正しくは \(1/(x\ln10)\) です。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑥ 覚え方</strong>
-              <p>「自然対数の公式に、底の補正 \(\ln a\) を付ける」。</p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑦ 具体例</strong>
+</div>
+<div class="learning-item">
+<strong>⑥ 覚え方</strong>
+<p>「自然対数の公式に、底の補正 \(\ln a\) を付ける」。</p>
+</div>
+<div class="learning-item">
+<strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}\log_2(x^3)
               =
               \frac{3}{x\ln2}
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item">
+<strong>⑧ 解説</strong>
+<p>
                 底 \(a\) は測定単位を変える役割を持ちます。
                 自然対数・常用対数・2進対数は、同じ情報を異なる尺度で測っています。
               </p>
-            </div>
-
-            <div class="usage-box">
-              <strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box">
+<strong>この公式はどこで使われる？</strong>
+<p>
                 デシベル、pH、マグニチュード、計算量解析、
                 情報量のbit表現、指数回帰などで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>公式C：合成された対数関数 \(f(x)=\ln u(x)\)</h3>
-
-            <div class="learning-item">
-              <strong>① 公式</strong>
+</div>
+</section>
+<section class="formula-learning-card">
+<h3>公式C：合成された対数関数 \(f(x)=\ln u(x)\)</h3>
+<div class="learning-item">
+<strong>① 公式</strong>
               \[
               \frac{d}{dx}\ln u(x)
               =
@@ -3272,27 +3297,24 @@
               \frac{u'(x)}{u(x)\ln a}
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>② グラフ</strong>
-              <p>
+<div class="learning-item">
+<strong>② グラフ</strong>
+<p>
                 内側 \(u(x)\) が正になる範囲だけで定義されます。
                 グラフの形は \(u(x)\) の増減や最小値に強く依存します。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>③ 接線</strong>
+</div>
+<div class="learning-item">
+<strong>③ 接線</strong>
               \[
               y-\ln u(a)
               =
               \frac{u'(a)}{u(a)}(x-a)
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>④ 証明</strong>
-              <p>
+<div class="learning-item">
+<strong>④ 証明</strong>
+<p>
                 外側を \(\ln t\)、内側を \(t=u(x)\) としてチェーンルールを使います。
               </p>
               \[
@@ -3301,25 +3323,22 @@
               \frac{1}{u(x)}u'(x)
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑤ よくある間違い</strong>
-              <p>
+<div class="learning-item">
+<strong>⑤ よくある間違い</strong>
+<p>
                 \(\ln(x^2+1)\) の微分を \(1/(x^2+1)\) とし、
                 内側の微分 \(2x\) を掛け忘れること。
               </p>
-            </div>
-
-            <div class="learning-item">
-              <strong>⑥ 覚え方</strong>
-              <p>「対数の微分は、中身の微分 ÷ 中身」。</p>
+</div>
+<div class="learning-item">
+<strong>⑥ 覚え方</strong>
+<p>「対数の微分は、中身の微分 ÷ 中身」。</p>
               \[
               \frac{u'}{u}
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑦ 具体例</strong>
+<div class="learning-item">
+<strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}\ln(\sin x+2)
               =
@@ -3331,76 +3350,65 @@
               \frac{e^x}{(e^x+1)\ln3}
               \]
             </div>
-
-            <div class="learning-item">
-              <strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item">
+<strong>⑧ 解説</strong>
+<p>
                 \(\frac{u'}{u}\) は相対変化率です。
                 「現在値に対して、どれくらいの割合で変化しているか」を表します。
               </p>
-            </div>
-
-            <div class="usage-box">
-              <strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box">
+<strong>この公式はどこで使われる？</strong>
+<p>
                 最尤推定、対数尤度の勾配、ロジスティック回帰、
                 確率分布のパラメータ推定、経済成長率などで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>数学とAIへの応用</h3>
-
-            <div class="learning-item">
-              <strong>クロスエントロピー</strong>
+</div>
+</section>
+<section class="formula-learning-card">
+<h3>数学とAIへの応用</h3>
+<div class="learning-item">
+<strong>クロスエントロピー</strong>
               \[
               L=-\sum_i y_i\ln \hat{y}_i
               \]
               <p>正解クラスの予測確率が小さいほど、損失が急激に大きくなります。</p>
-            </div>
-
-            <div class="learning-item">
-              <strong>対数尤度</strong>
+</div>
+<div class="learning-item">
+<strong>対数尤度</strong>
               \[
               \ell(\theta)=\sum_i\ln p(x_i\mid\theta)
               \]
               <p>確率の積を対数で和へ変換し、微分しやすくします。</p>
-            </div>
-
-            <div class="learning-item">
-              <strong>KLダイバージェンス</strong>
+</div>
+<div class="learning-item">
+<strong>KLダイバージェンス</strong>
               \[
               D_{\mathrm{KL}}(P\|Q)
               =
               \sum_xP(x)\ln\frac{P(x)}{Q(x)}
               \]
               <p>2つの確率分布の違いを、対数比を使って測ります。</p>
-            </div>
-
-            <div class="usage-box">
-              <strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box">
+<strong>この公式はどこで使われる？</strong>
+<p>
                 分類モデル、生成AI、言語モデル、ベイズ統計、
                 情報理論、ニューラルネットワークの学習で使われます。
               </p>
-            </div>
-          </section>
-        </div>
-      
-        <a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
-      </article>
-    </section>
-
-    <section id="trigonometric-functions" class="section-grid section-anchor">
-      <article class="panel" style="grid-column:1 / -1;">
-        <h2>三角関数</h2>
-
-        <div class="formula-learning-grid">
-          <section class="formula-learning-card">
-            <h3>公式A：\(\sin x\) と \(\cos x\)</h3>
-
-            <div class="learning-item"><strong>① 公式</strong>
+</div>
+</section>
+</div>
+<a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
+</article>
+</section>
+<section class="section-grid section-anchor lazy-chapter" id="trigonometric-functions">
+<article class="panel" style="grid-column:1 / -1;">
+<h2>三角関数</h2>
+<div class="formula-learning-grid">
+<section class="formula-learning-card">
+<h3>公式A：\(\sin x\) と \(\cos x\)</h3>
+<div class="learning-item"><strong>① 公式</strong>
               \[
               (\sin x)'=\cos x
               \]
@@ -3408,15 +3416,13 @@
               (\cos x)'=-\sin x
               \]
             </div>
-
-            <div class="learning-item"><strong>② グラフ</strong>
-              <p>
+<div class="learning-item"><strong>② グラフ</strong>
+<p>
                 \(\sin x\) の傾きは \(\cos x\) に一致します。
                 \(\cos x\) の傾きは \(-\sin x\) に一致し、位相がずれて循環します。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>③ 接線</strong>
+</div>
+<div class="learning-item"><strong>③ 接線</strong>
               \[
               y-\sin a=\cos a(x-a)
               \]
@@ -3424,9 +3430,8 @@
               y-\cos a=-\sin a(x-a)
               \]
             </div>
-
-            <div class="learning-item"><strong>④ 証明</strong>
-              <p>加法定理と基本極限を使います。</p>
+<div class="learning-item"><strong>④ 証明</strong>
+<p>加法定理と基本極限を使います。</p>
               \[
               \lim_{h\to0}\frac{\sin h}{h}=1,
               \qquad
@@ -3437,24 +3442,21 @@
               \to \cos x
               \]
             </div>
-
-            <div class="learning-item"><strong>⑤ よくある間違い</strong>
-              <p>
+<div class="learning-item"><strong>⑤ よくある間違い</strong>
+<p>
                 \((\cos x)'=\sin x\) として負号を忘れること。
                 また、度数法のまま公式を使うこと。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑥ 覚え方</strong>
-              <p>
+</div>
+<div class="learning-item"><strong>⑥ 覚え方</strong>
+<p>
                 \[
                 \sin \to \cos \to -\sin \to -\cos \to \sin
                 \]
                 と4段階で循環します。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑦ 具体例</strong>
+</div>
+<div class="learning-item"><strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}\sin(2x)=2\cos(2x)
               \]
@@ -3462,26 +3464,22 @@
               \frac{d}{dx}\cos(x^2)=-2x\sin(x^2)
               \]
             </div>
-
-            <div class="learning-item"><strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item"><strong>⑧ 解説</strong>
+<p>
                 \(\sin\) と \(\cos\) は、円運動の縦成分と横成分です。
                 微分によって位置から速度へ移ると、90度ずれた関数へ変わります。
               </p>
-            </div>
-
-            <div class="usage-box"><strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box"><strong>この公式はどこで使われる？</strong>
+<p>
                 波動、音、交流回路、振り子、回転運動、フーリエ解析、
                 信号処理、ニューラルネットワークの周期特徴表現などで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>公式B：\(\tan x\) と \(\cot x\)</h3>
-
-            <div class="learning-item"><strong>① 公式</strong>
+</div>
+</section>
+<section class="formula-learning-card">
+<h3>公式B：\(\tan x\) と \(\cot x\)</h3>
+<div class="learning-item"><strong>① 公式</strong>
               \[
               (\tan x)'=\sec^2x
               \]
@@ -3489,15 +3487,13 @@
               (\cot x)'=-\csc^2x
               \]
             </div>
-
-            <div class="learning-item"><strong>② グラフ</strong>
-              <p>
+<div class="learning-item"><strong>② グラフ</strong>
+<p>
                 \(\tan x\) と \(\cot x\) は周期的に垂直漸近線を持ちます。
                 定義される区間では \(\tan x\) は増加、\(\cot x\) は減少します。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>③ 接線</strong>
+</div>
+<div class="learning-item"><strong>③ 接線</strong>
               \[
               y-\tan a=\sec^2a(x-a)
               \]
@@ -3505,9 +3501,8 @@
               y-\cot a=-\csc^2a(x-a)
               \]
             </div>
-
-            <div class="learning-item"><strong>④ 証明</strong>
-              <p>商の微分を使います。</p>
+<div class="learning-item"><strong>④ 証明</strong>
+<p>商の微分を使います。</p>
               \[
               \tan x=\frac{\sin x}{\cos x}
               \]
@@ -3519,45 +3514,38 @@
               \sec^2x
               \]
             </div>
-
-            <div class="learning-item"><strong>⑤ よくある間違い</strong>
-              <p>
+<div class="learning-item"><strong>⑤ よくある間違い</strong>
+<p>
                 \((\tan x)'=1/\cos x\) としてしまうこと。
                 正しくは \(1/\cos^2x\) です。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑥ 覚え方</strong>
-              <p>
+</div>
+<div class="learning-item"><strong>⑥ 覚え方</strong>
+<p>
                 tan は sec の2乗、cot は負の csc の2乗です。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑦ 具体例</strong>
+</div>
+<div class="learning-item"><strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}\tan(3x)=3\sec^2(3x)
               \]
             </div>
-
-            <div class="learning-item"><strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item"><strong>⑧ 解説</strong>
+<p>
                 \(\tan x\) は傾きそのものを表す関数です。
                 角度が90度に近づくと傾きが急激に大きくなります。
               </p>
-            </div>
-
-            <div class="usage-box"><strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box"><strong>この公式はどこで使われる？</strong>
+<p>
                 接線勾配、測量、透視投影、ロボット姿勢、
                 制御工学、幾何光学などで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>公式C：\(\sec x\) と \(\csc x\)</h3>
-
-            <div class="learning-item"><strong>① 公式</strong>
+</div>
+</section>
+<section class="formula-learning-card">
+<h3>公式C：\(\sec x\) と \(\csc x\)</h3>
+<div class="learning-item"><strong>① 公式</strong>
               \[
               (\sec x)'=\sec x\tan x
               \]
@@ -3565,15 +3553,13 @@
               (\csc x)'=-\csc x\cot x
               \]
             </div>
-
-            <div class="learning-item"><strong>② グラフ</strong>
-              <p>
+<div class="learning-item"><strong>② グラフ</strong>
+<p>
                 \(\sec x=1/\cos x\)、\(\csc x=1/\sin x\) なので、
                 分母が0になる点に垂直漸近線を持ちます。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>③ 接線</strong>
+</div>
+<div class="learning-item"><strong>③ 接線</strong>
               \[
               y-\sec a=\sec a\tan a(x-a)
               \]
@@ -3581,8 +3567,7 @@
               y-\csc a=-\csc a\cot a(x-a)
               \]
             </div>
-
-            <div class="learning-item"><strong>④ 証明</strong>
+<div class="learning-item"><strong>④ 証明</strong>
               \[
               \sec x=\frac{1}{\cos x}
               \]
@@ -3594,81 +3579,67 @@
               \sec x\tan x
               \]
             </div>
-
-            <div class="learning-item"><strong>⑤ よくある間違い</strong>
-              <p>
+<div class="learning-item"><strong>⑤ よくある間違い</strong>
+<p>
                 sec と csc の公式を逆に覚えること。
                 csc 側には負号が付きます。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑥ 覚え方</strong>
-              <p>
+</div>
+<div class="learning-item"><strong>⑥ 覚え方</strong>
+<p>
                 sec は sec×tan、csc は −csc×cot。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑦ 具体例</strong>
+</div>
+<div class="learning-item"><strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}\sec(x^2)=2x\sec(x^2)\tan(x^2)
               \]
             </div>
-
-            <div class="learning-item"><strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item"><strong>⑧ 解説</strong>
+<p>
                 sec と csc は、cos と sin の逆数です。
                 元の三角関数が0へ近づくほど、値と傾きが急激に大きくなります。
               </p>
-            </div>
-
-            <div class="usage-box"><strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box"><strong>この公式はどこで使われる？</strong>
+<p>
                 三角積分、曲線長、幾何学、光学、波動解析、
                 特殊な座標変換などで使われます。
               </p>
-            </div>
-          </section>
-        </div>
-      
-        <a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
-      </article>
-    </section>
-
-    <section id="inverse-trigonometric-functions" class="section-grid section-anchor">
-      <article class="panel" style="grid-column:1 / -1;">
-        <h2>逆三角関数</h2>
-
-        <div class="formula-learning-grid">
-          <section class="formula-learning-card">
-            <h3>公式A：\(\arcsin x\)</h3>
-
-            <div class="learning-item"><strong>① 公式</strong>
+</div>
+</section>
+</div>
+<a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
+</article>
+</section>
+<section class="section-grid section-anchor lazy-chapter" id="inverse-trigonometric-functions">
+<article class="panel" style="grid-column:1 / -1;">
+<h2>逆三角関数</h2>
+<div class="formula-learning-grid">
+<section class="formula-learning-card">
+<h3>公式A：\(\arcsin x\)</h3>
+<div class="learning-item"><strong>① 公式</strong>
               \[
               \frac{d}{dx}\arcsin x
               =
               \frac{1}{\sqrt{1-x^2}}
-              \qquad(-1<x<1)
-              \]
-            </div>
-
-            <div class="learning-item"><strong>② グラフ</strong>
-              <p>
+              \qquad(-1<x<1) <="" \]="" div="">
+<div class="learning-item"><strong>② グラフ</strong>
+<p>
                 定義域は \([-1,1]\)、値域は
                 \([-\pi/2,\pi/2]\) です。
                 端点へ近づくと傾きが急激に大きくなります。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>③ 接線</strong>
+</div>
+<div class="learning-item"><strong>③ 接線</strong>
               \[
               y-\arcsin a
               =
               \frac{1}{\sqrt{1-a^2}}(x-a)
               \]
             </div>
-
-            <div class="learning-item"><strong>④ 証明</strong>
-              <p>\(y=\arcsin x\) とおくと \(x=\sin y\) です。</p>
+<div class="learning-item"><strong>④ 証明</strong>
+<p>\(y=\arcsin x\) とおくと \(x=\sin y\) です。</p>
               \[
               1=\cos y\frac{dy}{dx}
               \]
@@ -3682,70 +3653,58 @@
               \frac{1}{\sqrt{1-x^2}}
               \]
             </div>
-
-            <div class="learning-item"><strong>⑤ よくある間違い</strong>
-              <p>
+<div class="learning-item"><strong>⑤ よくある間違い</strong>
+<p>
                 \(\arcsin x\) を \(1/\sin x\) と考えること。
                 逆関数と逆数は別物です。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑥ 覚え方</strong>
-              <p>arcsin は正の \(1/\sqrt{1-x^2}\)。</p>
-            </div>
-
-            <div class="learning-item"><strong>⑦ 具体例</strong>
+</div>
+<div class="learning-item"><strong>⑥ 覚え方</strong>
+<p>arcsin は正の \(1/\sqrt{1-x^2}\)。</p>
+</div>
+<div class="learning-item"><strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}\arcsin(2x)
               =
               \frac{2}{\sqrt{1-4x^2}}
               \]
             </div>
-
-            <div class="learning-item"><strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item"><strong>⑧ 解説</strong>
+<p>
                 arcsin は、縦成分から角度を復元する関数です。
                 入力が \(\pm1\) に近づくと、わずかな値の変化が大きな角度変化になります。
               </p>
-            </div>
-
-            <div class="usage-box"><strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box"><strong>この公式はどこで使われる？</strong>
+<p>
                 角度推定、測量、姿勢推定、逆運動学、
                 信号位相の復元、幾何学などで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>公式B：\(\arccos x\)</h3>
-
-            <div class="learning-item"><strong>① 公式</strong>
+</div>
+</x<1)></div></section>
+<section class="formula-learning-card">
+<h3>公式B：\(\arccos x\)</h3>
+<div class="learning-item"><strong>① 公式</strong>
               \[
               \frac{d}{dx}\arccos x
               =
               -\frac{1}{\sqrt{1-x^2}}
-              \qquad(-1<x<1)
-              \]
-            </div>
-
-            <div class="learning-item"><strong>② グラフ</strong>
-              <p>
+              \qquad(-1<x<1) <="" \]="" div="">
+<div class="learning-item"><strong>② グラフ</strong>
+<p>
                 定義域は \([-1,1]\)、値域は \([0,\pi]\) です。
                 arcsin と異なり、全体で減少します。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>③ 接線</strong>
+</div>
+<div class="learning-item"><strong>③ 接線</strong>
               \[
               y-\arccos a
               =
               -\frac{1}{\sqrt{1-a^2}}(x-a)
               \]
             </div>
-
-            <div class="learning-item"><strong>④ 証明</strong>
-              <p>
+<div class="learning-item"><strong>④ 証明</strong>
+<p>
                 \(y=\arccos x\) とおくと \(x=\cos y\) です。
               </p>
               \[
@@ -3759,70 +3718,60 @@
               -\frac{1}{\sqrt{1-x^2}}
               \]
             </div>
-
-            <div class="learning-item"><strong>⑤ よくある間違い</strong>
-              <p>
+<div class="learning-item"><strong>⑤ よくある間違い</strong>
+<p>
                 arcsin と同じ符号にしてしまうこと。
                 arccos の導関数には負号が付きます。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑥ 覚え方</strong>
-              <p>arccos は arcsin の公式に負号を付ける。</p>
-            </div>
-
-            <div class="learning-item"><strong>⑦ 具体例</strong>
+</div>
+<div class="learning-item"><strong>⑥ 覚え方</strong>
+<p>arccos は arcsin の公式に負号を付ける。</p>
+</div>
+<div class="learning-item"><strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}\arccos(x^2)
               =
               -\frac{2x}{\sqrt{1-x^4}}
               \]
             </div>
-
-            <div class="learning-item"><strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item"><strong>⑧ 解説</strong>
+<p>
                 arccos は内積から2つのベクトルのなす角を求めるときに現れます。
                 類似度から角度へ変換する関数と考えられます。
               </p>
-            </div>
-
-            <div class="usage-box"><strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box"><strong>この公式はどこで使われる？</strong>
+<p>
                 コサイン類似度、3Dグラフィックス、ロボット姿勢、
                 ベクトル角度、コンピュータビジョンなどで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>公式C：\(\arctan x\)</h3>
-
-            <div class="learning-item"><strong>① 公式</strong>
+</div>
+</x<1)></div></section>
+<section class="formula-learning-card">
+<h3>公式C：\(\arctan x\)</h3>
+<div class="learning-item"><strong>① 公式</strong>
               \[
               \frac{d}{dx}\arctan x
               =
               \frac{1}{1+x^2}
               \]
             </div>
-
-            <div class="learning-item"><strong>② グラフ</strong>
-              <p>
+<div class="learning-item"><strong>② グラフ</strong>
+<p>
                 定義域は全実数、値域は
                 \((-\pi/2,\pi/2)\) です。
                 両端で水平漸近線へ近づきます。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>③ 接線</strong>
+</div>
+<div class="learning-item"><strong>③ 接線</strong>
               \[
               y-\arctan a
               =
               \frac{1}{1+a^2}(x-a)
               \]
             </div>
-
-            <div class="learning-item"><strong>④ 証明</strong>
-              <p>\(y=\arctan x\) とおくと \(x=\tan y\) です。</p>
+<div class="learning-item"><strong>④ 証明</strong>
+<p>\(y=\arctan x\) とおくと \(x=\tan y\) です。</p>
               \[
               1=\sec^2y\frac{dy}{dx}
               \]
@@ -3836,56 +3785,47 @@
               \frac{1}{1+x^2}
               \]
             </div>
-
-            <div class="learning-item"><strong>⑤ よくある間違い</strong>
-              <p>
+<div class="learning-item"><strong>⑤ よくある間違い</strong>
+<p>
                 分母を \(\sqrt{1-x^2}\) としてしまうこと。
                 arctan は \(1+x^2\) です。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑥ 覚え方</strong>
-              <p>arctan は「1プラスx二乗」。</p>
-            </div>
-
-            <div class="learning-item"><strong>⑦ 具体例</strong>
+</div>
+<div class="learning-item"><strong>⑥ 覚え方</strong>
+<p>arctan は「1プラスx二乗」。</p>
+</div>
+<div class="learning-item"><strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}\arctan(3x)
               =
               \frac{3}{1+9x^2}
               \]
             </div>
-
-            <div class="learning-item"><strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item"><strong>⑧ 解説</strong>
+<p>
                 arctan は傾きから角度を復元します。
                 値が大きくなっても角度は \(\pm\pi/2\) を超えないため、
                 出力を滑らかに制限する性質があります。
               </p>
-            </div>
-
-            <div class="usage-box"><strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box"><strong>この公式はどこで使われる？</strong>
+<p>
                 方向推定、複素数の偏角、ロボット制御、
                 座標変換、信号処理、位相解析などで使われます。
               </p>
-            </div>
-          </section>
-        </div>
-      
-        <a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
-      </article>
-    </section>
-
-    <section id="hyperbolic-functions" class="section-grid section-anchor">
-      <article class="panel" style="grid-column:1 / -1;">
-        <h2>双曲線関数</h2>
-
-        <div class="formula-learning-grid">
-          <section class="formula-learning-card">
-            <h3>公式A：\(\sinh x\) と \(\cosh x\)</h3>
-
-            <div class="learning-item"><strong>① 公式</strong>
+</div>
+</section>
+</div>
+<a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
+</article>
+</section>
+<section class="section-grid section-anchor lazy-chapter" id="hyperbolic-functions">
+<article class="panel" style="grid-column:1 / -1;">
+<h2>双曲線関数</h2>
+<div class="formula-learning-grid">
+<section class="formula-learning-card">
+<h3>公式A：\(\sinh x\) と \(\cosh x\)</h3>
+<div class="learning-item"><strong>① 公式</strong>
               \[
               (\sinh x)'=\cosh x
               \]
@@ -3893,15 +3833,13 @@
               (\cosh x)'=\sinh x
               \]
             </div>
-
-            <div class="learning-item"><strong>② グラフ</strong>
-              <p>
+<div class="learning-item"><strong>② グラフ</strong>
+<p>
                 \(\sinh x\) は原点対称、\(\cosh x\) はy軸対称です。
                 \(\cosh x\) は常に1以上で、懸垂線の形を表します。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>③ 接線</strong>
+</div>
+<div class="learning-item"><strong>③ 接線</strong>
               \[
               y-\sinh a=\cosh a(x-a)
               \]
@@ -3909,31 +3847,27 @@
               y-\cosh a=\sinh a(x-a)
               \]
             </div>
-
-            <div class="learning-item"><strong>④ 証明</strong>
+<div class="learning-item"><strong>④ 証明</strong>
               \[
               \sinh x=\frac{e^x-e^{-x}}{2},
               \qquad
               \cosh x=\frac{e^x+e^{-x}}{2}
               \]
               <p>指数関数を項ごとに微分すると公式が得られます。</p>
-            </div>
-
-            <div class="learning-item"><strong>⑤ よくある間違い</strong>
-              <p>
+</div>
+<div class="learning-item"><strong>⑤ よくある間違い</strong>
+<p>
                 \((\cosh x)'=-\sinh x\) としてしまうこと。
                 三角関数のcosと異なり、負号は付きません。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑥ 覚え方</strong>
-              <p>
+</div>
+<div class="learning-item"><strong>⑥ 覚え方</strong>
+<p>
                 sinh と cosh は微分すると互いに入れ替わり、
                 どちらにも負号は付きません。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑦ 具体例</strong>
+</div>
+<div class="learning-item"><strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}\sinh(2x)=2\cosh(2x)
               \]
@@ -3941,94 +3875,80 @@
               \frac{d}{dx}\cosh(x^2)=2x\sinh(x^2)
               \]
             </div>
-
-            <div class="learning-item"><strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item"><strong>⑧ 解説</strong>
+<p>
                 双曲線関数は指数関数の対称な組み合わせです。
                 増加と減少の指数関数を足したり引いたりすることで、
                 滑らかな対称曲線が生まれます。
               </p>
-            </div>
-
-            <div class="usage-box"><strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box"><strong>この公式はどこで使われる？</strong>
+<p>
                 懸垂線、相対論、波動方程式、熱方程式、
                 双曲線幾何、微分方程式などで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>公式B：\(\tanh x\)</h3>
-
-            <div class="learning-item"><strong>① 公式</strong>
+</div>
+</section>
+<section class="formula-learning-card">
+<h3>公式B：\(\tanh x\)</h3>
+<div class="learning-item"><strong>① 公式</strong>
               \[
               (\tanh x)'=\operatorname{sech}^2x
               =
               1-\tanh^2x
               \]
             </div>
-
-            <div class="learning-item"><strong>② グラフ</strong>
-              <p>
+<div class="learning-item"><strong>② グラフ</strong>
+<p>
                 値域は \((-1,1)\) で、原点付近ではほぼ直線、
                 両端では水平に飽和します。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>③ 接線</strong>
+</div>
+<div class="learning-item"><strong>③ 接線</strong>
               \[
               y-\tanh a
               =
               \operatorname{sech}^2a(x-a)
               \]
             </div>
-
-            <div class="learning-item"><strong>④ 証明</strong>
+<div class="learning-item"><strong>④ 証明</strong>
               \[
               \tanh x=\frac{\sinh x}{\cosh x}
               \]
               <p>商の微分と恒等式 \(\cosh^2x-\sinh^2x=1\) を使います。</p>
-            </div>
-
-            <div class="learning-item"><strong>⑤ よくある間違い</strong>
-              <p>
+</div>
+<div class="learning-item"><strong>⑤ よくある間違い</strong>
+<p>
                 \((\tanh x)'=1-\tanh x\) とすること。
                 正しくは \(1-\tanh^2x\) です。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑥ 覚え方</strong>
-              <p>tanhの微分は「1−tanhの2乗」。</p>
-            </div>
-
-            <div class="learning-item"><strong>⑦ 具体例</strong>
+</div>
+<div class="learning-item"><strong>⑥ 覚え方</strong>
+<p>tanhの微分は「1−tanhの2乗」。</p>
+</div>
+<div class="learning-item"><strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}\tanh(3x)
               =
               3\operatorname{sech}^2(3x)
               \]
             </div>
-
-            <div class="learning-item"><strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item"><strong>⑧ 解説</strong>
+<p>
                 tanhは入力を-1から1に圧縮する滑らかな関数です。
                 中央では反応が大きく、端では変化が小さくなります。
               </p>
-            </div>
-
-            <div class="usage-box"><strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box"><strong>この公式はどこで使われる？</strong>
+<p>
                 ニューラルネットワークの活性化関数、RNN、
                 制御工学、境界層モデル、連続的なスイッチ表現などで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>公式C：逆双曲線関数</h3>
-
-            <div class="learning-item"><strong>① 公式</strong>
+</div>
+</section>
+<section class="formula-learning-card">
+<h3>公式C：逆双曲線関数</h3>
+<div class="learning-item"><strong>① 公式</strong>
               \[
               (\operatorname{arsinh}x)'
               =
@@ -4045,24 +3965,20 @@
               \frac{1}{1-x^2}
               \]
             </div>
-
-            <div class="learning-item"><strong>② グラフ</strong>
-              <p>
+<div class="learning-item"><strong>② グラフ</strong>
+<p>
                 arsinhは全実数で定義されます。
-                arcoshは \(x\ge1\)、artanhは \(-1<x<1\) で定義されます。
-              </p>
-            </div>
-
-            <div class="learning-item"><strong>③ 接線</strong>
+                arcoshは \(x\ge1\)、artanhは \(-1<x<1\) <="" p="" で定義されます。="">
+</x<1\)></p></div>
+<div class="learning-item"><strong>③ 接線</strong>
               \[
               y-\operatorname{arsinh}a
               =
               \frac{1}{\sqrt{1+a^2}}(x-a)
               \]
             </div>
-
-            <div class="learning-item"><strong>④ 証明</strong>
-              <p>
+<div class="learning-item"><strong>④ 証明</strong>
+<p>
                 逆関数の微分公式を使います。
                 たとえば \(y=\operatorname{arsinh}x\) なら \(x=\sinh y\) です。
               </p>
@@ -4077,63 +3993,54 @@
               \frac{1}{\sqrt{1+x^2}}
               \]
             </div>
-
-            <div class="learning-item"><strong>⑤ よくある間違い</strong>
-              <p>
+<div class="learning-item"><strong>⑤ よくある間違い</strong>
+<p>
                 逆三角関数の公式と混同すること。
                 arsinhは \(\sqrt{1+x^2}\) で、符号がプラスです。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑥ 覚え方</strong>
-              <p>
+</div>
+<div class="learning-item"><strong>⑥ 覚え方</strong>
+<p>
                 arsinhは \(1+x^2\)、arcoshは \(x^2-1\)、
                 artanhは \(1-x^2\)。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑦ 具体例</strong>
+</div>
+<div class="learning-item"><strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}\operatorname{arsinh}(2x)
               =
               \frac{2}{\sqrt{1+4x^2}}
               \]
             </div>
-
-            <div class="learning-item"><strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item"><strong>⑧ 解説</strong>
+<p>
                 逆双曲線関数は、双曲線的な成長や飽和の結果から
                 元の入力を復元する関数です。
               </p>
-            </div>
-
-            <div class="usage-box"><strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box"><strong>この公式はどこで使われる？</strong>
+<p>
                 相対論、双曲線座標、信号圧縮、ロバスト統計、
                 物理モデルの逆変換などで使われます。
               </p>
-            </div>
-          </section>
-        </div>
-      
-        <a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
-      </article>
-    </section>
-
-    <section id="special-functions" class="section-grid section-anchor">
-      <article class="panel" style="grid-column:1 / -1;">
-        <h2>特殊関数</h2>
-
-        <div class="formula-learning-grid">
-          <section class="formula-learning-card">
-            <h3>公式A：ガンマ関数 \(\Gamma(x)\)</h3>
-
-            <div class="learning-item"><strong>① 公式</strong>
+</div>
+</section>
+</div>
+<a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
+</article>
+</section>
+<section class="section-grid section-anchor lazy-chapter" id="special-functions">
+<article class="panel" style="grid-column:1 / -1;">
+<h2>特殊関数</h2>
+<div class="formula-learning-grid">
+<section class="formula-learning-card">
+<h3>公式A：ガンマ関数 \(\Gamma(x)\)</h3>
+<div class="learning-item"><strong>① 公式</strong>
               \[
               \Gamma(x)
               =
               \int_0^\infty t^{x-1}e^{-t}\,dt
-              \qquad(x>0)
+              \qquad(x&gt;0)
               \]
               \[
               \Gamma'(x)
@@ -4141,24 +4048,21 @@
               \Gamma(x)\psi(x)
               \]
             </div>
-
-            <div class="learning-item"><strong>② グラフ</strong>
-              <p>
+<div class="learning-item"><strong>② グラフ</strong>
+<p>
                 正の整数では \(\Gamma(n)=(n-1)!\) となります。
                 0以下の整数には極があり、グラフは区間ごとに分断されます。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>③ 接線</strong>
+</div>
+<div class="learning-item"><strong>③ 接線</strong>
               \[
               y-\Gamma(a)
               =
               \Gamma(a)\psi(a)(x-a)
               \]
             </div>
-
-            <div class="learning-item"><strong>④ 証明</strong>
-              <p>積分表示をパラメータ \(x\) で微分します。</p>
+<div class="learning-item"><strong>④ 証明</strong>
+<p>積分表示をパラメータ \(x\) で微分します。</p>
               \[
               \Gamma'(x)
               =
@@ -4176,52 +4080,45 @@
                 \]
                 です。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑤ よくある間違い</strong>
-              <p>
+</div>
+<div class="learning-item"><strong>⑤ よくある間違い</strong>
+<p>
                 \(\Gamma'(x)=\Gamma(x)\) と考えること。
                 ガンマ関数は指数関数とは異なり、ディガンマ関数が掛かります。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑥ 覚え方</strong>
-              <p>
+</div>
+<div class="learning-item"><strong>⑥ 覚え方</strong>
+<p>
                 \[
                 \Gamma'=\Gamma\times\psi
                 \]
                 と覚えます。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑦ 具体例</strong>
+</div>
+<div class="learning-item"><strong>⑦ 具体例</strong>
               \[
               \Gamma'(1)
               =
               -\gamma
               \]
               <p>\(\gamma\) はオイラー・マスケローニ定数です。</p>
-            </div>
-
-            <div class="learning-item"><strong>⑧ 解説</strong>
-              <p>
+</div>
+<div class="learning-item"><strong>⑧ 解説</strong>
+<p>
                 ガンマ関数は階乗を実数・複素数へ拡張した関数です。
                 「離散的な組合せの大きさ」を連続的に扱えるようにします。
               </p>
-            </div>
-
-            <div class="usage-box"><strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box"><strong>この公式はどこで使われる？</strong>
+<p>
                 ガンマ分布、ベータ分布、ベイズ統計、確率密度の正規化、
                 特殊積分、量子力学、組合せ論などで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>公式B：ディガンマ関数 \(\psi(x)\)</h3>
-
-            <div class="learning-item"><strong>① 公式</strong>
+</div>
+</section>
+<section class="formula-learning-card">
+<h3>公式B：ディガンマ関数 \(\psi(x)\)</h3>
+<div class="learning-item"><strong>① 公式</strong>
               \[
               \psi(x)
               =
@@ -4235,25 +4132,22 @@
               \psi_1(x)
               \]
               <p>\(\psi_1(x)\) はトリガンマ関数です。</p>
-            </div>
-
-            <div class="learning-item"><strong>② グラフ</strong>
-              <p>
+</div>
+<div class="learning-item"><strong>② グラフ</strong>
+<p>
                 0以下の整数で極を持ちます。
                 正の範囲ではおおむね増加し、対数関数に近い振る舞いをします。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>③ 接線</strong>
+</div>
+<div class="learning-item"><strong>③ 接線</strong>
               \[
               y-\psi(a)
               =
               \psi_1(a)(x-a)
               \]
             </div>
-
-            <div class="learning-item"><strong>④ 証明</strong>
-              <p>
+<div class="learning-item"><strong>④ 証明</strong>
+<p>
                 \(\psi(x)=\ln\Gamma(x)\) の導関数として定義されるため、
               </p>
               \[
@@ -4262,20 +4156,17 @@
               \frac{d^2}{dx^2}\ln\Gamma(x)
               \]
               <p>これをトリガンマ関数と呼びます。</p>
-            </div>
-
-            <div class="learning-item"><strong>⑤ よくある間違い</strong>
-              <p>
+</div>
+<div class="learning-item"><strong>⑤ よくある間違い</strong>
+<p>
                 ディガンマ関数を \(1/\Gamma(x)\) と考えること。
                 実際には \(\Gamma'(x)/\Gamma(x)\) です。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑥ 覚え方</strong>
-              <p>ディガンマは「ガンマ関数の対数微分」。</p>
-            </div>
-
-            <div class="learning-item"><strong>⑦ 具体例</strong>
+</div>
+<div class="learning-item"><strong>⑥ 覚え方</strong>
+<p>ディガンマは「ガンマ関数の対数微分」。</p>
+</div>
+<div class="learning-item"><strong>⑦ 具体例</strong>
               \[
               \psi(1)=-\gamma
               \]
@@ -4285,26 +4176,22 @@
               H_{n-1}-\gamma
               \]
             </div>
-
-            <div class="learning-item"><strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item"><strong>⑧ 解説</strong>
+<p>
                 ディガンマ関数は、ガンマ関数の相対変化率です。
                 対数尤度の微分に自然に現れます。
               </p>
-            </div>
-
-            <div class="usage-box"><strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box"><strong>この公式はどこで使われる？</strong>
+<p>
                 ディリクレ分布、変分ベイズ、LDA、
                 ガンマ分布の最尤推定、ベイズ推論などで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>公式C：誤差関数 \(\operatorname{erf}(x)\)</h3>
-
-            <div class="learning-item"><strong>① 公式</strong>
+</div>
+</section>
+<section class="formula-learning-card">
+<h3>公式C：誤差関数 \(\operatorname{erf}(x)\)</h3>
+<div class="learning-item"><strong>① 公式</strong>
               \[
               \operatorname{erf}(x)
               =
@@ -4317,24 +4204,21 @@
               \frac{2}{\sqrt{\pi}}e^{-x^2}
               \]
             </div>
-
-            <div class="learning-item"><strong>② グラフ</strong>
-              <p>
+<div class="learning-item"><strong>② グラフ</strong>
+<p>
                 奇関数で、値域は \((-1,1)\) です。
                 原点付近で急に変化し、両端では水平に飽和します。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>③ 接線</strong>
+</div>
+<div class="learning-item"><strong>③ 接線</strong>
               \[
               y-\operatorname{erf}(a)
               =
               \frac{2}{\sqrt{\pi}}e^{-a^2}(x-a)
               \]
             </div>
-
-            <div class="learning-item"><strong>④ 証明</strong>
-              <p>微積分学の基本定理を使います。</p>
+<div class="learning-item"><strong>④ 証明</strong>
+<p>微積分学の基本定理を使います。</p>
               \[
               \frac{d}{dx}
               \int_0^x e^{-t^2}\,dt
@@ -4342,47 +4226,40 @@
               e^{-x^2}
               \]
             </div>
-
-            <div class="learning-item"><strong>⑤ よくある間違い</strong>
-              <p>
+<div class="learning-item"><strong>⑤ よくある間違い</strong>
+<p>
                 \(e^{-x^2}\) を微分して \(-2xe^{-x^2}\) にしてしまうこと。
                 erfの微分は積分の上端微分なので、被積分関数がそのまま出ます。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑥ 覚え方</strong>
-              <p>
+</div>
+<div class="learning-item"><strong>⑥ 覚え方</strong>
+<p>
                 erfの導関数は「正規分布型のベル曲線」。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>⑦ 具体例</strong>
+</div>
+<div class="learning-item"><strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}\operatorname{erf}(2x)
               =
               \frac{4}{\sqrt{\pi}}e^{-4x^2}
               \]
             </div>
-
-            <div class="learning-item"><strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item"><strong>⑧ 解説</strong>
+<p>
                 誤差関数は、ガウス型の確率密度を積分した累積量です。
                 「ある範囲までにどれだけ確率が蓄積したか」を表します。
               </p>
-            </div>
-
-            <div class="usage-box"><strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box"><strong>この公式はどこで使われる？</strong>
+<p>
                 正規分布の累積確率、拡散方程式、熱伝導、
                 通信工学、統計的誤差評価などで使われます。
               </p>
-            </div>
-          </section>
-
-          <section class="formula-learning-card">
-            <h3>公式D：相補誤差関数 \(\operatorname{erfc}(x)\)</h3>
-
-            <div class="learning-item"><strong>① 公式</strong>
+</div>
+</section>
+<section class="formula-learning-card">
+<h3>公式D：相補誤差関数 \(\operatorname{erfc}(x)\)</h3>
+<div class="learning-item"><strong>① 公式</strong>
               \[
               \operatorname{erfc}(x)
               =
@@ -4394,277 +4271,261 @@
               -\frac{2}{\sqrt{\pi}}e^{-x^2}
               \]
             </div>
-
-            <div class="learning-item"><strong>② グラフ</strong>
-              <p>
+<div class="learning-item"><strong>② グラフ</strong>
+<p>
                 erfとは逆方向に減少し、値域は \((0,2)\) です。
               </p>
-            </div>
-
-            <div class="learning-item"><strong>③ 接線</strong>
+</div>
+<div class="learning-item"><strong>③ 接線</strong>
               \[
               y-\operatorname{erfc}(a)
               =
               -\frac{2}{\sqrt{\pi}}e^{-a^2}(x-a)
               \]
             </div>
-
-            <div class="learning-item"><strong>④ 証明</strong>
+<div class="learning-item"><strong>④ 証明</strong>
               \[
               \operatorname{erfc}(x)=1-\operatorname{erf}(x)
               \]
               を微分するだけです。
             </div>
-
-            <div class="learning-item"><strong>⑤ よくある間違い</strong>
-              <p>負号を忘れること。</p>
-            </div>
-
-            <div class="learning-item"><strong>⑥ 覚え方</strong>
-              <p>erfcはerfの補数なので、導関数は符号反転。</p>
-            </div>
-
-            <div class="learning-item"><strong>⑦ 具体例</strong>
+<div class="learning-item"><strong>⑤ よくある間違い</strong>
+<p>負号を忘れること。</p>
+</div>
+<div class="learning-item"><strong>⑥ 覚え方</strong>
+<p>erfcはerfの補数なので、導関数は符号反転。</p>
+</div>
+<div class="learning-item"><strong>⑦ 具体例</strong>
               \[
               \frac{d}{dx}\operatorname{erfc}(3x)
               =
               -\frac{6}{\sqrt{\pi}}e^{-9x^2}
               \]
             </div>
-
-            <div class="learning-item"><strong>⑧ 解説</strong>
-              <p>
+<div class="learning-item"><strong>⑧ 解説</strong>
+<p>
                 erfcは「まだ残っている確率」や「尾部確率」を表すのに向いています。
               </p>
-            </div>
-
-            <div class="usage-box"><strong>この公式はどこで使われる？</strong>
-              <p>
+</div>
+<div class="usage-box"><strong>この公式はどこで使われる？</strong>
+<p>
                 通信のビット誤り率、正規分布の上側確率、
                 拡散問題、信頼性評価などで使われます。
               </p>
-            </div>
-          </section>
-        </div>
-      
-        <a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
-      </article>
-    </section>
-
-    <section id="function-summary" class="section-grid section-anchor">
-      <article class="panel" style="grid-column:1 / -1;">
-        <h2>関数別微分公式一覧</h2>
-
-        <div class="quick-table-wrap">
-          <table class="summary-formula-table">
-            <thead>
-              <tr>
-                <th>分類</th>
-                <th>関数</th>
-                <th>導関数</th>
-                <th>定義域・注意点</th>
-                <th>覚え方</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="summary-category">べき関数</td>
-                <td>\(x^\alpha\)</td>
-                <td>\(\alpha x^{\alpha-1}\)</td>
-                <td>分数指数・負の指数では定義域を確認</td>
-                <td>指数を前へ、1減らす</td>
-              </tr>
-              <tr>
-                <td class="summary-category">平方根</td>
-                <td>\(\sqrt{x}\)</td>
-                <td>\(\dfrac{1}{2\sqrt{x}}\)</td>
-                <td>実数では \(x>0\) で微分可能</td>
-                <td>\(x^{1/2}\) に直す</td>
-              </tr>
-              <tr>
-                <td class="summary-category">指数関数</td>
-                <td>\(e^x\)</td>
-                <td>\(e^x\)</td>
-                <td>全実数</td>
-                <td>微分してもそのまま</td>
-              </tr>
-              <tr>
-                <td class="summary-category">一般指数</td>
-                <td>\(a^x\)</td>
-                <td>\(a^x\ln a\)</td>
-                <td>\(a>0\)</td>
-                <td>自分自身×\(\ln a\)</td>
-              </tr>
-              <tr>
-                <td class="summary-category">自然対数</td>
-                <td>\(\ln x\)</td>
-                <td>\(\dfrac1x\)</td>
-                <td>\(x>0\)</td>
-                <td>入力の逆数</td>
-              </tr>
-              <tr>
-                <td class="summary-category">合成対数</td>
-                <td>\(\ln u(x)\)</td>
-                <td>\(\dfrac{u'}u\)</td>
-                <td>\(u(x)>0\)</td>
-                <td>中身の微分÷中身</td>
-              </tr>
-              <tr>
-                <td class="summary-category">三角関数</td>
-                <td>\(\sin x,\cos x\)</td>
-                <td>\(\cos x,-\sin x\)</td>
-                <td>角度はラジアン</td>
-                <td>4段階で循環</td>
-              </tr>
-              <tr>
-                <td class="summary-category">三角関数</td>
-                <td>\(\tan x\)</td>
-                <td>\(\sec^2x\)</td>
-                <td>\(\cos x\neq0\)</td>
-                <td>tanはsec²</td>
-              </tr>
-              <tr>
-                <td class="summary-category">逆三角関数</td>
-                <td>\(\arcsin x\)</td>
-                <td>\(\dfrac1{\sqrt{1-x^2}}\)</td>
-                <td>\(-1<x<1\)</td>
-                <td>1−x²の平方根</td>
-              </tr>
-              <tr>
-                <td class="summary-category">逆三角関数</td>
-                <td>\(\arctan x\)</td>
-                <td>\(\dfrac1{1+x^2}\)</td>
-                <td>全実数</td>
-                <td>1＋x²</td>
-              </tr>
-              <tr>
-                <td class="summary-category">双曲線関数</td>
-                <td>\(\sinh x,\cosh x\)</td>
-                <td>\(\cosh x,\sinh x\)</td>
-                <td>全実数</td>
-                <td>互いに入れ替わる</td>
-              </tr>
-              <tr>
-                <td class="summary-category">双曲線関数</td>
-                <td>\(\tanh x\)</td>
-                <td>\(\operatorname{sech}^2x\)</td>
-                <td>全実数</td>
-                <td>1−tanh²</td>
-              </tr>
-              <tr>
-                <td class="summary-category">特殊関数</td>
-                <td>\(\Gamma(x)\)</td>
-                <td>\(\Gamma(x)\psi(x)\)</td>
-                <td>0以下の整数で極</td>
-                <td>Γ×ψ</td>
-              </tr>
-              <tr>
-                <td class="summary-category">特殊関数</td>
-                <td>\(\operatorname{erf}(x)\)</td>
-                <td>\(\dfrac{2}{\sqrt\pi}e^{-x^2}\)</td>
-                <td>全実数</td>
-                <td>ガウス型の導関数</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      
-        <a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
-      </article>
-
-      <article class="panel">
-        <h2>式を見たときの判断順序</h2>
-        <div class="step-flow">
-          <div class="step">
-            <strong>1. 一番外側の演算を見る</strong>
-            <p>和・差・積・商・合成・逆関数のどれかを確認します。</p>
-          </div>
-          <div class="step">
-            <strong>2. 関数の種類を見る</strong>
-            <p>べき・指数・対数・三角・特殊関数のどれかを確認します。</p>
-          </div>
-          <div class="step">
-            <strong>3. 内側を確認する</strong>
-            <p>\(u(x)\) がある場合はチェーンルールを使います。</p>
-          </div>
-          <div class="step">
-            <strong>4. 定義域を確認する</strong>
-            <p>分母0、対数の中身、平方根、逆関数の端点などを確認します。</p>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2>代表的な組み合わせ</h2>
-        <div class="step-flow">
-          <div class="step">
+</div>
+</section>
+</div>
+<a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
+</article>
+</section>
+<section class="section-grid section-anchor lazy-chapter" id="function-summary">
+<article class="panel" style="grid-column:1 / -1;">
+<h2>関数別微分公式一覧</h2>
+<div class="quick-table-wrap">
+<table class="summary-formula-table">
+<thead>
+<tr>
+<th>分類</th>
+<th>関数</th>
+<th>導関数</th>
+<th>定義域・注意点</th>
+<th>覚え方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="summary-category">べき関数</td>
+<td>\(x^\alpha\)</td>
+<td>\(\alpha x^{\alpha-1}\)</td>
+<td>分数指数・負の指数では定義域を確認</td>
+<td>指数を前へ、1減らす</td>
+</tr>
+<tr>
+<td class="summary-category">平方根</td>
+<td>\(\sqrt{x}\)</td>
+<td>\(\dfrac{1}{2\sqrt{x}}\)</td>
+<td>実数では \(x&gt;0\) で微分可能</td>
+<td>\(x^{1/2}\) に直す</td>
+</tr>
+<tr>
+<td class="summary-category">指数関数</td>
+<td>\(e^x\)</td>
+<td>\(e^x\)</td>
+<td>全実数</td>
+<td>微分してもそのまま</td>
+</tr>
+<tr>
+<td class="summary-category">一般指数</td>
+<td>\(a^x\)</td>
+<td>\(a^x\ln a\)</td>
+<td>\(a&gt;0\)</td>
+<td>自分自身×\(\ln a\)</td>
+</tr>
+<tr>
+<td class="summary-category">自然対数</td>
+<td>\(\ln x\)</td>
+<td>\(\dfrac1x\)</td>
+<td>\(x&gt;0\)</td>
+<td>入力の逆数</td>
+</tr>
+<tr>
+<td class="summary-category">合成対数</td>
+<td>\(\ln u(x)\)</td>
+<td>\(\dfrac{u'}u\)</td>
+<td>\(u(x)&gt;0\)</td>
+<td>中身の微分÷中身</td>
+</tr>
+<tr>
+<td class="summary-category">三角関数</td>
+<td>\(\sin x,\cos x\)</td>
+<td>\(\cos x,-\sin x\)</td>
+<td>角度はラジアン</td>
+<td>4段階で循環</td>
+</tr>
+<tr>
+<td class="summary-category">三角関数</td>
+<td>\(\tan x\)</td>
+<td>\(\sec^2x\)</td>
+<td>\(\cos x\neq0\)</td>
+<td>tanはsec²</td>
+</tr>
+<tr>
+<td class="summary-category">逆三角関数</td>
+<td>\(\arcsin x\)</td>
+<td>\(\dfrac1{\sqrt{1-x^2}}\)</td>
+<td>\(-1<x<1\)< td="">
+<td>1−x²の平方根</td>
+</x<1\)<></td></tr>
+<tr>
+<td class="summary-category">逆三角関数</td>
+<td>\(\arctan x\)</td>
+<td>\(\dfrac1{1+x^2}\)</td>
+<td>全実数</td>
+<td>1＋x²</td>
+</tr>
+<tr>
+<td class="summary-category">双曲線関数</td>
+<td>\(\sinh x,\cosh x\)</td>
+<td>\(\cosh x,\sinh x\)</td>
+<td>全実数</td>
+<td>互いに入れ替わる</td>
+</tr>
+<tr>
+<td class="summary-category">双曲線関数</td>
+<td>\(\tanh x\)</td>
+<td>\(\operatorname{sech}^2x\)</td>
+<td>全実数</td>
+<td>1−tanh²</td>
+</tr>
+<tr>
+<td class="summary-category">特殊関数</td>
+<td>\(\Gamma(x)\)</td>
+<td>\(\Gamma(x)\psi(x)\)</td>
+<td>0以下の整数で極</td>
+<td>Γ×ψ</td>
+</tr>
+<tr>
+<td class="summary-category">特殊関数</td>
+<td>\(\operatorname{erf}(x)\)</td>
+<td>\(\dfrac{2}{\sqrt\pi}e^{-x^2}\)</td>
+<td>全実数</td>
+<td>ガウス型の導関数</td>
+</tr>
+</tbody>
+</table>
+</div>
+<a class="back-to-toc" href="#table-of-contents">↑ 目次へ戻る</a>
+</article>
+<article class="panel">
+<h2>式を見たときの判断順序</h2>
+<div class="step-flow">
+<div class="step">
+<strong>1. 一番外側の演算を見る</strong>
+<p>和・差・積・商・合成・逆関数のどれかを確認します。</p>
+</div>
+<div class="step">
+<strong>2. 関数の種類を見る</strong>
+<p>べき・指数・対数・三角・特殊関数のどれかを確認します。</p>
+</div>
+<div class="step">
+<strong>3. 内側を確認する</strong>
+<p>\(u(x)\) がある場合はチェーンルールを使います。</p>
+</div>
+<div class="step">
+<strong>4. 定義域を確認する</strong>
+<p>分母0、対数の中身、平方根、逆関数の端点などを確認します。</p>
+</div>
+</div>
+</article>
+<article class="panel">
+<h2>代表的な組み合わせ</h2>
+<div class="step-flow">
+<div class="step">
             \[
             \frac{d}{dx}e^{x^2}
             =
             2xe^{x^2}
             \]
             <p>指数関数＋チェーンルール</p>
-          </div>
-          <div class="step">
+</div>
+<div class="step">
             \[
             \frac{d}{dx}\ln(\sin x+2)
             =
             \frac{\cos x}{\sin x+2}
             \]
             <p>対数関数＋チェーンルール</p>
-          </div>
-          <div class="step">
+</div>
+<div class="step">
             \[
             \frac{d}{dx}\left(x^2\sin x\right)
             =
             2x\sin x+x^2\cos x
             \]
             <p>べき関数＋三角関数＋積の微分</p>
-          </div>
-          <div class="step">
+</div>
+<div class="step">
             \[
             \frac{d}{dx}\arctan(e^x)
             =
             \frac{e^x}{1+e^{2x}}
             \]
             <p>逆三角関数＋指数関数＋チェーンルール</p>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel" style="grid-column:1 / -1;">
-        <h2>学習チェック</h2>
-        <div class="check-grid">
-          <div class="check-card">
-            <strong>基本公式</strong>
-            <p>関数を見て、導関数をすぐ言えるか。</p>
-          </div>
-          <div class="check-card">
-            <strong>微分法則</strong>
-            <p>積・商・合成関数を正しく見分けられるか。</p>
-          </div>
-          <div class="check-card">
-            <strong>定義域</strong>
-            <p>関数値や導関数が定義されない点を判断できるか。</p>
-          </div>
-          <div class="check-card">
-            <strong>接線</strong>
-            <p>関数値と導関数から接線方程式を作れるか。</p>
-          </div>
-          <div class="check-card">
-            <strong>証明</strong>
-            <p>極限・逆関数・商・チェーンルールのどれで証明するか分かるか。</p>
-          </div>
-          <div class="check-card">
-            <strong>応用</strong>
-            <p>物理・統計・AIでどの関数が使われるか説明できるか。</p>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel" style="grid-column:1 / -1;">
-        <h2>総まとめ</h2>
-        <div class="formula-box">
+</div>
+</div>
+</article>
+<article class="panel" style="grid-column:1 / -1;">
+<h2>学習チェック</h2>
+<div class="check-grid">
+<div class="check-card">
+<strong>基本公式</strong>
+<p>関数を見て、導関数をすぐ言えるか。</p>
+</div>
+<div class="check-card">
+<strong>微分法則</strong>
+<p>積・商・合成関数を正しく見分けられるか。</p>
+</div>
+<div class="check-card">
+<strong>定義域</strong>
+<p>関数値や導関数が定義されない点を判断できるか。</p>
+</div>
+<div class="check-card">
+<strong>接線</strong>
+<p>関数値と導関数から接線方程式を作れるか。</p>
+</div>
+<div class="check-card">
+<strong>証明</strong>
+<p>極限・逆関数・商・チェーンルールのどれで証明するか分かるか。</p>
+</div>
+<div class="check-card">
+<strong>応用</strong>
+<p>物理・統計・AIでどの関数が使われるか説明できるか。</p>
+</div>
+</div>
+</article>
+<article class="panel" style="grid-column:1 / -1;">
+<h2>総まとめ</h2>
+<div class="formula-box">
           \[
           \text{微分法則}
           +
@@ -4675,15 +4536,13 @@
           \text{複雑な関数の微分}
           \]
         </div>
-      </article>
-    </section>
-
-    <footer>
+</article>
+</section>
+<footer>
       微分公式集
     </footer>
-  </main>
-
-  <script>
+</main>
+<script>
     'use strict';
 
     const CONFIG = {
@@ -8076,9 +7935,8 @@
       resizeCanvases();
     }
 
-    document.addEventListener('DOMContentLoaded', initialize);
+    window.initializeFunctionsVisualizer = initialize;
   </script>
-
 <script>
   (() => {
     let resizeTimer = null;
@@ -8162,6 +8020,166 @@
     }
   })();
 </script>
+<script>
+  (() => {
+    const renderedChapters = new Set();
+    let visualizerInitialized = false;
+    let activeChapterId = null;
 
-</body>
+    const getChapters = () =>
+      Array.from(document.querySelectorAll('.lazy-chapter'));
+
+    const getButtons = () =>
+      Array.from(
+        document.querySelectorAll('[data-chapter-target]')
+      );
+
+    async function typesetChapter(chapter) {
+      if (!chapter || renderedChapters.has(chapter.id)) {
+        return;
+      }
+
+      chapter.classList.add('math-loading');
+
+      try {
+        await MathJax.startup.promise;
+        await MathJax.typesetPromise([chapter]);
+        renderedChapters.add(chapter.id);
+      } catch (error) {
+        console.error(
+          `MathJax rendering failed in ${chapter.id}:`,
+          error
+        );
+      } finally {
+        chapter.classList.remove('math-loading');
+      }
+    }
+
+    function updateButtons(chapterId) {
+      getButtons().forEach(button => {
+        const active =
+          button.dataset.chapterTarget === chapterId;
+
+        button.classList.toggle('is-active', active);
+        button.setAttribute(
+          'aria-expanded',
+          active ? 'true' : 'false'
+        );
+      });
+    }
+
+    function initializeVisualizerOnce() {
+      if (visualizerInitialized) {
+        return;
+      }
+
+      if (
+        typeof window.initializeFunctionsVisualizer === 'function'
+      ) {
+        window.initializeFunctionsVisualizer();
+        visualizerInitialized = true;
+      }
+    }
+
+    function redrawVisualizer() {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          window.dispatchEvent(new Event('resize'));
+        });
+      });
+
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 180);
+    }
+
+    async function showChapter(chapterId, options = {}) {
+      const chapter = document.getElementById(chapterId);
+
+      if (!chapter) {
+        return;
+      }
+
+      getChapters().forEach(element => {
+        element.classList.toggle(
+          'is-visible',
+          element === chapter
+        );
+      });
+
+      const guide = document.getElementById('chapterGuide');
+
+      if (guide) {
+        guide.hidden = true;
+      }
+
+      activeChapterId = chapterId;
+      updateButtons(chapterId);
+
+      if (chapterId === 'interactive-graph') {
+        initializeVisualizerOnce();
+        redrawVisualizer();
+      }
+
+      await typesetChapter(chapter);
+
+      if (chapterId === 'interactive-graph') {
+        redrawVisualizer();
+      }
+
+      if (options.updateHistory !== false) {
+        history.replaceState(
+          null,
+          '',
+          `${location.pathname}${location.search}#${chapterId}`
+        );
+      }
+
+      if (options.scroll !== false) {
+        chapter.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      getButtons().forEach(button => {
+        button.addEventListener('click', () => {
+          showChapter(button.dataset.chapterTarget);
+        });
+      });
+
+      const requested =
+        location.hash.replace(/^#/, '');
+
+      if (
+        requested &&
+        document.getElementById(requested)?.classList
+          .contains('lazy-chapter')
+      ) {
+        showChapter(requested, {
+          updateHistory: false,
+          scroll: false
+        });
+      }
+    });
+
+    window.addEventListener('hashchange', () => {
+      const requested =
+        location.hash.replace(/^#/, '');
+
+      if (
+        requested &&
+        requested !== activeChapterId
+      ) {
+        showChapter(requested, {
+          updateHistory: false
+        });
+      }
+    });
+
+    window.showFunctionsChapter = showChapter;
+  })();
+</script></body>
 </html>
