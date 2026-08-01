@@ -6,10 +6,13 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet">
   <meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet">
-  <title>微分応用・発展｜完成版</title>
+  <title>微分応用・発展</title>
 
   <script>
     window.MathJax = {
+      startup: {
+        typeset: false
+      },
       tex: {
         inlineMath: [['\\(', '\\)']],
         displayMath: [['\\[', '\\]']]
@@ -2893,6 +2896,60 @@
   }
 }
 
+
+/* =====================================================
+   章選択式・MathJax遅延変換
+   初期表示では各章を隠し、選択した章だけ表示する
+===================================================== */
+
+main.page > section[id] {
+  display: none;
+}
+
+main.page > section[id].formula-section-active {
+  display: grid;
+}
+
+.formula-selector-guide {
+  margin-top: 14px;
+  padding: 13px 15px;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  background: #eff6ff;
+  color: #1e3a8a;
+  font-weight: 700;
+}
+
+.formula-selector-guide[hidden] {
+  display: none;
+}
+
+.toc-link {
+  cursor: pointer;
+}
+
+.toc-link[aria-current="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.toc-link[aria-current="true"] .toc-number {
+  color: var(--accent);
+  background: #ffffff;
+}
+
+.formula-loading {
+  opacity: 0.68;
+  pointer-events: none;
+}
+
+@media (max-width: 600px) {
+  main.page > section[id].formula-section-active {
+    display: grid;
+  }
+}
+
 </style>
 </head>
 
@@ -2916,7 +2973,7 @@
   <section class="hero">
 <h1>微分応用・発展</h1>
 <nav class="toc" aria-label="微分応用・発展の目次">
-      <h2>目次</h2>
+      <h2>公式・テーマを選択</h2>
       <div class="toc-grid">
         <a class="toc-link" href="#optimization-introduction">
           <span class="toc-number">6-1</span>
@@ -3058,7 +3115,7 @@
           <span>偏微分方程式</span>
           <span>→</span>
         </a>
-        <a class="toc-link active" href="#schrodinger-equation">
+        <a class="toc-link" href="#schrodinger-equation">
           <span class="toc-number">8-9</span>
           <span>シュレーディンガー方程式</span>
           <span>→</span>
@@ -3069,6 +3126,10 @@
           <span>→</span>
         </a>
 </div>
+
+      <div id="formulaSelectorGuide" class="formula-selector-guide">
+        上のボタンから学習する公式・テーマを選択してください。
+      </div>
     </nav>
   </section>
 
@@ -30438,5 +30499,188 @@ window.addEventListener('load',drawCatAll);
 drawCatAll();
 
 </script>
+
+<script>
+  (() => {
+    const sectionSelector = 'main.page > section[id]';
+    const linkSelector = '.toc-link[href^="#"]';
+
+    const sections = new Map(
+      Array.from(document.querySelectorAll(sectionSelector))
+        .map(section => [section.id, section])
+    );
+
+    const links = Array.from(
+      document.querySelectorAll(linkSelector)
+    );
+
+    const guide = document.getElementById(
+      'formulaSelectorGuide'
+    );
+
+    const typesetSections = new WeakSet();
+    let selectionToken = 0;
+
+    async function typesetSelectedSection(section) {
+      if (!section || typesetSections.has(section)) {
+        return;
+      }
+
+      section.classList.add('formula-loading');
+
+      try {
+        if (
+          !window.MathJax ||
+          !MathJax.startup ||
+          !MathJax.startup.promise
+        ) {
+          throw new Error(
+            'MathJaxの初期化情報を取得できません。'
+          );
+        }
+
+        await MathJax.startup.promise;
+        await MathJax.typesetPromise([section]);
+
+        typesetSections.add(section);
+      } catch (error) {
+        console.error(
+          '選択した章のMathJax変換に失敗しました。',
+          error
+        );
+      } finally {
+        section.classList.remove('formula-loading');
+      }
+    }
+
+    function updateSelectedLink(sectionId) {
+      links.forEach(link => {
+        const selected =
+          link.getAttribute('href') === `#${sectionId}`;
+
+        link.classList.toggle('active', selected);
+
+        if (selected) {
+          link.setAttribute('aria-current', 'true');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+    }
+
+    async function showSection(
+      sectionId,
+      {
+        updateHistory = true,
+        scroll = true
+      } = {}
+    ) {
+      const section = sections.get(sectionId);
+
+      if (!section) {
+        return;
+      }
+
+      const currentToken = ++selectionToken;
+
+      sections.forEach(item => {
+        item.classList.remove('formula-section-active');
+        item.setAttribute('aria-hidden', 'true');
+      });
+
+      section.classList.add('formula-section-active');
+      section.removeAttribute('aria-hidden');
+
+      updateSelectedLink(sectionId);
+
+      if (guide) {
+        guide.hidden = true;
+      }
+
+      if (updateHistory) {
+        history.replaceState(
+          null,
+          '',
+          `${location.pathname}${location.search}#${sectionId}`
+        );
+      }
+
+      await typesetSelectedSection(section);
+
+      if (currentToken !== selectionToken) {
+        return;
+      }
+
+      /*
+        非表示状態で初期化されたCanvasを、
+        表示後の実寸に合わせて再描画させる。
+      */
+      requestAnimationFrame(() => {
+        window.dispatchEvent(new Event('resize'));
+
+        requestAnimationFrame(() => {
+          window.dispatchEvent(new Event('resize'));
+
+          if (scroll) {
+            section.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+    }
+
+    links.forEach(link => {
+      link.setAttribute('role', 'button');
+
+      link.addEventListener('click', event => {
+        event.preventDefault();
+
+        const sectionId =
+          link.getAttribute('href').slice(1);
+
+        showSection(sectionId);
+      });
+    });
+
+    sections.forEach(section => {
+      section.setAttribute('aria-hidden', 'true');
+    });
+
+    window.addEventListener('hashchange', () => {
+      const sectionId = decodeURIComponent(
+        location.hash.replace(/^#/, '')
+      );
+
+      if (sections.has(sectionId)) {
+        showSection(
+          sectionId,
+          {
+            updateHistory: false,
+            scroll: true
+          }
+        );
+      }
+    });
+
+    window.addEventListener('load', () => {
+      const sectionId = decodeURIComponent(
+        location.hash.replace(/^#/, '')
+      );
+
+      if (sections.has(sectionId)) {
+        showSection(
+          sectionId,
+          {
+            updateHistory: false,
+            scroll: false
+          }
+        );
+      }
+    });
+  })();
+</script>
+
 </body>
 </html>
