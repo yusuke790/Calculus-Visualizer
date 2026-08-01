@@ -1,25 +1,34 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex,nofollow,noarchive">
-  <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet">
-  <meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet">
-  <title>微分公式集</title>
-
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<meta content="noindex,nofollow,noarchive" name="robots"/>
+<meta content="noindex, nofollow, noarchive, nosnippet" name="googlebot"/>
+<meta content="noindex, nofollow, noarchive, nosnippet" name="bingbot"/>
+<title>微分公式集</title>
+<script>
     window.MathJax = {
+      startup: {
+        typeset: false
+      },
       tex: {
         inlineMath: [['\\(', '\\)']],
         displayMath: [['\\[', '\\]']]
       },
-      svg: { fontCache: 'global' }
+      svg: {
+        fontCache: 'global'
+      }
     };
-  </script>
-  <script defer  src="../mathjax/tex-svg.js"></script>
-
-  <style>
+    </script>
+<script defer="" src="../mathjax/tex-svg.js"></script>
+<style>
     :root {
       --bg: #f4f7fb;
       --panel: #ffffff;
@@ -537,198 +546,594 @@
   }
 }
 
-  </style>
-</head>
+  
 
+    /* =====================================================
+       先行ページと共通の章選択テンプレート
+    ===================================================== */
+
+    :root {
+      --page-max-width: 1800px;
+      --page-gutter: clamp(8px, 2vw, 34px);
+      --section-gap: clamp(12px, 1.5vw, 24px);
+      --panel-padding-responsive: clamp(14px, 1.5vw, 26px);
+    }
+
+    html {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .app {
+      width: min(
+        var(--page-max-width),
+        calc(100% - (var(--page-gutter) * 2))
+      );
+      max-width: none;
+      padding: clamp(10px, 2vw, 30px) 0
+               clamp(30px, 4vw, 72px);
+    }
+
+    .hero,
+    .panel {
+      padding: var(--panel-padding-responsive);
+    }
+
+    .hero {
+      background:
+        linear-gradient(
+          135deg,
+          rgba(239, 246, 255, 0.98),
+          rgba(255, 255, 255, 0.98)
+        );
+    }
+
+    .hero h1 {
+      color: #182033;
+    }
+
+    .chapter-selector {
+      margin-top: 22px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .chapter-selector-title {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+
+    .chapter-selector-description {
+      margin: 4px 0 14px;
+      color: var(--muted);
+      font-size: .94rem;
+    }
+
+    .chapter-selector-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .chapter-select-button {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fbfdff;
+      color: var(--text);
+      text-align: left;
+      font-weight: 800;
+      cursor: pointer;
+      transition:
+        transform .18s ease,
+        border-color .18s ease,
+        box-shadow .18s ease,
+        background .18s ease,
+        color .18s ease;
+    }
+
+    .chapter-select-button:hover,
+    .chapter-select-button:focus-visible {
+      transform: translateY(-2px);
+      border-color: #93c5fd;
+      background: #eff6ff;
+      box-shadow: 0 7px 18px rgba(37, 99, 235, .12);
+      outline: none;
+    }
+
+    .chapter-select-button.is-active {
+      color: #ffffff;
+      border-color: var(--accent);
+      background: var(--accent);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, .22);
+    }
+
+    .chapter-number {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: .82rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .chapter-select-button.is-active .chapter-number {
+      background: rgba(255, 255, 255, .2);
+      color: #ffffff;
+    }
+
+    .chapter-label {
+      overflow-wrap: anywhere;
+    }
+
+    .chapter-arrow {
+      color: var(--accent);
+      font-size: 1.15rem;
+    }
+
+    .chapter-select-button.is-active .chapter-arrow {
+      color: #ffffff;
+    }
+
+    .chapter-guide {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px dashed #93c5fd;
+      border-radius: 14px;
+      background: #f8fbff;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .lazy-chapter {
+      display: none !important;
+      margin-top: var(--section-gap);
+    }
+
+    .lazy-chapter.is-visible {
+      display: grid !important;
+    }
+
+    .lazy-chapter.chapter-stack.is-visible {
+      display: block !important;
+    }
+
+    .chapter-heading-panel {
+      grid-column: 1 / -1;
+    }
+
+    .chapter-heading-panel h2 {
+      margin-bottom: 4px;
+    }
+
+    .chapter-heading-panel p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .math-loading {
+      opacity: .72;
+      pointer-events: none;
+    }
+
+    .main-grid,
+    .section-grid {
+      gap: var(--section-gap);
+    }
+
+    .panel,
+    .hero,
+    .graph-panel,
+    .control-group,
+    .value-card,
+    .step {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .formula-box,
+    .calculation-line,
+    .table-wrap,
+    mjx-container {
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    @media (min-width: 1500px) {
+      .chapter-selector-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .main-grid {
+        grid-template-columns:
+          minmax(0, 1.65fr)
+          minmax(360px, .55fr);
+      }
+
+      .section-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 901px) and (max-width: 1499px) {
+      .chapter-selector-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
+      .chapter-selector-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .main-grid,
+      .section-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      :root {
+        --page-gutter: 6px;
+      }
+
+      .app {
+        width: calc(100% - 12px);
+        padding-top: 8px;
+      }
+
+      .hero,
+      .panel {
+        border-radius: 15px;
+      }
+
+      .chapter-selector-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .chapter-select-button {
+        padding: 11px 12px;
+      }
+
+      .main-grid,
+      .section-grid,
+      .summary-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+      }
+
+      .button-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .button-row button {
+        width: 100%;
+      }
+    }
+
+/* =====================================================
+   多項式・未知数計算
+===================================================== */
+.polynomial-layout {
+  display: grid;
+  grid-template-columns: minmax(0, .95fr) minmax(0, 1.35fr);
+  gap: var(--section-gap);
+  grid-column: 1 / -1;
+}
+.polynomial-controls {
+  display: grid;
+  gap: 14px;
+}
+.polynomial-input-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.polynomial-input-grid label,
+.polynomial-solver-grid label {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  font-weight: 700;
+}
+.polynomial-input-grid input,
+.polynomial-solver-grid input,
+.polynomial-solver-grid select,
+.polynomial-expression-input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 9px 10px;
+  color: var(--text);
+  background: #fff;
+}
+.polynomial-solver-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.polynomial-result {
+  min-height: 92px;
+  padding: 14px;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  background: #eff6ff;
+}
+.polynomial-result.warning {
+  border-color: #fed7aa;
+  background: #fff7ed;
+  color: #9a3412;
+}
+.polynomial-canvas-wrap {
+  width: 100%;
+  min-height: 390px;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+}
+.polynomial-derivative-wrap {
+  width: 100%;
+  min-height: 260px;
+  aspect-ratio: 16 / 7;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  margin-top: 14px;
+}
+.polynomial-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: .9rem;
+}
+.polynomial-legend .legend-line.function-line {
+  background: #2563eb;
+}
+.polynomial-legend .legend-line.derivative-line {
+  background: #db2777;
+}
+.polynomial-legend .legend-dot.point-line {
+  background: #dc2626;
+}
+.polynomial-help {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: .9rem;
+}
+.polynomial-formula-output {
+  overflow-x: auto;
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+@media (max-width: 980px) {
+  .polynomial-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .polynomial-input-grid,
+  .polynomial-solver-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .polynomial-canvas-wrap {
+    min-height: 330px;
+    aspect-ratio: 4 / 5;
+  }
+}
+</style>
+</head>
 <body>
 <header class="site-header">
-  <div class="site-header-inner">
-    <a class="site-title" href="../index.html">
+<div class="site-header-inner">
+<a class="site-title" href="../index.html">
       Calculus Visualizer
     </a>
-
-    <nav class="site-nav" aria-label="公式集ナビゲーション">
-      <a href="../index.html">ホーム</a>
-      <a class="current-page" href="../basic/index.html">  微分基本公式集</a>
-      <a href="../functions/index.html">関数別微分公式集</a>
-      <a href="../analysis/index.html">微分公式・解析</a>
-      <a href="../advanced/index.html">微分応用・発展</a>
-    </nav>
-  </div>
+<nav aria-label="公式集ナビゲーション" class="site-nav">
+<a href="../index.html">ホーム</a>
+<a class="current-page" href="../basic/index.html">  微分基本公式集</a>
+<a href="../functions/index.html">関数別微分公式集</a>
+<a href="../analysis/index.html">微分公式・解析</a>
+<a href="../advanced/index.html">微分応用・発展</a>
+</nav>
+</div>
 </header>
-  <main class="app">
-    <header class="hero">
-      <h1>微分基本公式集</h1>
-    </header>
-
-    <section class="main-grid">
-      <article class="panel graph-panel">
-        <h2>元の関数と接線</h2>
-
-        <div class="legend">
-          <span class="legend-item">
-            <span class="legend-dot a-color"></span>固定点A
+<main class="app">
+<header class="hero">
+<h1>微分基本公式集</h1>
+<nav aria-label="微分基本公式集の章選択" class="chapter-selector"><h2 class="chapter-selector-title">公式・テーマを選択</h2><p class="chapter-selector-description">選択した章だけを表示し、公式・具体例・注意点を同じ章で確認できます。</p><div class="chapter-selector-grid"><button aria-controls="visualizer" aria-expanded="false" class="chapter-select-button" data-chapter-target="visualizer" type="button"><span class="chapter-number">01</span><span class="chapter-label">微分の可視化</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="inverse-hyperbolic" aria-expanded="false" class="chapter-select-button" data-chapter-target="inverse-hyperbolic" type="button"><span class="chapter-number">02</span><span class="chapter-label">逆双曲線関数</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="hyperbolic" aria-expanded="false" class="chapter-select-button" data-chapter-target="hyperbolic" type="button"><span class="chapter-number">03</span><span class="chapter-label">双曲線関数</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="inverse-trig" aria-expanded="false" class="chapter-select-button" data-chapter-target="inverse-trig" type="button"><span class="chapter-number">04</span><span class="chapter-label">逆三角関数</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="trig" aria-expanded="false" class="chapter-select-button" data-chapter-target="trig" type="button"><span class="chapter-number">05</span><span class="chapter-label">三角関数</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="logarithm" aria-expanded="false" class="chapter-select-button" data-chapter-target="logarithm" type="button"><span class="chapter-number">06</span><span class="chapter-label">対数関数</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="exponential" aria-expanded="false" class="chapter-select-button" data-chapter-target="exponential" type="button"><span class="chapter-number">07</span><span class="chapter-label">指数関数</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="power-basic" aria-expanded="false" class="chapter-select-button" data-chapter-target="power-basic" type="button"><span class="chapter-number">08</span><span class="chapter-label">定数・べき関数</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="derivative-sign" aria-expanded="false" class="chapter-select-button" data-chapter-target="derivative-sign" type="button"><span class="chapter-number">09</span><span class="chapter-label">導関数の符号と増減</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="derivative-concept" aria-expanded="false" class="chapter-select-button" data-chapter-target="derivative-concept" type="button"><span class="chapter-number">10</span><span class="chapter-label">微分係数と導関数</span><span aria-hidden="true" class="chapter-arrow">→</span></button><button aria-controls="polynomial-tool" aria-expanded="false" class="chapter-select-button" data-chapter-target="polynomial-tool" type="button">
+<span class="chapter-number">11</span>
+<span class="chapter-label">多項式・未知数計算</span>
+<span aria-hidden="true" class="chapter-arrow">→</span>
+</button><button aria-controls="summary" aria-expanded="false" class="chapter-select-button" data-chapter-target="summary" type="button"><span class="chapter-number">12</span><span class="chapter-label">総まとめ</span><span aria-hidden="true" class="chapter-arrow">→</span></button></div></nav></header><div class="chapter-guide" id="chapterGuide">上のボタンから、確認したい公式・テーマを選択してください。</div>
+<div class="lazy-chapter chapter-stack" id="visualizer"><section class="main-grid">
+<article class="panel graph-panel">
+<h2>元の関数と接線</h2>
+<div class="legend">
+<span class="legend-item">
+<span class="legend-dot a-color"></span>固定点A
           </span>
-          <span class="legend-item">
-            <span class="legend-dot b-color"></span>移動点B
+<span class="legend-item">
+<span class="legend-dot b-color"></span>移動点B
           </span>
-          <span class="legend-item">
-            <span class="legend-line secant-color"></span>割線
+<span class="legend-item">
+<span class="legend-line secant-color"></span>割線
           </span>
-          <span class="legend-item">
-            <span class="legend-line tangent-color"></span>接線
+<span class="legend-item">
+<span class="legend-line tangent-color"></span>接線
           </span>
-          <span class="legend-item">
-            <span class="legend-line" style="background:var(--increase);"></span>増加区間
+<span class="legend-item">
+<span class="legend-line" style="background:var(--increase);"></span>増加区間
           </span>
-          <span class="legend-item">
-            <span class="legend-line" style="background:var(--decrease);"></span>減少区間
+<span class="legend-item">
+<span class="legend-line" style="background:var(--decrease);"></span>減少区間
           </span>
-          <span class="legend-item">
-            <span class="legend-line dx-color"></span>\(h=\Delta x\)
+<span class="legend-item">
+<span class="legend-line dx-color"></span>\(h=\Delta x\)
           </span>
-          <span class="legend-item">
-            <span class="legend-line dy-color"></span>\(\Delta y\)
+<span class="legend-item">
+<span class="legend-line dy-color"></span>\(\Delta y\)
           </span>
-        </div>
-
-        <div id="canvasWrap" class="canvas-wrap">
-          <canvas id="graphCanvas"></canvas>
-        </div>
-
-        <p class="canvas-help">
+</div>
+<div class="canvas-wrap" id="canvasWrap">
+<canvas id="graphCanvas"></canvas>
+</div>
+<p class="canvas-help">
           点Aを横方向に動かすと、接線と微分係数が更新されます。
           下の導関数グラフでは、対応する点 \((a,f'(a))\) が同時に移動します。
         </p>
-      </article>
-
-      <aside class="panel">
-        <h2>操作と対応する値</h2>
-
-        <div class="controls">
-          <div class="control-group">
-            <label for="functionSelect" class="control-label">関数</label>
-            <select id="functionSelect">
-              <option value="arsinh">f(x) = arsinh x</option>
-              <option value="arcosh">f(x) = arcosh x</option>
-              <option value="artanh">f(x) = artanh x</option>
-              <option value="sinh">f(x) = sinh x</option>
-              <option value="cosh">f(x) = cosh x</option>
-              <option value="tanh">f(x) = tanh x</option>
-              <option value="arcsin">f(x) = arcsin x</option>
-              <option value="arccos">f(x) = arccos x</option>
-              <option value="arctan">f(x) = arctan x</option>
-              <option value="sin">f(x) = sin x</option>
-              <option value="cos">f(x) = cos x</option>
-              <option value="tan">f(x) = tan x</option>
-              <option value="ln">f(x) = ln x</option>
-              <option value="logA">f(x) = logₐ x</option>
-              <option value="expE">f(x) = eˣ</option>
-              <option value="expA">f(x) = aˣ</option>
-              <option value="constant">f(x) = c</option>
-              <option value="identity">f(x) = x</option>
-              <option value="square">f(x) = x²</option>
-              <option value="cube">f(x) = x³</option>
-              <option value="power">f(x) = xⁿ</option>
-              <option value="sqrt">f(x) = √x</option>
-              <option value="reciprocal">f(x) = 1/x</option>
-            </select>
-          </div>
-
-          <div class="control-group" id="parameterGroup">
-            <div class="control-row" id="baseRow" style="display:none;">
-              <label for="baseInput" class="control-label">底 a</label>
-              <input id="baseRange" type="range" min="0.1" max="5" step="0.1" value="2">
-              <input id="baseInput" type="number" min="0.0001" step="any" value="2">
-            </div>
-
-            <div class="control-row" id="constantRow" style="display:none;">
-              <label for="cInput" class="control-label">定数 c</label>
-              <input id="cRange" type="range" min="-5" max="5" step="0.1" value="3">
-              <input id="cInput" type="number" step="any" value="3">
-            </div>
-
-            <div class="control-row" id="exponentRow" style="display:none;">
-              <label for="nInput" class="control-label">指数 n</label>
-              <input id="nRange" type="range" min="-5" max="8" step="1" value="4">
-              <input id="nInput" type="number" step="1" value="4">
-            </div>
-          </div>
-
-          <div class="control-group">
-            <p style="margin-top:0;color:var(--muted);font-size:0.9rem;">
+</article>
+<aside class="panel">
+<h2>操作と対応する値</h2>
+<div class="controls">
+<div class="control-group">
+<label class="control-label" for="functionSelect">関数</label>
+<select id="functionSelect">
+<option value="arsinh">f(x) = arsinh x</option>
+<option value="arcosh">f(x) = arcosh x</option>
+<option value="artanh">f(x) = artanh x</option>
+<option value="sinh">f(x) = sinh x</option>
+<option value="cosh">f(x) = cosh x</option>
+<option value="tanh">f(x) = tanh x</option>
+<option value="arcsin">f(x) = arcsin x</option>
+<option value="arccos">f(x) = arccos x</option>
+<option value="arctan">f(x) = arctan x</option>
+<option value="sin">f(x) = sin x</option>
+<option value="cos">f(x) = cos x</option>
+<option value="tan">f(x) = tan x</option>
+<option value="ln">f(x) = ln x</option>
+<option value="logA">f(x) = logₐ x</option>
+<option value="expE">f(x) = eˣ</option>
+<option value="expA">f(x) = aˣ</option>
+<option value="constant">f(x) = c</option>
+<option value="identity">f(x) = x</option>
+<option value="square">f(x) = x²</option>
+<option value="cube">f(x) = x³</option>
+<option value="power">f(x) = xⁿ</option>
+<option value="sqrt">f(x) = √x</option>
+<option value="reciprocal">f(x) = 1/x</option>
+</select>
+</div>
+<div class="control-group" id="parameterGroup">
+<div class="control-row" id="baseRow" style="display:none;">
+<label class="control-label" for="baseInput">底 a</label>
+<input id="baseRange" max="5" min="0.1" step="0.1" type="range" value="2"/>
+<input id="baseInput" min="0.0001" step="any" type="number" value="2"/>
+</div>
+<div class="control-row" id="constantRow" style="display:none;">
+<label class="control-label" for="cInput">定数 c</label>
+<input id="cRange" max="5" min="-5" step="0.1" type="range" value="3"/>
+<input id="cInput" step="any" type="number" value="3"/>
+</div>
+<div class="control-row" id="exponentRow" style="display:none;">
+<label class="control-label" for="nInput">指数 n</label>
+<input id="nRange" max="8" min="-5" step="1" type="range" value="4"/>
+<input id="nInput" step="1" type="number" value="4"/>
+</div>
+</div>
+<div class="control-group">
+<p style="margin-top:0;color:var(--muted);font-size:0.9rem;">
               スライダーは表示範囲内で操作します。数値入力欄には、
               上限・下限を超える値も入力でき、計算結果へ反映されます。
             </p>
-            <div class="control-row">
-              <label for="aRange" class="control-label">点A</label>
-              <input id="aRange" type="range" min="-3.5" max="3.5" step="0.1" value="1">
-              <input id="aInput" type="number" step="any" value="1">
-            </div>
-
-            <div class="control-row">
-              <label for="hRange" class="control-label">h</label>
-              <input id="hRange" type="range" min="-3" max="3" step="0.01" value="2">
-              <input id="hInput" type="number" step="any" value="2">
-            </div>
-          </div>
-
-          <div class="button-row">
-            <button id="approachButton" type="button">h → 0 を再生</button>
-            <button id="stopButton" type="button" class="stop">停止</button>
-            <button id="toggleTangentButton" type="button" class="secondary">接線を非表示</button>
-            <button id="resetButton" type="button" class="secondary">初期値に戻す</button>
-          </div>
-        </div>
-
-        <div class="summary-grid">
-          <div class="value-card">
-            <div class="label">\(a\)</div>
-            <div id="aValue" class="value">1</div>
-          </div>
-          <div class="value-card">
-            <div class="label">\(h\)</div>
-            <div id="hValue" class="value">2</div>
-          </div>
-          <div class="value-card">
-            <div class="label">\(a+h\)</div>
-            <div id="bValue" class="value">3</div>
-          </div>
-          <div class="value-card">
-            <div class="label">\(f(a)\)</div>
-            <div id="faValue" class="value">1</div>
-          </div>
-          <div class="value-card">
-            <div class="label">\(f(a+h)\)</div>
-            <div id="fbValue" class="value">9</div>
-          </div>
-          <div class="value-card">
-            <div class="label">差商（割線の傾き）</div>
-            <div id="differenceValue" class="value">4</div>
-          </div>
-          <div class="value-card highlight-card">
-            <div class="label">接線の傾き \(f'(a)\)</div>
-            <div id="tangentValue" class="value">2</div>
-          </div>
-          <div class="value-card highlight-card">
-            <div class="label">傾きの差</div>
-            <div id="errorValue" class="value">2</div>
-          </div>
-          <div class="value-card highlight-card">
-            <div class="label">導関数上の点</div>
-            <div id="derivativePointValue" class="value">(1, 2)</div>
-          </div>
-          <div class="value-card highlight-card">
-            <div class="label">点A付近の増減</div>
-            <div id="monotonicityValue" class="value">増加</div>
-          </div>
-          <div class="value-card highlight-card" style="grid-column:1 / -1;">
-            <div class="label">接線の方程式</div>
-            <div id="tangentEquationValue" class="value">y = 2x - 1</div>
-          </div>
-        </div>
-
-        <div class="formula-box">
+<div class="control-row">
+<label class="control-label" for="aRange">点A</label>
+<input id="aRange" max="3.5" min="-3.5" step="0.1" type="range" value="1"/>
+<input id="aInput" step="any" type="number" value="1"/>
+</div>
+<div class="control-row">
+<label class="control-label" for="hRange">h</label>
+<input id="hRange" max="3" min="-3" step="0.01" type="range" value="2"/>
+<input id="hInput" step="any" type="number" value="2"/>
+</div>
+</div>
+<div class="button-row">
+<button id="approachButton" type="button">h → 0 を再生</button>
+<button class="stop" id="stopButton" type="button">停止</button>
+<button class="secondary" id="toggleTangentButton" type="button">接線を非表示</button>
+<button class="secondary" id="resetButton" type="button">初期値に戻す</button>
+</div>
+</div>
+<div class="summary-grid">
+<div class="value-card">
+<div class="label">\(a\)</div>
+<div class="value" id="aValue">1</div>
+</div>
+<div class="value-card">
+<div class="label">\(h\)</div>
+<div class="value" id="hValue">2</div>
+</div>
+<div class="value-card">
+<div class="label">\(a+h\)</div>
+<div class="value" id="bValue">3</div>
+</div>
+<div class="value-card">
+<div class="label">\(f(a)\)</div>
+<div class="value" id="faValue">1</div>
+</div>
+<div class="value-card">
+<div class="label">\(f(a+h)\)</div>
+<div class="value" id="fbValue">9</div>
+</div>
+<div class="value-card">
+<div class="label">差商（割線の傾き）</div>
+<div class="value" id="differenceValue">4</div>
+</div>
+<div class="value-card highlight-card">
+<div class="label">接線の傾き \(f'(a)\)</div>
+<div class="value" id="tangentValue">2</div>
+</div>
+<div class="value-card highlight-card">
+<div class="label">傾きの差</div>
+<div class="value" id="errorValue">2</div>
+</div>
+<div class="value-card highlight-card">
+<div class="label">導関数上の点</div>
+<div class="value" id="derivativePointValue">(1, 2)</div>
+</div>
+<div class="value-card highlight-card">
+<div class="label">点A付近の増減</div>
+<div class="value" id="monotonicityValue">増加</div>
+</div>
+<div class="value-card highlight-card" style="grid-column:1 / -1;">
+<div class="label">接線の方程式</div>
+<div class="value" id="tangentEquationValue">y = 2x - 1</div>
+</div>
+</div>
+<div class="formula-box">
           \[
           \frac{d}{dx}(\operatorname{arsinh}x)
           =
@@ -738,782 +1143,55 @@
           \frac{d}{dx}(\operatorname{arcosh}x)
           =
           \frac{1}{\sqrt{x^2-1}}
-          \qquad(x>1)
+          \qquad(x&gt;1)
           \]
           \[
           \frac{d}{dx}(\operatorname{artanh}x)
           =
           \frac{1}{1-x^2}
-          \qquad(|x|<1)
+          \qquad(|x|&lt;1)
           \]
           <p style="margin:8px 0 0;color:var(--muted);">
             逆双曲線関数は、逆関数の微分公式や対数表示から導けます。
           </p>
-        </div>
-
-        <div class="calculation">
-          <div class="calculation-line" id="calculation1"></div>
-          <div class="calculation-line" id="calculation2"></div>
-          <div class="calculation-line" id="calculation3"></div>
-        </div>
-
-        <div id="statusMessage" class="status-message"></div>
-      </aside>
-    </section>
-
-    <section class="panel derivative-panel">
-      <h2>導関数のグラフ</h2>
-
-      <div class="legend">
-        <span class="legend-item">
-          <span class="legend-line tangent-color"></span>導関数 \(y=f'(x)\)
+</div>
+<div class="calculation">
+<div class="calculation-line" id="calculation1"></div>
+<div class="calculation-line" id="calculation2"></div>
+<div class="calculation-line" id="calculation3"></div>
+</div>
+<div class="status-message" id="statusMessage"></div>
+</aside>
+</section><section class="panel derivative-panel">
+<h2>導関数のグラフ</h2>
+<div class="legend">
+<span class="legend-item">
+<span class="legend-line tangent-color"></span>導関数 \(y=f'(x)\)
         </span>
-        <span class="legend-item">
-          <span class="legend-dot a-color"></span>対応する点 \((a,f'(a))\)
+<span class="legend-item">
+<span class="legend-dot a-color"></span>対応する点 \((a,f'(a))\)
         </span>
-        <span class="legend-item">
-          <span class="legend-line" style="background:var(--increase);"></span>\(f'(x)>0\)
+<span class="legend-item">
+<span class="legend-line" style="background:var(--increase);"></span>\(f'(x)&gt;0\)
         </span>
-        <span class="legend-item">
-          <span class="legend-line" style="background:var(--decrease);"></span>\(f'(x)<0\)
+<span class="legend-item">
+<span class="legend-line" style="background:var(--decrease);"></span>\(f'(x)&lt;0\)
         </span>
-        <span class="legend-item">
-          <span class="legend-dot" style="background:var(--stationary);"></span>\(f'(x)=0\)
+<span class="legend-item">
+<span class="legend-dot" style="background:var(--stationary);"></span>\(f'(x)=0\)
         </span>
-      </div>
-
-      <div id="derivativeCanvasWrap" class="derivative-canvas-wrap">
-        <canvas id="derivativeCanvas"></canvas>
-      </div>
-
-      <p class="canvas-help">
+</div>
+<div class="derivative-canvas-wrap" id="derivativeCanvasWrap">
+<canvas id="derivativeCanvas"></canvas>
+</div>
+<p class="canvas-help">
         導関数がx軸より上なら元の関数は増加、下なら減少します。
         導関数がx軸と交わる点では、元の関数の接線が水平になります。
       </p>
-    </section>
-
-    <section class="section-grid">
-      <article class="panel">
-        <h2>逆双曲線関数の基本公式</h2>
-        <div class="step-flow">
-          <div class="step">
-            <strong>逆双曲線正弦関数：</strong>
-            <p>
-              \(\operatorname{arsinh}x\) は \(\sinh y=x\) を満たす \(y\) を返します。
-            </p>
-            \[
-            \frac{d}{dx}(\operatorname{arsinh}x)
-            =
-            \frac{1}{\sqrt{1+x^2}}
-            \]
-            <p>
-              すべての実数で定義され、導関数は常に正です。
-            </p>
-          </div>
-
-          <div class="step">
-            <strong>逆双曲線余弦関数：</strong>
-            <p>
-              \(\operatorname{arcosh}x\) は \(\cosh y=x\) を満たす主値 \(y\ge0\) を返します。
-            </p>
-            \[
-            \frac{d}{dx}(\operatorname{arcosh}x)
-            =
-            \frac{1}{\sqrt{x^2-1}}
-            \]
-            <p>
-              定義域は \(x\ge1\) で、\(x=1\) では有限な傾きになりません。
-            </p>
-          </div>
-
-          <div class="step">
-            <strong>逆双曲線正接関数：</strong>
-            <p>
-              \(\operatorname{artanh}x\) は \(\tanh y=x\) を満たす \(y\) を返します。
-            </p>
-            \[
-            \frac{d}{dx}(\operatorname{artanh}x)
-            =
-            \frac{1}{1-x^2}
-            \]
-            <p>
-              定義域は \(|x|<1\) で、端点 \(x=\pm1\) に近づくと傾きが発散します。
-            </p>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2>対数表示と定義域</h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>関数</th>
-                <th>対数表示</th>
-                <th>定義域</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>\(\operatorname{arsinh}x\)</td>
-                <td>\(\ln\left(x+\sqrt{x^2+1}\right)\)</td>
-                <td>すべての実数</td>
-              </tr>
-              <tr>
-                <td>\(\operatorname{arcosh}x\)</td>
-                <td>\(\ln\left(x+\sqrt{x^2-1}\right)\)</td>
-                <td>\([1,\infty)\)</td>
-              </tr>
-              <tr>
-                <td>\(\operatorname{artanh}x\)</td>
-                <td>\(\frac12\ln\left(\frac{1+x}{1-x}\right)\)</td>
-                <td>\((-1,1)\)</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </article>
-      <article class="panel">
-        <h2>双曲線関数の基本公式</h2>
-        <div class="step-flow">
-          <div class="step">
-            <strong>双曲線正弦関数：</strong>
-            <p>
-              \(\sinh x\) は指数関数の差から定義されます。
-            </p>
-            \[
-            \sinh x=\frac{e^x-e^{-x}}{2}
-            \]
-            \[
-            \frac{d}{dx}(\sinh x)=\cosh x
-            \]
-            <p>
-              導関数 \(\cosh x\) は常に正なので、\(\sinh x\) は単調増加します。
-            </p>
-          </div>
-
-          <div class="step">
-            <strong>双曲線余弦関数：</strong>
-            <p>
-              \(\cosh x\) は指数関数の和から定義されます。
-            </p>
-            \[
-            \cosh x=\frac{e^x+e^{-x}}{2}
-            \]
-            \[
-            \frac{d}{dx}(\cosh x)=\sinh x
-            \]
-            <p>
-              \(x=0\) で導関数が0になり、最小値1を取ります。
-            </p>
-          </div>
-
-          <div class="step">
-            <strong>双曲線正接関数：</strong>
-            <p>
-              \(\tanh x\) は \(\sinh x\) と \(\cosh x\) の比です。
-            </p>
-            \[
-            \tanh x=\frac{\sinh x}{\cosh x}
-            \]
-            \[
-            \frac{d}{dx}(\tanh x)
-            =
-            \operatorname{sech}^2x
-            =
-            \frac{1}{\cosh^2x}
-            \]
-            <p>
-              導関数は常に正で、値域は \((-1,1)\) です。
-            </p>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2>三角関数との違い</h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>関数</th>
-                <th>微分</th>
-                <th>特徴</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>\(\sinh x\)</td>
-                <td>\(\cosh x\)</td>
-                <td>奇関数・単調増加</td>
-              </tr>
-              <tr>
-                <td>\(\cosh x\)</td>
-                <td>\(\sinh x\)</td>
-                <td>偶関数・\(x=0\)で最小</td>
-              </tr>
-              <tr>
-                <td>\(\tanh x\)</td>
-                <td>\(\operatorname{sech}^2x\)</td>
-                <td>S字型・水平漸近線あり</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </article>
-      <article class="panel">
-        <h2>逆三角関数の基本公式</h2>
-        <div class="step-flow">
-          <div class="step">
-            <strong>逆正弦関数：</strong>
-            <p>
-              \(\arcsin x\) は、\(\sin y=x\) を満たす主値 \(y\) を返します。
-            </p>
-            \[
-            \frac{d}{dx}(\arcsin x)
-            =
-            \frac{1}{\sqrt{1-x^2}}
-            \]
-            <p>
-              \(|x|<1\) で微分可能です。
-            </p>
-          </div>
-
-          <div class="step">
-            <strong>逆余弦関数：</strong>
-            <p>
-              \(\arccos x\) は、\(\cos y=x\) を満たす主値 \(y\) を返します。
-            </p>
-            \[
-            \frac{d}{dx}(\arccos x)
-            =
-            -\frac{1}{\sqrt{1-x^2}}
-            \]
-            <p>
-              導関数が負なので、\(\arccos x\) は単調減少します。
-            </p>
-          </div>
-
-          <div class="step">
-            <strong>逆正接関数：</strong>
-            <p>
-              \(\arctan x\) は、\(\tan y=x\) を満たす主値 \(y\) を返します。
-            </p>
-            \[
-            \frac{d}{dx}(\arctan x)
-            =
-            \frac{1}{1+x^2}
-            \]
-            <p>
-              すべての実数で定義され、導関数は常に正です。
-            </p>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2>定義域・値域・主値</h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>関数</th>
-                <th>定義域</th>
-                <th>主値の範囲</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>\(\arcsin x\)</td>
-                <td>\([-1,1]\)</td>
-                <td>\(\left[-\frac{\pi}{2},\frac{\pi}{2}\right]\)</td>
-              </tr>
-              <tr>
-                <td>\(\arccos x\)</td>
-                <td>\([-1,1]\)</td>
-                <td>\([0,\pi]\)</td>
-              </tr>
-              <tr>
-                <td>\(\arctan x\)</td>
-                <td>すべての実数</td>
-                <td>\(\left(-\frac{\pi}{2},\frac{\pi}{2}\right)\)</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </article>
-      <article class="panel">
-        <h2>三角関数の基本公式</h2>
-        <div class="step-flow">
-          <div class="step">
-            <strong>正弦関数：</strong>
-            <p>
-              \(\sin x\) の導関数は \(\cos x\) です。
-            </p>
-            \[
-            \frac{d}{dx}(\sin x)=\cos x
-            \]
-            <p>
-              \(\cos x\) の符号によって、\(\sin x\) の増減が決まります。
-            </p>
-          </div>
-
-          <div class="step">
-            <strong>余弦関数：</strong>
-            <p>
-              \(\cos x\) の導関数は \(-\sin x\) です。
-            </p>
-            \[
-            \frac{d}{dx}(\cos x)=-\sin x
-            \]
-            <p>
-              \(\sin x\) にマイナスが付くため、増減の向きが反転します。
-            </p>
-          </div>
-
-          <div class="step">
-            <strong>正接関数：</strong>
-            <p>
-              \(\tan x\) の導関数は \(\sec^2x\) です。
-            </p>
-            \[
-            \frac{d}{dx}(\tan x)
-            =
-            \sec^2x
-            =
-            \frac{1}{\cos^2x}
-            \]
-            <p>
-              定義される範囲では常に正なので、各区間で単調増加します。
-            </p>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2>定義域と増減</h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>関数</th>
-                <th>定義域</th>
-                <th>導関数</th>
-                <th>特徴</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>\(\sin x\)</td>
-                <td>すべての実数</td>
-                <td>\(\cos x\)</td>
-                <td>周期的に増減</td>
-              </tr>
-              <tr>
-                <td>\(\cos x\)</td>
-                <td>すべての実数</td>
-                <td>\(-\sin x\)</td>
-                <td>周期的に増減</td>
-              </tr>
-              <tr>
-                <td>\(\tan x\)</td>
-                <td>\(\cos x\neq0\)</td>
-                <td>\(\sec^2x>0\)</td>
-                <td>各区間で単調増加</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </article>
-      <article class="panel">
-        <h2>対数関数の基本公式</h2>
-        <div class="step-flow">
-          <div class="step">
-            <strong>自然対数：</strong>
-            <p>
-              底が \(e\) の対数関数です。定義域は \(x>0\) です。
-            </p>
-            \[
-            \frac{d}{dx}(\ln x)=\frac{1}{x}
-            \]
-            <p>
-              \(x>0\) では導関数が正なので、\(\ln x\) は単調増加します。
-            </p>
-          </div>
-
-          <div class="step">
-            <strong>一般の対数関数：</strong>
-            <p>
-              底 \(a\) の対数関数は、自然対数を使って表せます。
-            </p>
-            \[
-            \log_a x=\frac{\ln x}{\ln a}
-            \]
-            \[
-            \frac{d}{dx}(\log_a x)
-            =
-            \frac{1}{x\ln a}
-            \]
-            <p>
-              \(a>1\) では増加、\(0<a<1\) では減少します。
-            </p>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2>定義域と底の条件</h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>条件</th>
-                <th>意味</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>\(x>0\)</td>
-                <td>対数関数の入力は正である必要があります。</td>
-              </tr>
-              <tr>
-                <td>\(a>0\)</td>
-                <td>底は正である必要があります。</td>
-              </tr>
-              <tr>
-                <td>\(a\neq1\)</td>
-                <td>底が1では逆関数として成立しません。</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </article>
-      <article class="panel">
-        <h2>指数関数の基本公式</h2>
-        <div class="step-flow">
-          <div class="step">
-            <strong>自然指数関数：</strong>
-            <p>
-              底がネイピア数 \(e\) の指数関数です。
-              微分しても元の関数と同じ形になります。
-            </p>
-            \[
-            \frac{d}{dx}(e^x)=e^x
-            \]
-            <p>
-              すべての点で、関数の値と接線の傾きが一致します。
-            </p>
-          </div>
-
-          <div class="step">
-            <strong>一般の指数関数：</strong>
-            <p>
-              底 \(a\) の指数関数では、元の関数に \(\ln a\) を掛けます。
-            </p>
-            \[
-            \frac{d}{dx}(a^x)=a^x\ln a
-            \]
-            <p>
-              \(a>1\) では増加、\(0<a<1\) では減少します。
-            </p>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2>底による違い</h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>底 \(a\)</th>
-                <th>\(\ln a\)</th>
-                <th>導関数</th>
-                <th>元の関数</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>\(a>1\)</td>
-                <td>正</td>
-                <td>\(a^x\ln a>0\)</td>
-                <td>増加</td>
-              </tr>
-              <tr>
-                <td>\(a=1\)</td>
-                <td>0</td>
-                <td>0</td>
-                <td>定数関数</td>
-              </tr>
-              <tr>
-                <td>\(0<a<1\)</td>
-                <td>負</td>
-                <td>\(a^x\ln a<0\)</td>
-                <td>減少</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </article>
-      <article class="panel">
-        <h2>基本公式</h2>
-        <div class="step-flow">
-          <div class="step">
-            <strong>定数関数の微分：</strong>
-            <p>
-              \(x\) が変化しても関数の値が変わらないため、変化率は常に0です。
-            </p>
-            \[
-            \frac{d}{dx}(c)=0
-            \]
-            <p>
-              グラフは水平線で、どの点でも接線の傾きは0です。
-            </p>
-          </div>
-
-          <div class="step">
-            <strong>べき関数の微分：</strong>
-            <p>
-              指数を前へ掛け、指数を1だけ減らします。
-            </p>
-            \[
-            \frac{d}{dx}(x^n)=nx^{n-1}
-            \]
-            <p>
-              この公式をべき乗則、またはべき関数の微分公式といいます。
-            </p>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2>公式の読み方</h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>元の関数</th>
-                <th>導関数</th>
-                <th>変化</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>\(c\)</td>
-                <td>\(0\)</td>
-                <td>水平線</td>
-              </tr>
-              <tr>
-                <td>\(x\)</td>
-                <td>\(1\)</td>
-                <td>常に傾き1</td>
-              </tr>
-              <tr>
-                <td>\(x^2\)</td>
-                <td>\(2x\)</td>
-                <td>傾きがxに比例</td>
-              </tr>
-              <tr>
-                <td>\(x^3\)</td>
-                <td>\(3x^2\)</td>
-                <td>傾きは常に0以上</td>
-              </tr>
-              <tr>
-                <td>\(x^n\)</td>
-                <td>\(nx^{n-1}\)</td>
-                <td>指数を前へ掛けて1減らす</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </article>
-      <article class="panel">
-        <h2>導関数の符号</h2>
-        <div class="step-flow">
-          <div class="step">
-            <strong>導関数が正：</strong>
-            <p>
-              接線の傾きが正なので、右へ進むほど元の関数の値は大きくなります。
-            </p>
-            \[
-            f'(x)>0
-            \]
-            <p>
-              この区間で、元の関数 \(f(x)\) は増加しています。
-            </p>
-          </div>
-
-          <div class="step">
-            <strong>導関数が負：</strong>
-            <p>
-              接線の傾きが負なので、右へ進むほど元の関数の値は小さくなります。
-            </p>
-            \[
-            f'(x)<0
-            \]
-            <p>
-              この区間で、元の関数 \(f(x)\) は減少しています。
-            </p>
-          </div>
-
-          <div class="step">
-            <strong>導関数が0：</strong>
-            <p>
-              接線の傾きが0なので、その点の接線は水平になります。
-            </p>
-            \[
-            f'(x)=0
-            \]
-            <p>
-              このような点を停留点といいます。ただし、必ず極大・極小になるとは限りません。
-            </p>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2>増加・減少の判定</h2>
-        <p>
-          導関数のグラフとx軸の上下関係を見ると、
-          元の関数の増減を読み取れます。
-        </p>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>導関数</th>
-                <th>接線</th>
-                <th>元の関数</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>\(f'(x)>0\)</td>
-                <td>右上がり</td>
-                <td>増加</td>
-              </tr>
-              <tr>
-                <td>\(f'(x)=0\)</td>
-                <td>水平</td>
-                <td>増減が切り替わる可能性</td>
-              </tr>
-              <tr>
-                <td>\(f'(x)<0\)</td>
-                <td>右下がり</td>
-                <td>減少</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </article>
-      <article class="panel">
-        <h2>微分係数から導関数へ</h2>
-        <p>
-          点 \(x=a\) における瞬間的な変化率を、微分係数といいます。
-          記号では \(f'(a)\) と表します。
-        </p>
-
-        <div class="step-flow">
-          <div class="step">
-            <strong>微分係数：</strong>
-            <p>
-              特定の点 \(x=a\) における瞬間変化率です。
-              1つの点に対して1つの数値が決まります。
-            </p>
-            \[
-            f'(a)
-            =
-            \lim_{h\to0}
-            \frac{f(a+h)-f(a)}{h}
-            \]
-            <p>
-              たとえば \(f'(1)=2\) は、点 \(x=1\) における傾きが2という意味です。
-            </p>
-          </div>
-
-          <div class="step">
-            <strong>導関数：</strong>
-            <p>
-              点 \(a\) を固定せず、任意の \(x\) における微分係数を表す関数です。
-              各点の傾きを集めて、新しい関数として表します。
-            </p>
-            \[
-            f'(x)
-            =
-            \lim_{h\to0}
-            \frac{f(x+h)-f(x)}{h}
-            \]
-            <p>
-              \(f'(x)\) は数値ではなく、\(x\) に応じて値が変化する関数です。
-            </p>
-          </div>
-
-          <div class="step">
-            <strong>対応関係：</strong>
-            <p>
-              元の関数上の点 \(A(a,f(a))\) の接線の傾きは、
-              導関数グラフ上の高さ \(f'(a)\) と一致します。
-            </p>
-            \[
-            A(a,f(a))
-            \quad\longleftrightarrow\quad
-            D(a,f'(a))
-            \]
-            <p>
-              つまり、元の関数の「傾き」をグラフにしたものが導関数です。
-            </p>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2>導関数のグラフの読み方</h2>
-        <p>
-          導関数グラフの縦の値は、元の関数の接線の傾きを表します。
-        </p>
-        \[
-        f'(x)>0 \Rightarrow \text{元の関数は増加}
-        \]
-        \[
-        f'(x)<0 \Rightarrow \text{元の関数は減少}
-        \]
-        \[
-        f'(x)=0 \Rightarrow \text{接線は水平}
-        \]
-        <p>
-          導関数を見ることで、元の関数がどこで増加・減少しているかを判断できます。
-        </p>
-      </article>
-
-      <article class="panel">
-        <h2>微分係数と導関数の違い</h2>
-        <div class="step-flow">
-          <div class="step">
-            <strong>微分係数：</strong>
-            <p>特定の点における傾きです。</p>
-            \[
-            f'(a)
-            \]
-            <p>結果は1つの数値になります。</p>
-          </div>
-
-          <div class="step">
-            <strong>導関数：</strong>
-            <p>すべての点における傾きを表す関数です。</p>
-            \[
-            f'(x)
-            \]
-            <p>結果は \(x\) を含む関数になります。</p>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2 id="exampleTitle">具体例：\(f(x)=x^2\)</h2>
-        <div id="exampleContent">
-          <p>
+</section><article class="panel">
+<h2 data-original-role="dynamic-example" id="exampleTitle">具体例：\(f(x)=x^2\)</h2>
+<div id="exampleContent">
+<p>
             点Aを \(a\) とすると、
           </p>
           \[
@@ -1536,45 +1214,1191 @@
           <p>
             点 \(x=a\) における接線の傾きは \(2a\) になります。
           </p>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2>割線と接線の違い</h2>
-        <ul class="explanation-list">
-          <li>割線は、関数上の異なる2点を通る直線です。</li>
-          <li>接線は、ある1点付近で関数と同じ向きを持つ直線です。</li>
-          <li>割線の傾きは平均変化率です。</li>
-          <li>割線の傾きの極限が瞬間変化率です。</li>
-        </ul>
-      </article>
-
-      <article class="panel">
-        <h2>よくある注意点</h2>
-        <ul class="explanation-list">
-          <li>
-            \(h=0\) を差商へ直接代入すると、分母が0になります。
-          </li>
-          <li>
-            瞬間変化率は「非常に小さい区間の平均変化率」そのものではなく、
-            その極限です。
-          </li>
-          <li>
-            \(f(x)=|x|\) の \(a=0\) では、左右から近づいた傾きが一致しません。
-          </li>
-          <li>
-            接線の傾きが存在しない点もあります。
-          </li>
-        </ul>
-      </article>
-    </section>
-
-    <footer>
+</div>
+</article><article class="panel"><h2>具体例・注意点</h2>
+<div class="step-flow">
+<div class="step">
+<strong>具体例：</strong>
+<p>
+          関数を選択すると、上の「具体例」欄がその関数に対応して更新されます。
+          点Aと \(h\) を動かすことで、割線の傾きが接線の傾きへ近づく様子も確認できます。
+        </p>
+</div>
+<div class="step">
+<strong>注意点：</strong>
+<p>
+          \(h=0\) を差商へ直接代入することはできません。
+          微分係数は、\(h\) を0に代入した値ではなく、\(h\to0\) の極限です。
+        </p>
+</div>
+<div class="step">
+<strong>定義域：</strong>
+<p>
+          対数・平方根・逆三角関数などでは、点Aまたは点Bが定義域外になる場合があります。
+          警告が表示された場合は、点Aまたは \(h\) を調整してください。
+        </p>
+</div>
+</div>
+</article></div>
+<section class="section-grid lazy-chapter" id="inverse-hyperbolic"><article class="panel chapter-heading-panel"><h2>逆双曲線関数</h2></article><article class="panel">
+<h2>逆双曲線関数の基本公式</h2>
+<div class="step-flow">
+<div class="step">
+<strong>逆双曲線正弦関数：</strong>
+<p>
+              \(\operatorname{arsinh}x\) は \(\sinh y=x\) を満たす \(y\) を返します。
+            </p>
+            \[
+            \frac{d}{dx}(\operatorname{arsinh}x)
+            =
+            \frac{1}{\sqrt{1+x^2}}
+            \]
+            <p>
+              すべての実数で定義され、導関数は常に正です。
+            </p>
+</div>
+<div class="step">
+<strong>逆双曲線余弦関数：</strong>
+<p>
+              \(\operatorname{arcosh}x\) は \(\cosh y=x\) を満たす主値 \(y\ge0\) を返します。
+            </p>
+            \[
+            \frac{d}{dx}(\operatorname{arcosh}x)
+            =
+            \frac{1}{\sqrt{x^2-1}}
+            \]
+            <p>
+              定義域は \(x\ge1\) で、\(x=1\) では有限な傾きになりません。
+            </p>
+</div>
+<div class="step">
+<strong>逆双曲線正接関数：</strong>
+<p>
+              \(\operatorname{artanh}x\) は \(\tanh y=x\) を満たす \(y\) を返します。
+            </p>
+            \[
+            \frac{d}{dx}(\operatorname{artanh}x)
+            =
+            \frac{1}{1-x^2}
+            \]
+            <p>
+              定義域は \(|x|&lt;1\) で、端点 \(x=\pm1\) に近づくと傾きが発散します。
+            </p>
+</div>
+</div>
+</article><article class="panel">
+<h2>対数表示と定義域</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>関数</th>
+<th>対数表示</th>
+<th>定義域</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\(\operatorname{arsinh}x\)</td>
+<td>\(\ln\left(x+\sqrt{x^2+1}\right)\)</td>
+<td>すべての実数</td>
+</tr>
+<tr>
+<td>\(\operatorname{arcosh}x\)</td>
+<td>\(\ln\left(x+\sqrt{x^2-1}\right)\)</td>
+<td>\([1,\infty)\)</td>
+</tr>
+<tr>
+<td>\(\operatorname{artanh}x\)</td>
+<td>\(\frac12\ln\left(\frac{1+x}{1-x}\right)\)</td>
+<td>\((-1,1)\)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</article><article class="panel"><h2>具体例・注意点</h2>
+<div class="step-flow">
+<div class="step">
+<strong>具体例：arsinh</strong>
+        \[
+        \frac{d}{dx}\operatorname{arsinh}(2x)
+        =
+        \frac{2}{\sqrt{1+4x^2}}
+        \]
+        <p>合成関数では、内側 \(2x\) の微分2を掛けます。</p>
+</div>
+<div class="step">
+<strong>具体例：artanh</strong>
+        \[
+        \frac{d}{dx}\operatorname{artanh}(x^2)
+        =
+        \frac{2x}{1-x^4}
+        \]
+      </div>
+<div class="step">
+<strong>注意点</strong>
+<p>
+          \(\operatorname{arcosh}x\) は \(x\ge1\)、
+          \(\operatorname{artanh}x\) は \(|x|&lt;1\) で定義されます。
+          逆三角関数と分母の符号を混同しないようにします。
+        </p>
+</div>
+</div>
+</article></section><section class="section-grid lazy-chapter" id="hyperbolic"><article class="panel chapter-heading-panel"><h2>双曲線関数</h2></article><article class="panel">
+<h2>双曲線関数の基本公式</h2>
+<div class="step-flow">
+<div class="step">
+<strong>双曲線正弦関数：</strong>
+<p>
+              \(\sinh x\) は指数関数の差から定義されます。
+            </p>
+            \[
+            \sinh x=\frac{e^x-e^{-x}}{2}
+            \]
+            \[
+            \frac{d}{dx}(\sinh x)=\cosh x
+            \]
+            <p>
+              導関数 \(\cosh x\) は常に正なので、\(\sinh x\) は単調増加します。
+            </p>
+</div>
+<div class="step">
+<strong>双曲線余弦関数：</strong>
+<p>
+              \(\cosh x\) は指数関数の和から定義されます。
+            </p>
+            \[
+            \cosh x=\frac{e^x+e^{-x}}{2}
+            \]
+            \[
+            \frac{d}{dx}(\cosh x)=\sinh x
+            \]
+            <p>
+              \(x=0\) で導関数が0になり、最小値1を取ります。
+            </p>
+</div>
+<div class="step">
+<strong>双曲線正接関数：</strong>
+<p>
+              \(\tanh x\) は \(\sinh x\) と \(\cosh x\) の比です。
+            </p>
+            \[
+            \tanh x=\frac{\sinh x}{\cosh x}
+            \]
+            \[
+            \frac{d}{dx}(\tanh x)
+            =
+            \operatorname{sech}^2x
+            =
+            \frac{1}{\cosh^2x}
+            \]
+            <p>
+              導関数は常に正で、値域は \((-1,1)\) です。
+            </p>
+</div>
+</div>
+</article><article class="panel">
+<h2>三角関数との違い</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>関数</th>
+<th>微分</th>
+<th>特徴</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\(\sinh x\)</td>
+<td>\(\cosh x\)</td>
+<td>奇関数・単調増加</td>
+</tr>
+<tr>
+<td>\(\cosh x\)</td>
+<td>\(\sinh x\)</td>
+<td>偶関数・\(x=0\)で最小</td>
+</tr>
+<tr>
+<td>\(\tanh x\)</td>
+<td>\(\operatorname{sech}^2x\)</td>
+<td>S字型・水平漸近線あり</td>
+</tr>
+</tbody>
+</table>
+</div>
+</article><article class="panel"><h2>具体例・注意点</h2>
+<div class="step-flow">
+<div class="step">
+<strong>具体例：sinh</strong>
+        \[
+        \frac{d}{dx}\sinh(3x)
+        =
+        3\cosh(3x)
+        \]
+      </div>
+<div class="step">
+<strong>具体例：tanh</strong>
+        \[
+        \frac{d}{dx}\tanh(x^2)
+        =
+        2x\operatorname{sech}^2(x^2)
+        \]
+      </div>
+<div class="step">
+<strong>注意点</strong>
+<p>
+          \((\cosh x)'=\sinh x\) には負号が付きません。
+          三角関数の \((\cos x)'=-\sin x\) と混同しないことが重要です。
+        </p>
+</div>
+</div>
+</article></section><section class="section-grid lazy-chapter" id="inverse-trig"><article class="panel chapter-heading-panel"><h2>逆三角関数</h2></article><article class="panel">
+<h2>逆三角関数の基本公式</h2>
+<div class="step-flow">
+<div class="step">
+<strong>逆正弦関数：</strong>
+<p>
+              \(\arcsin x\) は、\(\sin y=x\) を満たす主値 \(y\) を返します。
+            </p>
+            \[
+            \frac{d}{dx}(\arcsin x)
+            =
+            \frac{1}{\sqrt{1-x^2}}
+            \]
+            <p>
+              \(|x|&lt;1\) で微分可能です。
+            </p>
+</div>
+<div class="step">
+<strong>逆余弦関数：</strong>
+<p>
+              \(\arccos x\) は、\(\cos y=x\) を満たす主値 \(y\) を返します。
+            </p>
+            \[
+            \frac{d}{dx}(\arccos x)
+            =
+            -\frac{1}{\sqrt{1-x^2}}
+            \]
+            <p>
+              導関数が負なので、\(\arccos x\) は単調減少します。
+            </p>
+</div>
+<div class="step">
+<strong>逆正接関数：</strong>
+<p>
+              \(\arctan x\) は、\(\tan y=x\) を満たす主値 \(y\) を返します。
+            </p>
+            \[
+            \frac{d}{dx}(\arctan x)
+            =
+            \frac{1}{1+x^2}
+            \]
+            <p>
+              すべての実数で定義され、導関数は常に正です。
+            </p>
+</div>
+</div>
+</article><article class="panel">
+<h2>定義域・値域・主値</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>関数</th>
+<th>定義域</th>
+<th>主値の範囲</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\(\arcsin x\)</td>
+<td>\([-1,1]\)</td>
+<td>\(\left[-\frac{\pi}{2},\frac{\pi}{2}\right]\)</td>
+</tr>
+<tr>
+<td>\(\arccos x\)</td>
+<td>\([-1,1]\)</td>
+<td>\([0,\pi]\)</td>
+</tr>
+<tr>
+<td>\(\arctan x\)</td>
+<td>すべての実数</td>
+<td>\(\left(-\frac{\pi}{2},\frac{\pi}{2}\right)\)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</article><article class="panel"><h2>具体例・注意点</h2>
+<div class="step-flow">
+<div class="step">
+<strong>具体例：arcsin</strong>
+        \[
+        \frac{d}{dx}\arcsin(2x)
+        =
+        \frac{2}{\sqrt{1-4x^2}}
+        \]
+      </div>
+<div class="step">
+<strong>具体例：arctan</strong>
+        \[
+        \frac{d}{dx}\arctan(x^2)
+        =
+        \frac{2x}{1+x^4}
+        \]
+      </div>
+<div class="step">
+<strong>注意点</strong>
+<p>
+          \(\arcsin x\) と \(\arccos x\) は入力が \([-1,1]\) に限られます。
+          また、\(\arccos x\) の導関数には負号が付きます。
+        </p>
+</div>
+</div>
+</article></section><section class="section-grid lazy-chapter" id="trig"><article class="panel chapter-heading-panel"><h2>三角関数</h2></article><article class="panel">
+<h2>三角関数の基本公式</h2>
+<div class="step-flow">
+<div class="step">
+<strong>正弦関数：</strong>
+<p>
+              \(\sin x\) の導関数は \(\cos x\) です。
+            </p>
+            \[
+            \frac{d}{dx}(\sin x)=\cos x
+            \]
+            <p>
+              \(\cos x\) の符号によって、\(\sin x\) の増減が決まります。
+            </p>
+</div>
+<div class="step">
+<strong>余弦関数：</strong>
+<p>
+              \(\cos x\) の導関数は \(-\sin x\) です。
+            </p>
+            \[
+            \frac{d}{dx}(\cos x)=-\sin x
+            \]
+            <p>
+              \(\sin x\) にマイナスが付くため、増減の向きが反転します。
+            </p>
+</div>
+<div class="step">
+<strong>正接関数：</strong>
+<p>
+              \(\tan x\) の導関数は \(\sec^2x\) です。
+            </p>
+            \[
+            \frac{d}{dx}(\tan x)
+            =
+            \sec^2x
+            =
+            \frac{1}{\cos^2x}
+            \]
+            <p>
+              定義される範囲では常に正なので、各区間で単調増加します。
+            </p>
+</div>
+</div>
+</article><article class="panel">
+<h2>定義域と増減</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>関数</th>
+<th>定義域</th>
+<th>導関数</th>
+<th>特徴</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\(\sin x\)</td>
+<td>すべての実数</td>
+<td>\(\cos x\)</td>
+<td>周期的に増減</td>
+</tr>
+<tr>
+<td>\(\cos x\)</td>
+<td>すべての実数</td>
+<td>\(-\sin x\)</td>
+<td>周期的に増減</td>
+</tr>
+<tr>
+<td>\(\tan x\)</td>
+<td>\(\cos x\neq0\)</td>
+<td>\(\sec^2x&gt;0\)</td>
+<td>各区間で単調増加</td>
+</tr>
+</tbody>
+</table>
+</div>
+</article><article class="panel"><h2>具体例・注意点</h2>
+<div class="step-flow">
+<div class="step">
+<strong>具体例：sin</strong>
+        \[
+        \frac{d}{dx}\sin(x^2)
+        =
+        2x\cos(x^2)
+        \]
+      </div>
+<div class="step">
+<strong>具体例：cos</strong>
+        \[
+        \frac{d}{dx}\cos(3x)
+        =
+        -3\sin(3x)
+        \]
+      </div>
+<div class="step">
+<strong>注意点</strong>
+<p>
+          三角関数の微分公式は角度をラジアンで扱うときの公式です。
+          \(\cos x\) の微分の負号と、合成関数の内側の微分を忘れないようにします。
+        </p>
+</div>
+</div>
+</article></section><section class="section-grid lazy-chapter" id="logarithm"><article class="panel chapter-heading-panel"><h2>対数関数</h2></article><article class="panel">
+<h2>対数関数の基本公式</h2>
+<div class="step-flow">
+<div class="step">
+<strong>自然対数：</strong>
+<p>
+              底が \(e\) の対数関数です。定義域は \(x&gt;0\) です。
+            </p>
+            \[
+            \frac{d}{dx}(\ln x)=\frac{1}{x}
+            \]
+            <p>
+              \(x&gt;0\) では導関数が正なので、\(\ln x\) は単調増加します。
+            </p>
+</div>
+<div class="step">
+<strong>一般の対数関数：</strong>
+<p>
+              底 \(a\) の対数関数は、自然対数を使って表せます。
+            </p>
+            \[
+            \log_a x=\frac{\ln x}{\ln a}
+            \]
+            \[
+            \frac{d}{dx}(\log_a x)
+            =
+            \frac{1}{x\ln a}
+            \]
+            <p>
+              \(a&gt;1\) では増加、\(0<a<1\) <="" p="" では減少します。="">
+</a<1\)></p></div>
+</div>
+</article><article class="panel">
+<h2>定義域と底の条件</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>条件</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\(x&gt;0\)</td>
+<td>対数関数の入力は正である必要があります。</td>
+</tr>
+<tr>
+<td>\(a&gt;0\)</td>
+<td>底は正である必要があります。</td>
+</tr>
+<tr>
+<td>\(a\neq1\)</td>
+<td>底が1では逆関数として成立しません。</td>
+</tr>
+</tbody>
+</table>
+</div>
+</article><article class="panel"><h2>具体例・注意点</h2>
+<div class="step-flow">
+<div class="step">
+<strong>具体例：自然対数</strong>
+        \[
+        \frac{d}{dx}\ln(x^2+1)
+        =
+        \frac{2x}{x^2+1}
+        \]
+      </div>
+<div class="step">
+<strong>具体例：一般の対数</strong>
+        \[
+        \frac{d}{dx}\log_2(3x+1)
+        =
+        \frac{3}{(3x+1)\ln2}
+        \]
+      </div>
+<div class="step">
+<strong>注意点</strong>
+<p>
+          対数の中身は正でなければなりません。
+          一般の対数では \(a&gt;0,\ a\neq1\) も必要です。
+          合成関数では「中身の微分」を分子に付けます。
+        </p>
+</div>
+</div>
+</article></section><section class="section-grid lazy-chapter" id="exponential"><article class="panel chapter-heading-panel"><h2>指数関数</h2></article><article class="panel">
+<h2>指数関数の基本公式</h2>
+<div class="step-flow">
+<div class="step">
+<strong>自然指数関数：</strong>
+<p>
+              底がネイピア数 \(e\) の指数関数です。
+              微分しても元の関数と同じ形になります。
+            </p>
+            \[
+            \frac{d}{dx}(e^x)=e^x
+            \]
+            <p>
+              すべての点で、関数の値と接線の傾きが一致します。
+            </p>
+</div>
+<div class="step">
+<strong>一般の指数関数：</strong>
+<p>
+              底 \(a\) の指数関数では、元の関数に \(\ln a\) を掛けます。
+            </p>
+            \[
+            \frac{d}{dx}(a^x)=a^x\ln a
+            \]
+            <p>
+              \(a&gt;1\) では増加、\(0<a<1\) <="" p="" では減少します。="">
+</a<1\)></p></div>
+</div>
+</article><article class="panel">
+<h2>底による違い</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>底 \(a\)</th>
+<th>\(\ln a\)</th>
+<th>導関数</th>
+<th>元の関数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\(a&gt;1\)</td>
+<td>正</td>
+<td>\(a^x\ln a&gt;0\)</td>
+<td>増加</td>
+</tr>
+<tr>
+<td>\(a=1\)</td>
+<td>0</td>
+<td>0</td>
+<td>定数関数</td>
+</tr>
+<tr>
+<td>\(0<a<1\)< td="">
+<td>負</td>
+<td>\(a^x\ln a&lt;0\)</td>
+<td>減少</td>
+</a<1\)<></td></tr>
+</tbody>
+</table>
+</div>
+</article><article class="panel"><h2>具体例・注意点</h2>
+<div class="step-flow">
+<div class="step">
+<strong>具体例：自然指数関数</strong>
+        \[
+        \frac{d}{dx}e^{x^2}
+        =
+        2xe^{x^2}
+        \]
+      </div>
+<div class="step">
+<strong>具体例：一般の指数関数</strong>
+        \[
+        \frac{d}{dx}3^{2x}
+        =
+        2\ln3\cdot3^{2x}
+        \]
+      </div>
+<div class="step">
+<strong>注意点</strong>
+<p>
+          \((a^x)'=a^x\ln a\) です。
+          微分してもそのままになるのは底が \(e\) の場合だけです。
+          指数の中に関数があるときは内側の微分も掛けます。
+        </p>
+</div>
+</div>
+</article></section><section class="section-grid lazy-chapter" id="power-basic"><article class="panel chapter-heading-panel"><h2>定数・べき関数</h2></article><article class="panel">
+<h2>基本公式</h2>
+<div class="step-flow">
+<div class="step">
+<strong>定数関数の微分：</strong>
+<p>
+              \(x\) が変化しても関数の値が変わらないため、変化率は常に0です。
+            </p>
+            \[
+            \frac{d}{dx}(c)=0
+            \]
+            <p>
+              グラフは水平線で、どの点でも接線の傾きは0です。
+            </p>
+</div>
+<div class="step">
+<strong>べき関数の微分：</strong>
+<p>
+              指数を前へ掛け、指数を1だけ減らします。
+            </p>
+            \[
+            \frac{d}{dx}(x^n)=nx^{n-1}
+            \]
+            <p>
+              この公式をべき乗則、またはべき関数の微分公式といいます。
+            </p>
+</div>
+</div>
+</article><article class="panel">
+<h2>公式の読み方</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>元の関数</th>
+<th>導関数</th>
+<th>変化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\(c\)</td>
+<td>\(0\)</td>
+<td>水平線</td>
+</tr>
+<tr>
+<td>\(x\)</td>
+<td>\(1\)</td>
+<td>常に傾き1</td>
+</tr>
+<tr>
+<td>\(x^2\)</td>
+<td>\(2x\)</td>
+<td>傾きがxに比例</td>
+</tr>
+<tr>
+<td>\(x^3\)</td>
+<td>\(3x^2\)</td>
+<td>傾きは常に0以上</td>
+</tr>
+<tr>
+<td>\(x^n\)</td>
+<td>\(nx^{n-1}\)</td>
+<td>指数を前へ掛けて1減らす</td>
+</tr>
+</tbody>
+</table>
+</div>
+</article><article class="panel"><h2>具体例・注意点</h2>
+<div class="step-flow">
+<div class="step">
+<strong>具体例：べき関数</strong>
+        \[
+        \frac{d}{dx}x^5=5x^4
+        \]
+      </div>
+<div class="step">
+<strong>具体例：平方根と逆数</strong>
+        \[
+        \frac{d}{dx}\sqrt{x}
+        =
+        \frac{1}{2\sqrt{x}},
+        \qquad
+        \frac{d}{dx}\frac1x
+        =
+        -\frac1{x^2}
+        \]
+      </div>
+<div class="step">
+<strong>注意点</strong>
+<p>
+          指数を前へ下ろした後、指数を1減らします。
+          負の指数・分数指数では、分母が0になる点や実数としての定義域を確認します。
+        </p>
+</div>
+</div>
+</article></section><section class="section-grid lazy-chapter" id="derivative-sign"><article class="panel chapter-heading-panel"><h2>導関数の符号と増減</h2></article><article class="panel">
+<h2>導関数の符号</h2>
+<div class="step-flow">
+<div class="step">
+<strong>導関数が正：</strong>
+<p>
+              接線の傾きが正なので、右へ進むほど元の関数の値は大きくなります。
+            </p>
+            \[
+            f'(x)&gt;0
+            \]
+            <p>
+              この区間で、元の関数 \(f(x)\) は増加しています。
+            </p>
+</div>
+<div class="step">
+<strong>導関数が負：</strong>
+<p>
+              接線の傾きが負なので、右へ進むほど元の関数の値は小さくなります。
+            </p>
+            \[
+            f'(x)&lt;0
+            \]
+            <p>
+              この区間で、元の関数 \(f(x)\) は減少しています。
+            </p>
+</div>
+<div class="step">
+<strong>導関数が0：</strong>
+<p>
+              接線の傾きが0なので、その点の接線は水平になります。
+            </p>
+            \[
+            f'(x)=0
+            \]
+            <p>
+              このような点を停留点といいます。ただし、必ず極大・極小になるとは限りません。
+            </p>
+</div>
+</div>
+</article><article class="panel">
+<h2>増加・減少の判定</h2>
+<p>
+          導関数のグラフとx軸の上下関係を見ると、
+          元の関数の増減を読み取れます。
+        </p>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>導関数</th>
+<th>接線</th>
+<th>元の関数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\(f'(x)&gt;0\)</td>
+<td>右上がり</td>
+<td>増加</td>
+</tr>
+<tr>
+<td>\(f'(x)=0\)</td>
+<td>水平</td>
+<td>増減が切り替わる可能性</td>
+</tr>
+<tr>
+<td>\(f'(x)&lt;0\)</td>
+<td>右下がり</td>
+<td>減少</td>
+</tr>
+</tbody>
+</table>
+</div>
+</article><article class="panel"><h2>具体例・注意点</h2>
+<div class="step-flow">
+<div class="step">
+<strong>具体例：</strong>
+<p>\(f(x)=x^2\) では \(f'(x)=2x\) です。</p>
+        \[
+        x&lt;0\Rightarrow f'(x)&lt;0,\qquad
+        x=0\Rightarrow f'(x)=0,\qquad
+        x&gt;0\Rightarrow f'(x)&gt;0
+        \]
+        <p>したがって、原点まで減少し、原点から増加します。</p>
+</div>
+<div class="step">
+<strong>注意点</strong>
+<p>
+          \(f'(a)=0\) であっても、必ず極大・極小になるとは限りません。
+          たとえば \(f(x)=x^3\) は \(x=0\) で導関数が0ですが、増加を続けます。
+        </p>
+</div>
+</div>
+</article></section><section class="section-grid lazy-chapter" id="derivative-concept"><article class="panel chapter-heading-panel"><h2>微分係数と導関数</h2></article><article class="panel">
+<h2>微分係数から導関数へ</h2>
+<p>
+          点 \(x=a\) における瞬間的な変化率を、微分係数といいます。
+          記号では \(f'(a)\) と表します。
+        </p>
+<div class="step-flow">
+<div class="step">
+<strong>微分係数：</strong>
+<p>
+              特定の点 \(x=a\) における瞬間変化率です。
+              1つの点に対して1つの数値が決まります。
+            </p>
+            \[
+            f'(a)
+            =
+            \lim_{h\to0}
+            \frac{f(a+h)-f(a)}{h}
+            \]
+            <p>
+              たとえば \(f'(1)=2\) は、点 \(x=1\) における傾きが2という意味です。
+            </p>
+</div>
+<div class="step">
+<strong>導関数：</strong>
+<p>
+              点 \(a\) を固定せず、任意の \(x\) における微分係数を表す関数です。
+              各点の傾きを集めて、新しい関数として表します。
+            </p>
+            \[
+            f'(x)
+            =
+            \lim_{h\to0}
+            \frac{f(x+h)-f(x)}{h}
+            \]
+            <p>
+              \(f'(x)\) は数値ではなく、\(x\) に応じて値が変化する関数です。
+            </p>
+</div>
+<div class="step">
+<strong>対応関係：</strong>
+<p>
+              元の関数上の点 \(A(a,f(a))\) の接線の傾きは、
+              導関数グラフ上の高さ \(f'(a)\) と一致します。
+            </p>
+            \[
+            A(a,f(a))
+            \quad\longleftrightarrow\quad
+            D(a,f'(a))
+            \]
+            <p>
+              つまり、元の関数の「傾き」をグラフにしたものが導関数です。
+            </p>
+</div>
+</div>
+</article><article class="panel">
+<h2>導関数のグラフの読み方</h2>
+<p>
+          導関数グラフの縦の値は、元の関数の接線の傾きを表します。
+        </p>
+        \[
+        f'(x)&gt;0 \Rightarrow \text{元の関数は増加}
+        \]
+        \[
+        f'(x)&lt;0 \Rightarrow \text{元の関数は減少}
+        \]
+        \[
+        f'(x)=0 \Rightarrow \text{接線は水平}
+        \]
+        <p>
+          導関数を見ることで、元の関数がどこで増加・減少しているかを判断できます。
+        </p>
+</article><article class="panel">
+<h2>微分係数と導関数の違い</h2>
+<div class="step-flow">
+<div class="step">
+<strong>微分係数：</strong>
+<p>特定の点における傾きです。</p>
+            \[
+            f'(a)
+            \]
+            <p>結果は1つの数値になります。</p>
+</div>
+<div class="step">
+<strong>導関数：</strong>
+<p>すべての点における傾きを表す関数です。</p>
+            \[
+            f'(x)
+            \]
+            <p>結果は \(x\) を含む関数になります。</p>
+</div>
+</div>
+</article><article class="panel"><h2>具体例・注意点</h2>
+<div class="step-flow">
+<div class="step">
+<strong>具体例：</strong>
+<p>\(f(x)=x^2\) の導関数は \(f'(x)=2x\) です。</p>
+        \[
+        f'(1)=2,\qquad f'(3)=6
+        \]
+        <p>
+          \(f'(x)\) は傾きを返す関数であり、
+          \(f'(1)\) や \(f'(3)\) は特定の点における微分係数です。
+        </p>
+</div>
+<div class="step">
+<strong>注意点</strong>
+<p>
+          微分係数 \(f'(a)\) は1つの数値、
+          導関数 \(f'(x)\) は \(x\) に応じて値が変わる関数です。
+          両者を区別して読みます。
+        </p>
+</div>
+</div>
+</article></section><section class="section-grid lazy-chapter" id="polynomial-tool">
+<article class="panel chapter-heading-panel">
+<h2>多項式・未知数計算</h2>
+<p>
+      一次・二次・三次関数を係数または数式から設定し、
+      関数値・導関数・未知の係数・未知の \(x\) を計算してグラフで確認します。
+    </p>
+</article>
+<div class="polynomial-layout">
+<article class="panel">
+<h2>数式と値の入力</h2>
+<div class="polynomial-controls">
+<label>
+          数式
+          <input class="polynomial-expression-input" id="polyExpression" placeholder="例：y=2x^3-3x^2+x-4" type="text" value="y=x^2-x-1"/>
+</label>
+<p class="polynomial-help">
+          使用できる形：\(y=a_3x^3+a_2x^2+a_1x+a_0\)。
+          「^」と通常の数値を使って入力してください。
+        </p>
+<div class="button-row">
+<button id="polyParseButton" type="button">数式を係数へ反映</button>
+<button class="secondary" id="polyPresetLinear" type="button">一次関数</button>
+<button class="secondary" id="polyPresetQuadratic" type="button">二次関数</button>
+<button class="secondary" id="polyPresetCubic" type="button">三次関数</button>
+</div>
+<div class="polynomial-input-grid">
+<label>\(a_3\)：\(x^3\) の係数
+            <input id="polyA3" step="any" type="number" value="0"/>
+</label>
+<label>\(a_2\)：\(x^2\) の係数
+            <input id="polyA2" step="any" type="number" value="1"/>
+</label>
+<label>\(a_1\)：\(x\) の係数
+            <input id="polyA1" step="any" type="number" value="-1"/>
+</label>
+<label>\(a_0\)：定数項
+            <input id="polyA0" step="any" type="number" value="-1"/>
+</label>
+</div>
+<div class="polynomial-formula-output" id="polyFormulaOutput"></div>
+</div>
+</article>
+<article class="panel">
+<h2>既知の値から未知数を求める</h2>
+<div class="polynomial-solver-grid">
+<label>求める値
+          <select id="polySolveTarget">
+<option value="y">y（関数値）</option>
+<option value="x">x</option>
+<option value="a3">a₃</option>
+<option value="a2">a₂</option>
+<option value="a1">a₁</option>
+<option value="a0">a₀</option>
+</select>
+</label>
+<label>x
+          <input id="polyX" step="any" type="number" value="2"/>
+</label>
+<label>y
+          <input id="polyY" step="any" type="number" value="1"/>
+</label>
+</div>
+<div class="button-row" style="margin-top:12px;">
+<button id="polyCalculateButton" type="button">計算する</button>
+<button class="secondary" id="polyUseResultButton" type="button">
+          結果を入力値へ反映
+        </button>
+</div>
+<div aria-live="polite" class="polynomial-result" id="polyResult">
+        求める値を選び、「計算する」を押してください。
+      </div>
+<div class="step-flow">
+<div class="step">
+<strong>例1：関数値を求める</strong>
+<p>
+            \(y=x^2-x-1\)、\(x=2\) なら \(y=1\) です。
+          </p>
+</div>
+<div class="step">
+<strong>例2：定数項を求める</strong>
+<p>
+            \(y=x^2-x+a_0\)、\(x=2,\ y=5\) なら \(a_0=3\) です。
+          </p>
+</div>
+<div class="step">
+<strong>例3：xを求める</strong>
+<p>
+            \(y\) と係数が既知なら、
+            \(a_3x^3+a_2x^2+a_1x+a_0-y=0\) の実数解を数値計算します。
+          </p>
+</div>
+</div>
+</article>
+<article class="panel graph-panel">
+<h2>多項式のグラフ</h2>
+<div class="polynomial-legend">
+<span class="legend-item">
+<span class="legend-line function-line"></span> \(y=f(x)\)
+        </span>
+<span class="legend-item">
+<span class="legend-line derivative-line"></span> 接線
+        </span>
+<span class="legend-item">
+<span class="legend-dot point-line"></span> 入力した点 \((x,y)\)
+        </span>
+</div>
+<div class="polynomial-canvas-wrap" id="polyCanvasWrap">
+<canvas id="polyCanvas"></canvas>
+</div>
+<p class="polynomial-help">
+        入力した係数と \(x,y\) に応じて自動更新します。
+        点が関数上にない場合も、その位置を確認できます。
+      </p>
+</article>
+<article class="panel">
+<h2>導関数のグラフ</h2>
+<div class="formula-box" id="polyDerivativeFormula"></div>
+<div class="polynomial-derivative-wrap" id="polyDerivativeCanvasWrap">
+<canvas id="polyDerivativeCanvas"></canvas>
+</div>
+<div class="summary-grid">
+<div class="value-card">
+<div class="label">入力した x</div>
+<div class="value" id="polyXValue">2</div>
+</div>
+<div class="value-card">
+<div class="label">f(x)</div>
+<div class="value" id="polyFunctionValue">1</div>
+</div>
+<div class="value-card highlight-card">
+<div class="label">f'(x)</div>
+<div class="value" id="polyDerivativeValue">3</div>
+</div>
+<div class="value-card highlight-card">
+<div class="label">接線</div>
+<div class="value" id="polyTangentValue">y=3x-5</div>
+</div>
+</div>
+</article>
+</div>
+</section><section class="section-grid lazy-chapter" id="summary"><article class="panel chapter-heading-panel"><h2>総まとめ</h2><p>微分の基本公式、定義域、増減、微分係数と導関数の関係を一覧で確認します。</p></article><article class="panel"><h2>基本公式一覧</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>分類</th>
+<th>関数</th>
+<th>導関数</th>
+<th>主な注意点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>定数・べき</td>
+<td>\(c,\ x^n\)</td>
+<td>\(0,\ nx^{n-1}\)</td>
+<td>分数・負の指数では定義域を確認</td>
+</tr>
+<tr>
+<td>指数</td>
+<td>\(e^x,\ a^x\)</td>
+<td>\(e^x,\ a^x\ln a\)</td>
+<td>\(a&gt;0\)</td>
+</tr>
+<tr>
+<td>対数</td>
+<td>\(\ln x,\ \log_a x\)</td>
+<td>\(\frac1x,\ \frac1{x\ln a}\)</td>
+<td>\(x&gt;0,\ a&gt;0,\ a\neq1\)</td>
+</tr>
+<tr>
+<td>三角</td>
+<td>\(\sin x,\cos x,\tan x\)</td>
+<td>\(\cos x,-\sin x,\sec^2x\)</td>
+<td>角度はラジアン</td>
+</tr>
+<tr>
+<td>逆三角</td>
+<td>\(\arcsin x,\arccos x,\arctan x\)</td>
+<td>
+              \(\frac1{\sqrt{1-x^2}},
+              -\frac1{\sqrt{1-x^2}},
+              \frac1{1+x^2}\)
+            </td>
+<td>arcsin・arccosは入力範囲に注意</td>
+</tr>
+<tr>
+<td>双曲線</td>
+<td>\(\sinh x,\cosh x,\tanh x\)</td>
+<td>\(\cosh x,\sinh x,\operatorname{sech}^2x\)</td>
+<td>coshの微分に負号は付かない</td>
+</tr>
+<tr>
+<td>逆双曲線</td>
+<td>
+              \(\operatorname{arsinh}x,
+              \operatorname{arcosh}x,
+              \operatorname{artanh}x\)
+            </td>
+<td>
+              \(\frac1{\sqrt{1+x^2}},
+              \frac1{\sqrt{x^2-1}},
+              \frac1{1-x^2}\)
+            </td>
+<td>各関数の定義域を確認</td>
+</tr>
+</tbody>
+</table>
+</div>
+</article><article class="panel"><h2>微分を読むための3つの視点</h2>
+<div class="step-flow">
+<div class="step">
+<strong>1. 局所的な傾き</strong>
+        \[
+        f'(a)
+        =
+        \lim_{h\to0}
+        \frac{f(a+h)-f(a)}{h}
+        \]
+        <p>割線の傾きの極限が、点 \(a\) における接線の傾きです。</p>
+</div>
+<div class="step">
+<strong>2. 導関数の符号</strong>
+        \[
+        f'(x)&gt;0\Rightarrow増加,\qquad
+        f'(x)&lt;0\Rightarrow減少
+        \]
+      </div>
+<div class="step">
+<strong>3. 定義域</strong>
+<p>
+          元の関数が定義されていても、端点や分母が0になる点では、
+          有限な導関数が存在しないことがあります。
+        </p>
+</div>
+</div>
+</article><article class="panel"><h2>学習チェック</h2>
+<div class="step-flow">
+<div class="step">
+<strong>公式：</strong>
+<p>関数を見て、対応する導関数を説明できるか。</p>
+</div>
+<div class="step">
+<strong>具体例：</strong>
+<p>合成関数では、内側の微分を掛けられるか。</p>
+</div>
+<div class="step">
+<strong>定義域：</strong>
+<p>対数・平方根・逆関数で、計算可能な範囲を判断できるか。</p>
+</div>
+<div class="step">
+<strong>グラフ：</strong>
+<p>導関数の符号から、元の関数の増加・減少を判断できるか。</p>
+</div>
+</div>
+</article></section>
+<footer>
       微分公式集
     </footer>
-  </main>
-
-  <script>
+</main>
+<script>
     'use strict';
 
     const CONFIG = {
@@ -2963,27 +3787,34 @@
     }
 
     function typesetMath() {
-      if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
-        if (typeof window.MathJax.typesetClear === 'function') {
-          window.MathJax.typesetClear([
-            elements.calculation1,
-            elements.calculation2,
-            elements.calculation3,
-            elements.exampleTitle,
-            elements.exampleContent
-          ]);
-        }
-
-        window.MathJax.typesetPromise([
-          elements.calculation1,
-          elements.calculation2,
-          elements.calculation3,
-          elements.exampleTitle,
-          elements.exampleContent
-        ]).catch(error => {
-          console.warn('MathJax rendering failed:', error);
-        });
+      if (
+        !window.MathJax ||
+        typeof window.MathJax.typesetPromise !== 'function'
+      ) {
+        return;
       }
+
+      const targets = [
+        elements.calculation1,
+        elements.calculation2,
+        elements.calculation3,
+        elements.exampleTitle,
+        elements.exampleContent
+      ].filter(element => {
+        return element && element.offsetParent !== null;
+      });
+
+      if (!targets.length) {
+        return;
+      }
+
+      if (typeof window.MathJax.typesetClear === 'function') {
+        window.MathJax.typesetClear(targets);
+      }
+
+      window.MathJax.typesetPromise(targets).catch(error => {
+        console.warn('MathJax rendering failed:', error);
+      });
     }
 
     function updateAll() {
@@ -3305,7 +4136,688 @@
       resizeDerivativeCanvas();
     }
 
-    document.addEventListener('DOMContentLoaded', initialize);
+    
+    window.initializeBasicVisualizer = initialize;
+    
   </script>
-</body>
+<script>
+(() => {
+  'use strict';
+
+  let initialized = false;
+  let lastResult = null;
+
+  const state = {
+    a3: 0,
+    a2: 1,
+    a1: -1,
+    a0: -1,
+    x: 2,
+    y: 1
+  };
+
+  let el = null;
+  let ctx = null;
+  let dctx = null;
+
+  const EPS = 1e-10;
+  const RANGE = { xMin: -6, xMax: 6, yMin: -10, yMax: 10, pad: 38 };
+
+  function num(value) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  function fmt(value, digits = 6) {
+    if (!Number.isFinite(value)) return '定義できません';
+    if (Math.abs(value) < 1e-12) return '0';
+    return String(Number(value.toFixed(digits)));
+  }
+
+  function coeffTerm(coef, power, first) {
+    if (Math.abs(coef) < EPS) return '';
+    const sign = coef < 0 ? '-' : (first ? '' : '+');
+    const abs = Math.abs(coef);
+    const coeff = (power > 0 && Math.abs(abs - 1) < EPS) ? '' : fmt(abs);
+    const variable =
+      power === 3 ? 'x^3' :
+      power === 2 ? 'x^2' :
+      power === 1 ? 'x' : '';
+    return `${sign}${coeff}${variable}`;
+  }
+
+  function expressionText() {
+    const terms = [];
+    [
+      [state.a3, 3],
+      [state.a2, 2],
+      [state.a1, 1],
+      [state.a0, 0]
+    ].forEach(([coef, power]) => {
+      const t = coeffTerm(coef, power, terms.length === 0);
+      if (t) terms.push(t);
+    });
+    return `y=${terms.join('') || '0'}`;
+  }
+
+  function latexPolynomial() {
+    const text = expressionText().slice(2);
+    return text
+      .replace(/x\^3/g, 'x^3')
+      .replace(/x\^2/g, 'x^2');
+  }
+
+  function latexDerivative() {
+    const parts = [];
+    const push = (coef, power) => {
+      if (Math.abs(coef) < EPS) return;
+      const first = parts.length === 0;
+      parts.push(coeffTerm(coef, power, first));
+    };
+    push(3 * state.a3, 2);
+    push(2 * state.a2, 1);
+    push(state.a1, 0);
+    return parts.join('') || '0';
+  }
+
+  function f(x) {
+    return ((state.a3 * x + state.a2) * x + state.a1) * x + state.a0;
+  }
+
+  function df(x) {
+    return (3 * state.a3 * x + 2 * state.a2) * x + state.a1;
+  }
+
+  function syncStateFromInputs() {
+    state.a3 = num(el.a3.value);
+    state.a2 = num(el.a2.value);
+    state.a1 = num(el.a1.value);
+    state.a0 = num(el.a0.value);
+    state.x = num(el.x.value);
+    state.y = num(el.y.value);
+  }
+
+  function syncInputsFromState() {
+    el.a3.value = state.a3;
+    el.a2.value = state.a2;
+    el.a1.value = state.a1;
+    el.a0.value = state.a0;
+    el.x.value = state.x;
+    el.y.value = state.y;
+    el.expression.value = expressionText();
+  }
+
+  function parsePolynomial(raw) {
+    let s = raw
+      .replace(/\s+/g, '')
+      .replace(/−/g, '-')
+      .replace(/\*/g, '')
+      .toLowerCase();
+
+    if (s.includes('=')) s = s.split('=').slice(1).join('=');
+    if (!s) throw new Error('数式を入力してください。');
+
+    s = s.replace(/-/g, '+-');
+    if (s.startsWith('+')) s = s.slice(1);
+
+    const coeffs = { 3: 0, 2: 0, 1: 0, 0: 0 };
+    const terms = s.split('+').filter(Boolean);
+
+    for (const term of terms) {
+      let power = 0;
+      let coefficientText = term;
+
+      if (term.includes('x')) {
+        power = 1;
+        if (term.includes('x^3')) power = 3;
+        else if (term.includes('x^2')) power = 2;
+
+        coefficientText = term
+          .replace('x^3', '')
+          .replace('x^2', '')
+          .replace('x', '');
+
+        if (coefficientText === '' || coefficientText === '+') {
+          coefficientText = '1';
+        } else if (coefficientText === '-') {
+          coefficientText = '-1';
+        }
+      }
+
+      const coefficient = Number(coefficientText);
+      if (!Number.isFinite(coefficient) || power > 3) {
+        throw new Error('一次から三次までの多項式として解釈できません。');
+      }
+      coeffs[power] += coefficient;
+    }
+    return coeffs;
+  }
+
+  function typesetTargets(targets) {
+    if (!window.MathJax || !MathJax.typesetPromise) return;
+    if (MathJax.typesetClear) MathJax.typesetClear(targets);
+    MathJax.typesetPromise(targets).catch(console.warn);
+  }
+
+  function updateFormulaOutputs() {
+    el.expression.value = expressionText();
+    el.formula.innerHTML =
+      `\\[f(x)=${latexPolynomial()}\\]` +
+      `\\[f'\\!(x)=${latexDerivative()}\\]`;
+    el.derivativeFormula.innerHTML =
+      `\\[f'\\!(x)=${latexDerivative()}\\]`;
+    typesetTargets([el.formula, el.derivativeFormula]);
+  }
+
+  function tangentText(x) {
+    const y = f(x);
+    const m = df(x);
+    const b = y - m * x;
+    const mPart = Math.abs(m) < EPS ? '' :
+      Math.abs(m - 1) < EPS ? 'x' :
+      Math.abs(m + 1) < EPS ? '-x' : `${fmt(m)}x`;
+    const bPart = Math.abs(b) < EPS ? '' :
+      b > 0 ? `${mPart ? '+' : ''}${fmt(b)}` : `-${fmt(Math.abs(b))}`;
+    return `y=${mPart}${bPart || (!mPart ? '0' : '')}`;
+  }
+
+  function updateMetrics() {
+    const fx = f(state.x);
+    const dfx = df(state.x);
+    el.xValue.textContent = fmt(state.x);
+    el.functionValue.textContent = fmt(fx);
+    el.derivativeValue.textContent = fmt(dfx);
+    el.tangentValue.textContent = tangentText(state.x);
+  }
+
+  function solveQuadratic(a, b, c) {
+    if (Math.abs(a) < EPS) {
+      if (Math.abs(b) < EPS) return [];
+      return [-c / b];
+    }
+    const d = b * b - 4 * a * c;
+    if (d < -EPS) return [];
+    if (Math.abs(d) <= EPS) return [-b / (2 * a)];
+    const root = Math.sqrt(d);
+    return [(-b - root) / (2 * a), (-b + root) / (2 * a)];
+  }
+
+  function polynomialRootsReal() {
+    const a = state.a3, b = state.a2, c = state.a1, d = state.a0 - state.y;
+
+    if (Math.abs(a) < EPS) return solveQuadratic(b, c, d);
+
+    // Cubic: locate real roots by scanning + bisection.
+    const bound = 1 + Math.max(Math.abs(b/a), Math.abs(c/a), Math.abs(d/a));
+    const roots = [];
+    const g = x => ((a*x+b)*x+c)*x+d;
+    const steps = 2400;
+    let px = -bound;
+    let py = g(px);
+
+    for (let i = 1; i <= steps; i++) {
+      const x = -bound + (2 * bound * i / steps);
+      const y = g(x);
+
+      if (Math.abs(y) < 1e-7) roots.push(x);
+
+      if (py * y < 0) {
+        let lo = px, hi = x, flo = py;
+        for (let k = 0; k < 80; k++) {
+          const mid = (lo + hi) / 2;
+          const fm = g(mid);
+          if (flo * fm <= 0) hi = mid;
+          else { lo = mid; flo = fm; }
+        }
+        roots.push((lo + hi) / 2);
+      }
+      px = x; py = y;
+    }
+
+    roots.sort((u, v) => u - v);
+    return roots.filter((r, i) => i === 0 || Math.abs(r - roots[i-1]) > 1e-5);
+  }
+
+  function calculateUnknown() {
+    syncStateFromInputs();
+    const target = el.target.value;
+    let value = null;
+    let text = '';
+    let warning = false;
+
+    if (target === 'y') {
+      value = f(state.x);
+      text =
+        `\\[y=${fmt(state.a3)}(${fmt(state.x)})^3+` +
+        `${fmt(state.a2)}(${fmt(state.x)})^2+` +
+        `${fmt(state.a1)}(${fmt(state.x)})+${fmt(state.a0)}` +
+        `=${fmt(value)}\\]`;
+    } else if (target === 'x') {
+      const roots = polynomialRootsReal();
+      lastResult = roots;
+      if (!roots.length) {
+        warning = true;
+        text = '実数解は見つかりませんでした。';
+      } else {
+        text =
+          `\\[${latexPolynomial()}=${fmt(state.y)}\\]` +
+          `\\[x=${roots.map(r => fmt(r)).join(',\\ ')}\\]`;
+      }
+    } else {
+      const power = Number(target.slice(1));
+      const xPow = Math.pow(state.x, power);
+      if (Math.abs(xPow) < EPS) {
+        warning = true;
+        text =
+          `x=${fmt(state.x)} では、この係数を一意に求められません。`;
+      } else {
+        const known =
+          (target === 'a3' ? 0 : state.a3 * state.x**3) +
+          (target === 'a2' ? 0 : state.a2 * state.x**2) +
+          (target === 'a1' ? 0 : state.a1 * state.x) +
+          (target === 'a0' ? 0 : state.a0);
+        value = (state.y - known) / xPow;
+        text =
+          `\\[${target}=` +
+          `\\frac{${fmt(state.y)}-(${fmt(known)})}` +
+          `{${fmt(xPow)}}=${fmt(value)}\\]`;
+      }
+    }
+
+    if (target !== 'x') lastResult = value;
+    el.result.classList.toggle('warning', warning);
+    el.result.innerHTML = text;
+    typesetTargets([el.result]);
+    updateAll();
+  }
+
+  function applyResult() {
+    const target = el.target.value;
+    if (lastResult === null) return;
+
+    if (target === 'x') {
+      if (Array.isArray(lastResult) && lastResult.length) {
+        state.x = lastResult[0];
+      }
+    } else if (target === 'y') {
+      state.y = lastResult;
+    } else {
+      state[target] = lastResult;
+    }
+    syncInputsFromState();
+    updateAll();
+  }
+
+  function graphX(x, width) {
+    return RANGE.pad + (x - RANGE.xMin) /
+      (RANGE.xMax - RANGE.xMin) * (width - 2 * RANGE.pad);
+  }
+  function graphY(y, height) {
+    return RANGE.pad + (RANGE.yMax - y) /
+      (RANGE.yMax - RANGE.yMin) * (height - 2 * RANGE.pad);
+  }
+
+  function resizeCanvas(canvas, wrap, context, drawFn) {
+    const rect = wrap.getBoundingClientRect();
+    const ratio = Math.max(1, window.devicePixelRatio || 1);
+    canvas.width = Math.round(rect.width * ratio);
+    canvas.height = Math.round(rect.height * ratio);
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    drawFn(rect.width, rect.height);
+  }
+
+  function drawAxes(context, width, height, yMin=RANGE.yMin, yMax=RANGE.yMax) {
+    const gy = y => RANGE.pad + (yMax-y)/(yMax-yMin)*(height-2*RANGE.pad);
+    context.clearRect(0, 0, width, height);
+    context.fillStyle = '#fff';
+    context.fillRect(0, 0, width, height);
+    context.strokeStyle = '#e5e7eb';
+    context.lineWidth = 1;
+
+    for (let x = Math.ceil(RANGE.xMin); x <= RANGE.xMax; x++) {
+      const px = graphX(x, width);
+      context.beginPath(); context.moveTo(px, RANGE.pad);
+      context.lineTo(px, height-RANGE.pad); context.stroke();
+    }
+    for (let y = Math.ceil(yMin); y <= yMax; y += 2) {
+      const py = gy(y);
+      context.beginPath(); context.moveTo(RANGE.pad, py);
+      context.lineTo(width-RANGE.pad, py); context.stroke();
+    }
+    context.strokeStyle = '#475569';
+    context.lineWidth = 1.5;
+    const xAxis = gy(0);
+    const yAxis = graphX(0, width);
+    context.beginPath(); context.moveTo(RANGE.pad, xAxis);
+    context.lineTo(width-RANGE.pad, xAxis); context.stroke();
+    context.beginPath(); context.moveTo(yAxis, RANGE.pad);
+    context.lineTo(yAxis, height-RANGE.pad); context.stroke();
+    return gy;
+  }
+
+  function drawFunction(width, height) {
+    const gy = drawAxes(ctx, width, height);
+    const samples = Math.max(700, Math.floor(width * 1.5));
+    ctx.strokeStyle = '#2563eb';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    let started = false;
+    for (let i=0; i<=samples; i++) {
+      const x = RANGE.xMin + (RANGE.xMax-RANGE.xMin)*i/samples;
+      const y = f(x);
+      if (!Number.isFinite(y) || y < RANGE.yMin-4 || y > RANGE.yMax+4) {
+        started = false; continue;
+      }
+      const px = graphX(x,width), py = gy(y);
+      if (!started) { ctx.moveTo(px,py); started = true; }
+      else ctx.lineTo(px,py);
+    }
+    ctx.stroke();
+
+    const fx = f(state.x), m = df(state.x);
+    if (Number.isFinite(fx) && Number.isFinite(m)) {
+      const y1 = fx + m*(RANGE.xMin-state.x);
+      const y2 = fx + m*(RANGE.xMax-state.x);
+      ctx.strokeStyle = '#db2777';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(graphX(RANGE.xMin,width), gy(y1));
+      ctx.lineTo(graphX(RANGE.xMax,width), gy(y2));
+      ctx.stroke();
+    }
+
+    const px = graphX(state.x,width), py = gy(state.y);
+    ctx.fillStyle = '#dc2626';
+    ctx.beginPath(); ctx.arc(px,py,7,0,Math.PI*2); ctx.fill();
+  }
+
+  function drawDerivative(width, height) {
+    const yMin = -12, yMax = 12;
+    const gy = drawAxes(dctx, width, height, yMin, yMax);
+    const samples = Math.max(700, Math.floor(width * 1.5));
+    dctx.strokeStyle = '#db2777';
+    dctx.lineWidth = 3;
+    dctx.beginPath();
+    let started = false;
+    for (let i=0; i<=samples; i++) {
+      const x = RANGE.xMin + (RANGE.xMax-RANGE.xMin)*i/samples;
+      const y = df(x);
+      if (!Number.isFinite(y) || y < yMin-4 || y > yMax+4) {
+        started = false; continue;
+      }
+      const px = graphX(x,width), py = gy(y);
+      if (!started) { dctx.moveTo(px,py); started = true; }
+      else dctx.lineTo(px,py);
+    }
+    dctx.stroke();
+  }
+
+  function redraw() {
+    if (!initialized) return;
+    resizeCanvas(el.canvas, el.canvasWrap, ctx, drawFunction);
+    resizeCanvas(
+      el.derivativeCanvas,
+      el.derivativeWrap,
+      dctx,
+      drawDerivative
+    );
+  }
+
+  function updateAll() {
+    syncStateFromInputs();
+    updateFormulaOutputs();
+    updateMetrics();
+    redraw();
+  }
+
+  function setPreset(a3,a2,a1,a0,x,y) {
+    Object.assign(state,{a3,a2,a1,a0,x,y});
+    syncInputsFromState();
+    updateAll();
+  }
+
+  function initialize() {
+    if (initialized) return;
+    el = {
+      expression: document.getElementById('polyExpression'),
+      parse: document.getElementById('polyParseButton'),
+      linear: document.getElementById('polyPresetLinear'),
+      quadratic: document.getElementById('polyPresetQuadratic'),
+      cubic: document.getElementById('polyPresetCubic'),
+      a3: document.getElementById('polyA3'),
+      a2: document.getElementById('polyA2'),
+      a1: document.getElementById('polyA1'),
+      a0: document.getElementById('polyA0'),
+      target: document.getElementById('polySolveTarget'),
+      x: document.getElementById('polyX'),
+      y: document.getElementById('polyY'),
+      calculate: document.getElementById('polyCalculateButton'),
+      useResult: document.getElementById('polyUseResultButton'),
+      result: document.getElementById('polyResult'),
+      formula: document.getElementById('polyFormulaOutput'),
+      derivativeFormula: document.getElementById('polyDerivativeFormula'),
+      canvas: document.getElementById('polyCanvas'),
+      canvasWrap: document.getElementById('polyCanvasWrap'),
+      derivativeCanvas: document.getElementById('polyDerivativeCanvas'),
+      derivativeWrap: document.getElementById('polyDerivativeCanvasWrap'),
+      xValue: document.getElementById('polyXValue'),
+      functionValue: document.getElementById('polyFunctionValue'),
+      derivativeValue: document.getElementById('polyDerivativeValue'),
+      tangentValue: document.getElementById('polyTangentValue')
+    };
+    ctx = el.canvas.getContext('2d');
+    dctx = el.derivativeCanvas.getContext('2d');
+
+    [el.a3,el.a2,el.a1,el.a0,el.x,el.y].forEach(input => {
+      input.addEventListener('input', updateAll);
+    });
+
+    el.parse.addEventListener('click', () => {
+      try {
+        const c = parsePolynomial(el.expression.value);
+        state.a3=c[3]; state.a2=c[2]; state.a1=c[1]; state.a0=c[0];
+        syncInputsFromState();
+        updateAll();
+        el.result.classList.remove('warning');
+        el.result.textContent = '数式を係数へ反映しました。';
+      } catch (error) {
+        el.result.classList.add('warning');
+        el.result.textContent = error.message;
+      }
+    });
+
+    el.linear.addEventListener('click', () => setPreset(0,0,2,1,2,5));
+    el.quadratic.addEventListener('click', () => setPreset(0,1,-1,-1,2,1));
+    el.cubic.addEventListener('click', () => setPreset(1,-2,-1,2,2,0));
+    el.calculate.addEventListener('click', calculateUnknown);
+    el.useResult.addEventListener('click', applyResult);
+    window.addEventListener('resize', redraw);
+
+    initialized = true;
+    syncInputsFromState();
+    updateAll();
+  }
+
+  window.initializePolynomialTool = initialize;
+  window.redrawPolynomialTool = redraw;
+})();
+</script><script>
+  (() => {
+    const renderedChapters = new Set();
+    let visualizerInitialized = false;
+    let activeChapterId = null;
+
+    const chapterElements = () =>
+      Array.from(document.querySelectorAll('.lazy-chapter'));
+
+    const chapterButtons = () =>
+      Array.from(
+        document.querySelectorAll('[data-chapter-target]')
+      );
+
+    async function typesetChapter(chapter) {
+      if (!chapter || renderedChapters.has(chapter.id)) {
+        return;
+      }
+
+      chapter.classList.add('math-loading');
+
+      try {
+        await MathJax.startup.promise;
+        await MathJax.typesetPromise([chapter]);
+        renderedChapters.add(chapter.id);
+      } catch (error) {
+        console.error(
+          `MathJax rendering failed in ${chapter.id}:`,
+          error
+        );
+      } finally {
+        chapter.classList.remove('math-loading');
+      }
+    }
+
+    function updateButtons(chapterId) {
+      chapterButtons().forEach(button => {
+        const isActive =
+          button.dataset.chapterTarget === chapterId;
+
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute(
+          'aria-expanded',
+          isActive ? 'true' : 'false'
+        );
+      });
+    }
+
+    function initializeVisualizerOnce() {
+      if (visualizerInitialized) {
+        return;
+      }
+
+      if (
+        typeof window.initializeBasicVisualizer === 'function'
+      ) {
+        window.initializeBasicVisualizer();
+        visualizerInitialized = true;
+      }
+    }
+
+    function redrawVisualizer() {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          window.dispatchEvent(new Event('resize'));
+        });
+      });
+
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 180);
+    }
+
+    async function showChapter(chapterId, options = {}) {
+      const chapter =
+        document.getElementById(chapterId);
+
+      if (!chapter) {
+        return;
+      }
+
+      chapterElements().forEach(element => {
+        element.classList.toggle(
+          'is-visible',
+          element === chapter
+        );
+      });
+
+      const guide = document.getElementById('chapterGuide');
+
+      if (guide) {
+        guide.hidden = true;
+      }
+
+      activeChapterId = chapterId;
+      updateButtons(chapterId);
+
+      if (chapterId === 'visualizer') {
+        initializeVisualizerOnce();
+        redrawVisualizer();
+      }
+
+      if (
+        chapterId === 'polynomial-tool' &&
+        typeof window.initializePolynomialTool === 'function'
+      ) {
+        window.initializePolynomialTool();
+      }
+
+      await typesetChapter(chapter);
+
+      if (chapterId === 'visualizer') {
+        redrawVisualizer();
+      }
+
+      if (
+        chapterId === 'polynomial-tool' &&
+        typeof window.redrawPolynomialTool === 'function'
+      ) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(window.redrawPolynomialTool);
+        });
+      }
+
+      if (options.updateHistory !== false) {
+        history.replaceState(
+          null,
+          '',
+          `${location.pathname}${location.search}#${chapterId}`
+        );
+      }
+
+      if (options.scroll !== false) {
+        chapter.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      chapterButtons().forEach(button => {
+        button.addEventListener('click', () => {
+          showChapter(button.dataset.chapterTarget);
+        });
+      });
+
+      const requestedChapter =
+        location.hash.replace(/^#/, '');
+
+      if (
+        requestedChapter &&
+        document.getElementById(requestedChapter)?.classList
+          .contains('lazy-chapter')
+      ) {
+        showChapter(requestedChapter, {
+          updateHistory: false,
+          scroll: false
+        });
+      }
+    });
+
+    window.addEventListener('hashchange', () => {
+      const requestedChapter =
+        location.hash.replace(/^#/, '');
+
+      if (
+        requestedChapter &&
+        requestedChapter !== activeChapterId
+      ) {
+        showChapter(requestedChapter, {
+          updateHistory: false
+        });
+      }
+    });
+
+    window.showBasicChapter = showChapter;
+  })();
+</script></body>
 </html>
